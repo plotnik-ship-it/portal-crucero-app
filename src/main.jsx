@@ -1,5 +1,5 @@
 import React from 'react';
-console.log('🚀 PORTAL VERSION: 5.2 - FIX VERIFIED');
+console.log('🚀 PORTAL VERSION: 5.3 - LOGIN FIX + MANUAL PAYMENTS');
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 

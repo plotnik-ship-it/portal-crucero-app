@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getFamilyData, updateFamilyData, getFamilyPayments, deletePayment } from '../../services/firestore';
+import { getFamilyData, updateFamilyData, getFamilyPayments, deletePayment, addPayment } from '../../services/firestore';
 import Card from '../shared/Card';
 import { formatCurrencyWithLabel } from '../../services/currencyService';
 import { formatTimestamp } from '../../utils/formatters';
@@ -11,6 +11,7 @@ const FamilyDetail = ({ family: initialFamily, onClose, onUpdate }) => {
     const [activeTab, setActiveTab] = useState('global');
     const [payments, setPayments] = useState([]);
     const [loadingPayments, setLoadingPayments] = useState(true);
+    const [showAddPayment, setShowAddPayment] = useState(false);
 
     // Financial Data Form
     const [formData, setFormData] = useState({
@@ -266,6 +267,39 @@ const FamilyDetail = ({ family: initialFamily, onClose, onUpdate }) => {
                 fullError: error
             });
             alert(`❌ Error al eliminar el pago: ${error.message}`);
+        }
+    };
+
+    const handleAddPayment = async (paymentFormData) => {
+        try {
+            const { cabinIndex, amountCad, method, reference, note, appliedAt } = paymentFormData;
+
+            await addPayment(family.id, {
+                amountCad: parseFloat(amountCad),
+                targetCabinIndex: parseInt(cabinIndex),
+                method: method || 'Manual Entry',
+                reference: reference || 'Manual Payment',
+                note: note || '',
+                adminUid: 'admin', // TODO: Get from auth context
+                appliedAt: appliedAt ? new Date(appliedAt) : null
+            });
+
+            // Reload family data and payments
+            const updatedFamily = await getFamilyData(family.id);
+            if (updatedFamily) {
+                setFamily(updatedFamily);
+            }
+            const paymentsData = await getFamilyPayments(family.id);
+            setPayments(paymentsData);
+
+            // Trigger parent update
+            if (onUpdate) onUpdate();
+
+            setShowAddPayment(false);
+            alert('✅ Pago manual agregado exitosamente');
+        } catch (error) {
+            console.error('❌ Error adding manual payment:', error);
+            alert(`❌ Error al agregar el pago: ${error.message}`);
         }
     };
 
@@ -691,7 +725,15 @@ const FamilyDetail = ({ family: initialFamily, onClose, onUpdate }) => {
 
                         {/* Payment History Section */}
                         <div className="mt-xl pt-lg" style={{ borderTop: '2px solid var(--color-border)' }}>
-                            <h4 className="font-semibold mb-md">💳 Historial de Pagos Aplicados</h4>
+                            <div className="flex justify-between items-center mb-md">
+                                <h4 className="font-semibold">💳 Historial de Pagos Aplicados</h4>
+                                <button
+                                    onClick={() => setShowAddPayment(true)}
+                                    className="btn btn-sm btn-success"
+                                >
+                                    ➕ Agregar Pago Manual
+                                </button>
+                            </div>
                             {loadingPayments ? (
                                 <p className="text-muted text-center">Cargando pagos...</p>
                             ) : payments.length === 0 ? (
@@ -746,6 +788,155 @@ const FamilyDetail = ({ family: initialFamily, onClose, onUpdate }) => {
                         </div>
                     </div>
                 </Card>
+
+                {/* Manual Payment Modal */}
+                {showAddPayment && (
+                    <ManualPaymentModal
+                        family={family}
+                        onClose={() => setShowAddPayment(false)}
+                        onSubmit={handleAddPayment}
+                    />
+                )}
+            </div>
+        </div>
+    );
+};
+
+// Manual Payment Modal Component
+const ManualPaymentModal = ({ family, onClose, onSubmit }) => {
+    const [formData, setFormData] = useState({
+        cabinIndex: family.cabinAccounts?.[0] ? '0' : '',
+        amountCad: '',
+        method: 'Wire Transfer',
+        reference: '',
+        note: '',
+        appliedAt: new Date().toISOString().split('T')[0]
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.amountCad || parseFloat(formData.amountCad) <= 0) {
+            alert('Por favor ingresa un monto válido');
+            return;
+        }
+        onSubmit(formData);
+    };
+
+    return (
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2000,
+            padding: '1rem'
+        }}>
+            <div style={{
+                maxWidth: '500px',
+                width: '100%',
+                background: 'var(--color-surface)',
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: 'var(--shadow-xl)',
+                padding: '2rem'
+            }}>
+                <div className="flex justify-between items-center mb-lg">
+                    <h3 className="font-bold text-lg">➕ Agregar Pago Manual</h3>
+                    <button onClick={onClose} className="btn btn-sm btn-outline">✕</button>
+                </div>
+
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="form-label required">Cabina</label>
+                        <select
+                            className="form-input"
+                            value={formData.cabinIndex}
+                            onChange={(e) => setFormData({ ...formData, cabinIndex: e.target.value })}
+                            required
+                        >
+                            <option value="">Seleccionar cabina...</option>
+                            {family.cabinAccounts?.map((cabin, idx) => (
+                                <option key={idx} value={idx}>
+                                    {cabin.cabinNumber} - Saldo: ${cabin.balanceCad?.toFixed(2) || '0.00'} CAD
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label required">Monto (CAD)</label>
+                        <input
+                            type="number"
+                            className="form-input"
+                            value={formData.amountCad}
+                            onChange={(e) => setFormData({ ...formData, amountCad: e.target.value })}
+                            step="0.01"
+                            min="0.01"
+                            placeholder="0.00"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Método de Pago</label>
+                        <select
+                            className="form-input"
+                            value={formData.method}
+                            onChange={(e) => setFormData({ ...formData, method: e.target.value })}
+                        >
+                            <option value="Wire Transfer">Transferencia Bancaria</option>
+                            <option value="Cash">Efectivo</option>
+                            <option value="Check">Cheque</option>
+                            <option value="Card">Tarjeta</option>
+                            <option value="Other">Otro</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Referencia / No. Transacción</label>
+                        <input
+                            type="text"
+                            className="form-input"
+                            value={formData.reference}
+                            onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
+                            placeholder="Ej: TRANS-12345"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Fecha de Aplicación</label>
+                        <input
+                            type="date"
+                            className="form-input"
+                            value={formData.appliedAt}
+                            onChange={(e) => setFormData({ ...formData, appliedAt: e.target.value })}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Notas</label>
+                        <textarea
+                            className="form-input"
+                            value={formData.note}
+                            onChange={(e) => setFormData({ ...formData, note: e.target.value })}
+                            rows="3"
+                            placeholder="Notas adicionales..."
+                        />
+                    </div>
+
+                    <div className="flex gap-md mt-lg">
+                        <button type="button" onClick={onClose} className="btn btn-outline flex-1">
+                            Cancelar
+                        </button>
+                        <button type="submit" className="btn btn-success flex-1">
+                            Agregar Pago
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );

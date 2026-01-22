@@ -2,7 +2,7 @@ import Card from '../shared/Card';
 import { formatDate } from '../../utils/formatters';
 
 const CabinInfo = ({ familyData, groupData }) => {
-    if (!familyData || !groupData) return null;
+    if (!familyData) return null;
 
     // Helper to find booking number for a given cabin number string
     const getBookingNumber = (cabinNum) => {
@@ -21,18 +21,18 @@ const CabinInfo = ({ familyData, groupData }) => {
                     <div className="flex flex-col gap-sm">
                         <div>
                             <p className="text-small text-muted">Barco</p>
-                            <p className="font-semibold">{groupData.shipName || 'Por definir'}</p>
+                            <p className="font-semibold">{groupData?.shipName || 'Por definir'}</p>
                         </div>
 
                         <div>
                             <p className="text-small text-muted">Fecha de Salida</p>
-                            <p className="font-semibold">{formatDate(groupData.sailDate)}</p>
+                            <p className="font-semibold">{groupData?.sailDate ? formatDate(groupData.sailDate) : 'Por definir'}</p>
                         </div>
 
                         <div>
                             <p className="text-small text-muted">Pago Total (100%)</p>
                             <p className="font-semibold text-warning">
-                                {formatDate(groupData.finalPaymentDate)}
+                                {groupData?.finalPaymentDate ? formatDate(groupData.finalPaymentDate) : 'Por definir'}
                             </p>
                         </div>
                     </div>

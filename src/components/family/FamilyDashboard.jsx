@@ -44,7 +44,7 @@ const FamilyDashboard = () => {
         );
     }
 
-    if (!familyData || !groupData) {
+    if (!familyData) {
         return (
             <Layout>
                 <div className="container page">
@@ -150,7 +150,7 @@ const FamilyDashboard = () => {
                     />
 
                     {/* Itinerary - Only show on Global Tab to reduce noise? Or always? Always is fine. */}
-                    {activeTab === 'global' && groupData.itinerary && groupData.itinerary.length > 0 && (
+                    {activeTab === 'global' && groupData?.itinerary && groupData.itinerary.length > 0 && (
                         <ItineraryTable itinerary={groupData.itinerary} />
                     )}
 

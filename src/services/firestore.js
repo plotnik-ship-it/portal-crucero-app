@@ -383,6 +383,79 @@ export const deletePaymentRequest = async (familyId, requestId) => {
 };
 
 /**
+ * Add a manual payment (admin only) - Creates payment record and updates balances
+ */
+export const addPayment = async (familyId, paymentData) => {
+    const { amountCad, targetCabinIndex, reference, note, method, adminUid, appliedAt } = paymentData;
+
+    try {
+        await runTransaction(db, async (transaction) => {
+            const familyRef = doc(db, 'families', familyId);
+            const newPaymentRef = doc(collection(db, 'families', familyId, 'payments'));
+
+            const familyDoc = await transaction.get(familyRef);
+            if (!familyDoc.exists()) throw new Error('Family not found');
+
+            const familyData = familyDoc.data();
+            const cabinAccounts = familyData.cabinAccounts || [];
+
+            if (targetCabinIndex === undefined || targetCabinIndex === null) {
+                throw new Error("Target cabin is required for payment.");
+            }
+
+            if (!cabinAccounts[targetCabinIndex]) {
+                throw new Error(`Cabin at index ${targetCabinIndex} not found.`);
+            }
+
+            const cabin = cabinAccounts[targetCabinIndex];
+            const newPaid = (cabin.paidCad || 0) + amountCad;
+            const newBalance = Math.round((cabin.totalCad - newPaid) * 100) / 100;
+
+            cabinAccounts[targetCabinIndex] = {
+                ...cabin,
+                paidCad: Math.round(newPaid * 100) / 100,
+                balanceCad: newBalance
+            };
+
+            const newPaidGlobal = cabinAccounts.reduce((sum, c) => sum + (c.paidCad || 0), 0);
+            const newTotalGlobal = cabinAccounts.reduce((sum, c) => sum + (c.totalCad || 0), 0);
+            const newGratuitiesGlobal = cabinAccounts.reduce((sum, c) => sum + (c.gratuitiesCad || 0), 0);
+            const newSubtotalGlobal = cabinAccounts.reduce((sum, c) => sum + (c.subtotalCad || 0), 0);
+            const newBalanceGlobal = Math.round((newTotalGlobal - newPaidGlobal) * 100) / 100;
+
+            transaction.update(familyRef, {
+                cabinAccounts: cabinAccounts,
+                subtotalCadGlobal: newSubtotalGlobal,
+                gratuitiesCadGlobal: newGratuitiesGlobal,
+                totalCadGlobal: newTotalGlobal,
+                paidCadGlobal: Math.round(newPaidGlobal * 100) / 100,
+                balanceCadGlobal: newBalanceGlobal,
+                updatedAt: serverTimestamp()
+            });
+
+            // Create payment record
+            transaction.set(newPaymentRef, {
+                amountCad: amountCad,
+                appliedAt: appliedAt || serverTimestamp(),
+                method: method || 'Manual Entry',
+                reference: reference || 'Manual Payment',
+                note: note || '',
+                createdBy: adminUid,
+                targetCabinIndex: targetCabinIndex,
+                targetCabinNumber: cabin.cabinNumber,
+                isManualEntry: true
+            });
+        });
+
+        console.log(`✅ Manual payment of ${amountCad} CAD added successfully`);
+        return true;
+    } catch (error) {
+        console.error('Error adding manual payment:', error);
+        throw error;
+    }
+};
+
+/**
  * Delete an applied payment (admin only)
  */
 export const deletePayment = async (familyId, paymentId) => {
