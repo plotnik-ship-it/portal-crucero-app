@@ -42,9 +42,14 @@ export const useFamilyData = (userId) => {
                 setFamilyData(family);
 
                 // Load group data
-                console.log('🔍 [useFamilyData] Cargando grupo ID:', family.groupId);
-                const group = await getGroupData(family.groupId);
-                setGroupData(group);
+                if (family.groupId) {
+                    console.log('🔍 [useFamilyData] Cargando grupo ID:', family.groupId);
+                    const group = await getGroupData(family.groupId);
+                    setGroupData(group);
+                } else {
+                    console.warn('⚠️ [useFamilyData] Family has no groupId. Skipping group load.');
+                    setGroupData(null);
+                }
 
                 // Load payments and requests
                 console.log('🔍 [useFamilyData] Cargando pagos y solicitudes...');

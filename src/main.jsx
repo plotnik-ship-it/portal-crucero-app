@@ -1,5 +1,5 @@
 import React from 'react';
-console.log('🚀 PORTAL VERSION: 5.1 - DEBUG MODE');
+console.log('🚀 PORTAL VERSION: 5.2 - FIX VERIFIED');
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 
