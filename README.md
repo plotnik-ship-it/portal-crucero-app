@@ -1,47 +1,49 @@
-# Portal de Crucero
+# Portal de Crucero (Cruise Portal)
 
-Portal seguro para que 27 familias accedan a información de sus cabinas de crucero y realicen solicitudes de adelanto de pago.
+**Note: This application was developed for a LATAM travel agency client. The User Interface is in Spanish, but this documentation is provided in English for technical review.**
 
-## 🚀 Características
+Secure portal for 27 families to access cruise cabin information and manage payment request workflows.
 
-- ✅ Autenticación con Firebase (email/password)
-- ✅ Roles: Familia y Administrador
-- ✅ Dashboard de familia con información de cabina, costos, e itinerario
-- ✅ Conversión de moneda CAD a MXN (configurable)
-- ✅ Solicitud de adelanto de pago (captura de intención, sin procesamiento real)
-- ✅ Manejo seguro de datos de tarjeta (solo últimos 4 dígitos, sin CVV)
-- ✅ Notificaciones por email al administrador
-- ✅ Panel de administración para gestionar familias y solicitudes
-- ✅ Firestore Security Rules estrictas
-- ✅ Diseño responsive (mobile-first)
+## 🚀 Features
 
-## 📋 Requisitos Previos
+- ✅ **Firebase Authentication** (email/password)
+- ✅ **Roles**: Family and Administrator
+- ✅ **Family Dashboard** with cabin info, cost breakdown, and itinerary
+- ✅ **Currency Conversion** CAD to MXN (configurable)
+- ✅ **Payment Request Workflow** (intent capture, no real-time processing)
+- ✅ **PCI-Compliant Data Handling** (Tokenization/Masking - only last 4 digits stored, NO CVV)
+- ✅ **Email Notifications** to administrator
+- ✅ **Admin Panel** to manage families and requests
+- ✅ **Strict Role-Based Access Control (RBAC)** via Firestore Security Rules
+- ✅ **Responsive Design** (mobile-first)
 
-- Node.js 18+ y npm
-- Cuenta de Firebase (plan Spark o superior)
-- Cuenta de EmailJS (gratuita)
+## 📋 Prerequisites
 
-## 🛠️ Configuración
+- Node.js 18+ and npm
+- Firebase Account (Spark plan or higher)
+- EmailJS Account (free tier)
 
-### 1. Clonar e Instalar Dependencias
+## 🛠️ Setup
+
+### 1. Clone and Install Dependencies
 
 ```bash
 cd portal-crucero
 npm install
 ```
 
-### 2. Configurar Firebase
+### 2. Configure Firebase
 
-1. Crear proyecto en [Firebase Console](https://console.firebase.google.com/)
-2. Habilitar **Authentication** → Email/Password
-3. Habilitar **Cloud Firestore**
-4. Copiar las credenciales del proyecto
+1. Create a project in [Firebase Console](https://console.firebase.google.com/)
+2. Enable **Authentication** → Email/Password
+3. Enable **Cloud Firestore**
+4. Copy project credentials
 
-### 3. Configurar EmailJS
+### 3. Configure EmailJS
 
-1. Crear cuenta en [EmailJS](https://www.emailjs.com/)
-2. Crear un servicio de email (Gmail, Outlook, etc.)
-3. Crear un template con las siguientes variables:
+1. Create an account at [EmailJS](https://www.emailjs.com/)
+2. Create an email service (Gmail, Outlook, etc.)
+3. Create a template with the following variables:
    - `to_email`
    - `family_name`
    - `family_code`
@@ -55,176 +57,176 @@ npm install
    - `timestamp`
    - `admin_link`
 
-### 4. Variables de Entorno
+### 4. Environment Variables
 
-Crear archivo `.env` en la raíz del proyecto:
+Create a `.env` file in the project root:
 
 ```env
-VITE_FIREBASE_API_KEY=tu_api_key
-VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=tu_proyecto_id
-VITE_FIREBASE_STORAGE_BUCKET=tu_proyecto.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
-VITE_FIREBASE_APP_ID=tu_app_id
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
 
-VITE_EMAILJS_SERVICE_ID=tu_service_id
-VITE_EMAILJS_TEMPLATE_ID=tu_template_id
-VITE_EMAILJS_PUBLIC_KEY=tu_public_key
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
 
 VITE_ADMIN_EMAIL=dplotnik@trevelo.com
 ```
 
-### 5. Configurar Firestore Security Rules
+### 5. Configure Firestore Security Rules (RBAC)
 
-Subir las reglas de seguridad a Firebase:
+Deploy security rules to Firebase:
 
 ```bash
 firebase deploy --only firestore:rules
 ```
 
-O copiar manualmente el contenido de `firestore.rules` en Firebase Console.
+Or manually copy the content of `firestore.rules` into the Firebase Console.
 
-### 6. Poblar Base de Datos
+### 6. Database Seeding
 
-Opción A - Usar el script de seed:
-1. Descomentar la importación en un componente temporal
-2. Llamar a `seedDatabase()` una vez
-3. Verificar en Firestore Console que se crearon los datos
+Option A - Use the seed script:
+1. Uncomment the import in a temporary component
+2. Call `seedDatabase()` once
+3. Verify in Firestore Console that data was created
 
-Opción B - Crear datos manualmente en Firestore Console
+Option B - Manually create data in Firestore Console
 
-### 7. Crear Usuario Administrador
+### 7. Create Administrator User
 
-1. Ir a Firebase Console → Authentication
-2. Crear usuario con email y contraseña
-3. Copiar el UID del usuario
-4. En Firestore, crear colección `admins`
-5. Crear documento con ID = UID del admin
-6. Agregar campo: `{ role: "admin" }`
+1. Go to Firebase Console → Authentication
+2. Create user with email and password
+3. Copy the user's UID
+4. In Firestore, create `admins` collection
+5. Create document with ID = Admin UID
+6. Add field: `{ role: "admin" }`
 
-### 8. Crear Usuarios de Familia
+### 8. Create Family Users
 
-Para cada familia (FAM001 - FAM027):
-1. Crear usuario en Firebase Authentication
-2. Email: `fam001@example.com` (o el email real de la familia)
-3. Password: Asignar contraseña segura
-4. **IMPORTANTE**: El UID del usuario debe coincidir con el ID del documento en Firestore
-   - Opción 1: Crear usuario primero, copiar UID, crear documento con ese ID
-   - Opción 2: Usar Cloud Functions para sincronizar automáticamente
+For each family (FAM001 - FAM027):
+1. Create user in Firebase Authentication
+2. Email: `fam001@example.com` (or the actual family email)
+3. Password: Assign a secure password
+4. **IMPORTANT**: The User UID must match the Document ID in Firestore
+   - Option 1: Create user first, copy UID, create document with that ID
+   - Option 2: Use Cloud Functions to synchronize automatically
 
-## 🚀 Ejecutar Aplicación
+## 🚀 Run Application
 
 ```bash
 npm run dev
 ```
 
-La aplicación estará disponible en `http://localhost:5173`
+The application will be available at `http://localhost:5173`
 
-## 👥 Usuarios de Prueba
+## 👥 Test Users
 
-### Administrador
-- Email: (el que creaste en Firebase)
-- Password: (la que asignaste)
+### Administrator
+- Email: (the one created in Firebase)
+- Password: (assigned password)
 
-### Familia
-- Email: `fam001@example.com` (o cualquier FAM001-FAM027)
-- Password: (la que asignaste)
+### Family
+- Email: `fam001@example.com` (or any FAM001-FAM027)
+- Password: (assigned password)
 
-## 📱 Flujo de Usuario
+## 📱 User Flow
 
-### Familia
-1. Login con email/password
-2. Ver información de cabina, barco, fecha de salida
-3. Ver desglose de costos en CAD con conversión a MXN
-4. Ver itinerario del crucero
-5. Ver historial de pagos
-6. Realizar solicitud de adelanto:
-   - Ingresar monto en CAD
-   - Ver conversión automática a MXN
-   - Ingresar datos de tarjeta
-   - Aceptar autorización
-   - Enviar solicitud
-7. Recibir confirmación (se contactará para completar el pago)
+### Family
+1. Login with email/password
+2. View cabin information, ship details, sail date
+3. View cost breakdown in CAD with MXN conversion
+4. View cruise itinerary
+5. View payment history
+6. Initiate **Payment Request Workflow**:
+   - Enter amount in CAD
+   - View automatic conversion to MXN
+   - Enter card details
+   - Accept authorization
+   - Submit request
+7. Receive confirmation (will be contacted to complete payment)
 
-### Administrador
-1. Login con email/password
-2. Ver lista de 27 familias
-3. Buscar por nombre, código o cabina
-4. Ver detalle de familia
-5. Editar montos (subtotal, propinas, pagado)
-6. Ver solicitudes de pago pendientes
-7. Aprobar o rechazar solicitudes
-8. Al aprobar: se crea registro de pago y se actualiza saldo
-9. Configurar tipo de cambio CAD/MXN
+### Administrator
+1. Login with email/password
+2. View list of 27 families
+3. Search by name, code, or cabin
+4. View family details
+5. Edit amounts (subtotal, gratuities, paid)
+6. View pending payment requests
+7. Approve or reject requests
+8. On approval: payment record is created and balance is updated
+9. Configure CAD/MXN exchange rate
 
-## 🔒 Seguridad
+## 🔒 Security
 
-- ✅ Firestore Security Rules estrictas
-- ✅ Familias solo pueden leer su propia información
-- ✅ Familias solo pueden crear payment requests, no modificarlos
-- ✅ Solo admin puede modificar datos financieros
-- ✅ Datos de tarjeta NO se guardan completos
-- ✅ Solo se almacenan últimos 4 dígitos
-- ✅ CVV NUNCA se guarda
-- ✅ Email solo contiene últimos 4 dígitos
-- ✅ Rutas protegidas con autenticación
+- ✅ **Strict Role-Based Access Control (RBAC)** via Firestore Rules
+- ✅ Families can only read their own information
+- ✅ Families can only create payment requests, not modify them
+- ✅ Only admin can modify financial data
+- ✅ **PCI-Compliant Data Handling**: Card data is NEVER fully stored
+- ✅ Only last 4 digits are stored
+- ✅ CVV is NEVER stored
+- ✅ Email notifications contain only last 4 digits
+- ✅ Protected routes with authentication
 
-## 📧 Notificaciones
+## 📧 Notifications
 
-Cuando una familia envía una solicitud de adelanto:
-1. Se crea documento en Firestore
-2. Se envía email a `dplotnik@trevelo.com` con:
-   - Información de la familia
-   - Monto en CAD y MXN
-   - Últimos 4 dígitos de tarjeta
-   - Nombre del titular
-   - Link al panel de admin
+When a family submits a Payment Request:
+1. Document created in Firestore
+2. Email sent to `dplotnik@trevelo.com` containing:
+   - Family information
+   - Amount in CAD and MXN
+   - Last 4 digits of card
+   - Cardholder name
+   - Link to admin panel
 
-## 🎨 Personalización
+## 🎨 Customization
 
-### Cambiar Colores
-Editar variables CSS en `src/styles/index.css`:
+### Change Colors
+Edit CSS variables in `src/styles/index.css`:
 ```css
 :root {
   --color-primary: #1e40af;
   --color-secondary: #0891b2;
-  /* ... más colores */
+  /* ... more colors */
 }
 ```
 
-### Cambiar Tipo de Cambio por Defecto
-Editar `src/hooks/useExchangeRate.js`:
+### Change Default Exchange Rate
+Edit `src/hooks/useExchangeRate.js`:
 ```javascript
-const [rate, setRate] = useState(14.5); // Cambiar valor aquí
+const [rate, setRate] = useState(14.5); // Change value here
 ```
 
-## 📝 Notas Importantes
+## 📝 Important Notes
 
-1. **No se procesan pagos reales**: La app solo captura la intención de pago
-2. **Contacto manual**: El admin debe contactar a la familia para procesar el cargo
-3. **Datos de tarjeta**: Solo para referencia, no se almacenan de forma segura para procesamiento
-4. **Tipo de cambio**: Es aproximado, el banco determina la tasa final
+1.  **No Real-Time Payment Processing**: The app captures payment intent only.
+2.  **Manual Contact**: The admin must contact the family to safely process the charge via the cruise line's terminal.
+3.  **Data Privacy**: Card details are handled with strict privacy measures; only tokenized/masked data is stored.
+4.  **Exchange Rate**: Is approximate; the issuing bank determines the final rate.
 
 ## 🐛 Troubleshooting
 
 ### Error: "Firebase not configured"
-- Verificar que `.env` existe y tiene todas las variables
-- Reiniciar el servidor de desarrollo
+- Verify that `.env` exists and contains all variables
+- Restart the development server
 
 ### Error: "Permission denied"
-- Verificar que las Security Rules están desplegadas
-- Verificar que el usuario está autenticado
-- Para admin: verificar que existe documento en colección `admins`
+- Verify that Security Rules are deployed
+- Verify that user is authenticated
+- For admin: Verify that a document exists in the `admins` collection
 
-### Emails no se envían
-- Verificar credenciales de EmailJS en `.env`
-- Verificar que el template existe en EmailJS
-- Revisar consola del navegador para errores
+### Emails not sending
+- Verify EmailJS credentials in `.env`
+- Verify that the template exists in EmailJS
+- Check browser console for errors
 
-## 📄 Licencia
+## 📄 License
 
-Proyecto privado para Trevelo.
+Private project for Trevelo.
 
-## 👨‍💻 Soporte
+## 👨‍💻 Support
 
-Para soporte, contactar a: dplotnik@trevelo.com
+For support, contact: dplotnik@trevelo.com
