@@ -632,19 +632,47 @@ const FamilyDetail = ({ family: initialFamily, onClose, onUpdate }) => {
                                         <div className="flex gap-sm justify-end mt-sm">
                                             <button
                                                 onClick={() => {
-                                                    // Helper to add default deadlines
+                                                    // Auto-calculate Final Payment based on Total - Sum(Others)
+                                                    const totalCost = (formData.subtotalCad || 0) + (formData.gratuitiesCad || 0);
+                                                    const deadlines = [...(formData.paymentDeadlines || [])];
+
+                                                    // Find "Pago Final" or "Final Payment"
+                                                    const finalIdx = deadlines.findIndex(d =>
+                                                        d.label.toLowerCase().includes('final') ||
+                                                        d.label.toLowerCase().includes('saldo')
+                                                    );
+
+                                                    if (finalIdx !== -1) {
+                                                        const otherAmount = deadlines.reduce((sum, d, i) => i === finalIdx ? sum : sum + (d.amountCad || 0), 0);
+                                                        deadlines[finalIdx].amountCad = Math.max(0, parseFloat((totalCost - otherAmount).toFixed(2)));
+                                                        setFormData({ ...formData, paymentDeadlines: deadlines });
+                                                    } else {
+                                                        alert('No se encontró un "Pago Final" para recalcular. Asegúrate de tener una fecha con la palabra "Final" o "Saldo".');
+                                                    }
+                                                }}
+                                                className="btn btn-xs btn-primary"
+                                                title="Ajusta el Pago Final para cubrir el saldo restante del total"
+                                            >
+                                                🪄 Ajustar Pago Final
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    // Defaults with smart calculation
+                                                    const totalCost = (formData.subtotalCad || 0) + (formData.gratuitiesCad || 0);
+                                                    const defaultDeposit = 500; // Standard deposit placeholder
+                                                    const finalAmount = Math.max(0, totalCost - defaultDeposit);
+
                                                     setFormData({
                                                         ...formData,
                                                         paymentDeadlines: [
-                                                            { label: 'Depósito Inicial', dueDate: '', amountCad: 0, status: 'upcoming' },
-                                                            { label: 'Segundo Pago', dueDate: '', amountCad: 0, status: 'upcoming' },
-                                                            { label: 'Pago Final', dueDate: '', amountCad: 0, status: 'upcoming' }
+                                                            { label: 'Depósito Inicial', dueDate: '', amountCad: defaultDeposit, status: 'upcoming' },
+                                                            { label: 'Pago Final', dueDate: '', amountCad: parseFloat(finalAmount.toFixed(2)), status: 'upcoming' }
                                                         ]
                                                     });
                                                 }}
                                                 className="btn btn-xs btn-outline"
                                             >
-                                                ↺ Cargar Defaults
+                                                ↺ Cargar Defaults Inteligentes
                                             </button>
                                         </div>
                                     </div>
