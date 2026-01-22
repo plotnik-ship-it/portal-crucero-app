@@ -76,7 +76,7 @@ const FamilyList = ({ onSelectFamily }) => {
                 </div>
 
                 <div className="flex justify-between items-center mt-lg">
-                    <h3 className="card-title">👥 Familias ({families.length})</h3>
+                    <h3 className="card-title">👥 Cabinas ({families.reduce((sum, f) => sum + (f.cabinNumbers?.length || 0), 0)})</h3>
                     <input
                         type="text"
                         className="form-input"

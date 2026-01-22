@@ -252,10 +252,7 @@ const PaymentRequestForm = ({ familyData, exchangeRate, onSuccess, defaultNote =
             <Card>
                 <div className="alert alert-success">
                     <p className="font-semibold">✅ Solicitud Enviada</p>
-                    <p>Tu solicitud de adelanto ha sido enviada exitosamente.</p>
-                    <p className="text-small mt-sm">
-                        <strong>Te contactaremos pronto para completar el pago de forma segura con la naviera.</strong>
-                    </p>
+                    <p>Envíanos tu información, aplicaremos el pago a la naviera y te confirmaremos en cuanto quede listo.</p>
                 </div>
             </Card>
         );
