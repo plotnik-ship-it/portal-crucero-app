@@ -1,0 +1,129 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===== HELPER FUNCTIONS =====
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+    
+    function isFamily() {
+      return isAuthenticated() && getUserData().role == 'family';
+    }
+    
+    function getFamilyId() {
+      return getUserData().familyId;
+    }
+    
+    function isFamilyOwner(familyId) {
+      return isFamily() && getFamilyId() == familyId;
+    }
+    
+    // Validate payment request fields - NO card data allowed
+    function isValidPaymentRequest() {
+      let data = request.resource.data;
+      
+      // Required fields
+      let hasRequiredFields = data.keys().hasAll([
+        'createdAt', 'status', 'amountCad', 'amountMxnApprox',
+        'fxRateUsed', 'cardholderName', 'authorizationAccepted'
+      ]);
+      
+      // Forbidden fields - NEVER allow these
+      let hasForbiddenFields = data.keys().hasAny([
+        'cardNumber', 'cvv', 'fullCardNumber', 'pan', 'cardCvv',
+        'securityCode', 'expiryDate', 'expiry'
+      ]);
+      
+      // Field validations
+      let validStatus = data.status == 'Pending';
+      let validAmount = data.amountCad is number && data.amountCad > 0;
+      let validName = data.cardholderName is string && data.cardholderName.size() >= 3;
+      let validAuth = data.authorizationAccepted == true;
+      
+      // Optional fields validation
+      let validLast4 = !data.keys().hasAny(['cardLast4']) || 
+                       (data.cardLast4 is string && data.cardLast4.size() == 4);
+      let validBrand = !data.keys().hasAny(['cardBrand']) || 
+                       (data.cardBrand is string);
+      let validNotes = !data.keys().hasAny(['notes']) || 
+                       (data.notes is string);
+      
+      return hasRequiredFields && 
+             !hasForbiddenFields && 
+             validStatus && 
+             validAmount && 
+             validName && 
+             validAuth &&
+             validLast4 &&
+             validBrand &&
+             validNotes;
+    }
+    
+    // ===== USERS COLLECTION =====
+    match /users/{userId} {
+      // Users can read their own document ONLY
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Only admins can write
+      allow write: if isAdmin();
+      
+      // BLOCK list operations
+      allow list: if false;
+    }
+    
+    // ===== GROUPS COLLECTION =====
+    match /groups/{groupId} {
+      // Authenticated users can read specific group documents
+      allow get: if isAuthenticated();
+      
+      // Only admins can write
+      allow write: if isAdmin();
+      
+      // BLOCK list operations for non-admins
+      allow list: if isAdmin();
+    }
+    
+    // ===== FAMILIES COLLECTION =====
+    match /families/{familyId} {
+      // Family can ONLY read their own document (get, not list)
+      allow get: if isFamilyOwner(familyId) || isAdmin();
+      
+      // BLOCK list operations - families cannot enumerate
+      allow list: if isAdmin();
+      
+      // Only admin can write
+      allow create, update, delete: if isAdmin();
+      
+      // ===== PAYMENTS SUBCOLLECTION =====
+      match /payments/{paymentId} {
+        // Family can read their own payments (both get and list)
+        allow get, list: if isFamilyOwner(familyId) || isAdmin();
+        
+        // Only admin can write
+        allow write: if isAdmin();
+      }
+      
+      // ===== PAYMENT REQUESTS SUBCOLLECTION =====
+      match /paymentRequests/{requestId} {
+        // Family can read their own requests (both get and list)
+        allow get, list: if isFamilyOwner(familyId) || isAdmin();
+        
+        // Family can ONLY CREATE with validated fields
+        allow create: if isFamilyOwner(familyId) && isValidPaymentRequest();
+        
+        // Only admin can update/delete
+        allow update, delete: if isAdmin();
+      }
+    }
+  }
+}
