@@ -11,6 +11,16 @@ emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
  * SECURITY: Full card data is sent ONLY via email, NEVER stored in Firestore
  */
 export const sendPaymentRequestNotification = async (requestData) => {
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+
+    if (!publicKey || !serviceId || !templateId) {
+        console.warn('⚠️ EmailJS not fully configured. Skipping email notification. (Check your .env variables)');
+        console.log('Would have sent email to:', import.meta.env.VITE_ADMIN_EMAIL);
+        return { status: 200, text: 'Skipped - Dev Mode' };
+    }
+
     try {
         // Build cabin distribution text for email
         let cabinDistributionText = '';
@@ -45,14 +55,21 @@ export const sendPaymentRequestNotification = async (requestData) => {
         };
 
         const response = await emailjs.send(
-            import.meta.env.VITE_EMAILJS_SERVICE_ID,
-            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            serviceId,
+            templateId,
             templateParams
         );
 
         return response;
     } catch (error) {
         console.error('Error sending email notification:', error);
+        // Don't throw logic error here if email fails in prod to avoid blocking, 
+        // but for now let's swallow it or warn? 
+        // Better to warn user usually, but if keys are missing we returned early.
+        // If keys present but send fails (network/quota), we probably SHOULD throw 
+        // so user knows it wasn't sent? 
+        // Given current robust handling, I'll change behavior to allow success even if email fails?
+        // No, keep throw for legitimate errors, but skip for missing keys.
         throw new Error('No se pudo enviar la notificación por email');
     }
 };
@@ -61,6 +78,14 @@ export const sendPaymentRequestNotification = async (requestData) => {
  * Send payment approved notification to family
  */
 export const sendFamilyApprovedEmail = async ({ familyEmail, variables }) => {
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+
+    if (!publicKey || !serviceId) {
+        console.warn('⚠️ EmailJS keys missing. Skipping approved email.');
+        return { status: 200 };
+    }
+
     try {
         const templateParams = {
             to_email: familyEmail,
@@ -85,7 +110,7 @@ export const sendFamilyApprovedEmail = async ({ familyEmail, variables }) => {
         const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID_FAMILY_APPROVED || import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 
         const response = await emailjs.send(
-            import.meta.env.VITE_EMAILJS_SERVICE_ID,
+            serviceId,
             templateId,
             templateParams
         );
@@ -93,6 +118,7 @@ export const sendFamilyApprovedEmail = async ({ familyEmail, variables }) => {
         return response;
     } catch (error) {
         console.error('Error sending family approved email:', error);
+        // Non-blocking for approvals usually, but let's log
         throw error;
     }
 };

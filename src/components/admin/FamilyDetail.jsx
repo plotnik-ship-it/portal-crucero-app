@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { updateFamilyData, getFamilyPayments, deletePayment } from '../../services/firestore';
+import { getFamilyData, updateFamilyData, getFamilyPayments, deletePayment } from '../../services/firestore';
 import Card from '../shared/Card';
 import { formatCurrencyWithLabel } from '../../services/currencyService';
 import { formatTimestamp } from '../../utils/formatters';
 
-const FamilyDetail = ({ family, onClose, onUpdate }) => {
+const FamilyDetail = ({ family: initialFamily, onClose, onUpdate }) => {
+    const [family, setFamily] = useState(initialFamily); // Local state for immediate updates
     const [editing, setEditing] = useState(false);
     const [editingInfo, setEditingInfo] = useState(false); // New state for editing basic info
     const [activeTab, setActiveTab] = useState('global');
@@ -134,6 +135,12 @@ const FamilyDetail = ({ family, onClose, onUpdate }) => {
                 balanceCadGlobal
             });
 
+            // Refresh local data
+            const updatedFamily = await getFamilyData(family.id);
+            if (updatedFamily) {
+                setFamily(updatedFamily);
+            }
+
             setEditingInfo(false);
             if (onUpdate) onUpdate();
             alert('Información actualizada exitosamente');
@@ -154,7 +161,8 @@ const FamilyDetail = ({ family, onClose, onUpdate }) => {
         setFormData({
             subtotalCad: displayData.subtotalCad,
             gratuitiesCad: displayData.gratuitiesCad,
-            paidCad: displayData.paidCad
+            paidCad: displayData.paidCad,
+            paymentDeadlines: displayData.paymentDeadlines ? JSON.parse(JSON.stringify(displayData.paymentDeadlines)) : []
         });
         setEditing(true);
     };
@@ -176,7 +184,9 @@ const FamilyDetail = ({ family, onClose, onUpdate }) => {
                 gratuitiesCad: formData.gratuitiesCad,
                 totalCad,
                 paidCad: formData.paidCad,
-                balanceCad
+                paidCad: formData.paidCad,
+                balanceCad,
+                paymentDeadlines: formData.paymentDeadlines || []
             };
 
             // Update array
@@ -199,15 +209,17 @@ const FamilyDetail = ({ family, onClose, onUpdate }) => {
                 balanceCadGlobal
             });
 
+            // Refresh local data
+            const updatedFamily = await getFamilyData(family.id);
+            if (updatedFamily) {
+                setFamily(updatedFamily);
+            }
+
             setEditing(false);
             if (onUpdate) onUpdate();
 
-            // Close modal to force refresh
-            setTimeout(() => {
-                if (onClose) onClose();
-            }, 500);
-
-            alert('Datos de cabina actualizados exitosamente. El modal se cerrará para refrescar los datos.');
+            // Success message
+            alert('Datos de cabina actualizados exitosamente.');
         } catch (error) {
             console.error('Error updating family:', error);
             alert('Error al actualizar los datos');
@@ -399,6 +411,18 @@ const FamilyDetail = ({ family, onClose, onUpdate }) => {
                                                         }}
                                                         placeholder="No. Reserva / Booking #"
                                                     />
+                                                    <label className="flex items-center gap-xs text-small cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={infoData.cabinAccountsSnapshot[idx]?.depositPaid || false}
+                                                            onChange={(e) => {
+                                                                const newSnapshot = [...infoData.cabinAccountsSnapshot];
+                                                                newSnapshot[idx] = { ...newSnapshot[idx], depositPaid: e.target.checked };
+                                                                setInfoData(prev => ({ ...prev, cabinAccountsSnapshot: newSnapshot }));
+                                                            }}
+                                                        />
+                                                        Depósito Pagado
+                                                    </label>
                                                 </div>
                                                 <button
                                                     onClick={() => removeCabin(idx)}
@@ -501,7 +525,131 @@ const FamilyDetail = ({ family, onClose, onUpdate }) => {
                                         />
                                     </div>
 
-                                    <div className="flex gap-md">
+                                    {/* Payment Deadlines Editor */}
+                                    <div className="form-group mt-md pt-md border-t border-light">
+                                        <label className="form-label flex justify-between items-center mb-sm">
+                                            Fechas de Pago (Deadlines)
+                                            <button
+                                                onClick={() => setFormData({
+                                                    ...formData,
+                                                    paymentDeadlines: [
+                                                        ...(formData.paymentDeadlines || []),
+                                                        { label: 'Nuevo Pago', dueDate: '', amountCad: 0, status: 'upcoming' }
+                                                    ]
+                                                })}
+                                                className="btn btn-xs btn-success"
+                                            >
+                                                + Agregar Fecha
+                                            </button>
+                                        </label>
+
+                                        <div className="flex flex-col gap-sm">
+                                            {(formData.paymentDeadlines || []).map((deadline, idx) => (
+                                                <div key={idx} className="p-sm bg-bg rounded border border-light grid gap-sm">
+                                                    <div className="grid grid-2 gap-sm">
+                                                        <div>
+                                                            <label className="text-xs text-muted">Concepto</label>
+                                                            <input
+                                                                className="form-input text-xs"
+                                                                value={deadline.label}
+                                                                onChange={(e) => {
+                                                                    const newDeadlines = [...formData.paymentDeadlines];
+                                                                    newDeadlines[idx].label = e.target.value;
+                                                                    setFormData({ ...formData, paymentDeadlines: newDeadlines });
+                                                                }}
+                                                                placeholder="Ej: Depósito Inicial"
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <label className="text-xs text-muted">Fecha Límite</label>
+                                                            <input
+                                                                type="date"
+                                                                className="form-input text-xs"
+                                                                value={deadline.dueDate ? new Date(deadline.dueDate).toISOString().split('T')[0] : ''}
+                                                                onChange={(e) => {
+                                                                    const newDeadlines = [...formData.paymentDeadlines];
+                                                                    // Store as full ISO string or just date depending on backend expectation. 
+                                                                    // Using ISO string to be safe but usually date part is enough.
+                                                                    // Let's stick to the value directly if it's a string, or create a date object.
+                                                                    // Firestore likes Timestamps or Strings. Let's use simplified string YYYY-MM-DD for UI simplicity, 
+                                                                    // or convert to date. The current data shows 'dueDate' as a timestamp probably?
+                                                                    // Let's check format. 'formatDate' handles it.
+                                                                    // For simplicity let's save as ISO string or Date object.
+                                                                    // Better to save as standard Date object serialized.
+                                                                    newDeadlines[idx].dueDate = e.target.value; // Save 'YYYY-MM-DD' string for now, backend handling might be needed if it expects Timestamp.
+                                                                    setFormData({ ...formData, paymentDeadlines: newDeadlines });
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="grid grid-3 gap-sm items-end">
+                                                        <div className="col-span-1">
+                                                            <label className="text-xs text-muted">Monto (CAD)</label>
+                                                            <input
+                                                                type="number"
+                                                                className="form-input text-xs"
+                                                                value={deadline.amountCad}
+                                                                onChange={(e) => {
+                                                                    const newDeadlines = [...formData.paymentDeadlines];
+                                                                    newDeadlines[idx].amountCad = parseFloat(e.target.value) || 0;
+                                                                    setFormData({ ...formData, paymentDeadlines: newDeadlines });
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="col-span-1">
+                                                            <label className="text-xs text-muted">Estado</label>
+                                                            <select
+                                                                className="form-input text-xs"
+                                                                value={deadline.status}
+                                                                onChange={(e) => {
+                                                                    const newDeadlines = [...formData.paymentDeadlines];
+                                                                    newDeadlines[idx].status = e.target.value;
+                                                                    setFormData({ ...formData, paymentDeadlines: newDeadlines });
+                                                                }}
+                                                            >
+                                                                <option value="upcoming">Próximo</option>
+                                                                <option value="paid">Pagado</option>
+                                                                <option value="overdue">Vencido</option>
+                                                            </select>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => {
+                                                                const newDeadlines = formData.paymentDeadlines.filter((_, i) => i !== idx);
+                                                                setFormData({ ...formData, paymentDeadlines: newDeadlines });
+                                                            }}
+                                                            className="btn btn-xs btn-danger h-8"
+                                                            title="Eliminar fecha"
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            {(formData.paymentDeadlines || []).length === 0 && (
+                                                <p className="text-xs text-muted italic text-center">No hay fechas de pago configuradas.</p>
+                                            )}
+                                        </div>
+                                        <div className="flex gap-sm justify-end mt-sm">
+                                            <button
+                                                onClick={() => {
+                                                    // Helper to add default deadlines
+                                                    setFormData({
+                                                        ...formData,
+                                                        paymentDeadlines: [
+                                                            { label: 'Depósito Inicial', dueDate: '', amountCad: 0, status: 'upcoming' },
+                                                            { label: 'Segundo Pago', dueDate: '', amountCad: 0, status: 'upcoming' },
+                                                            { label: 'Pago Final', dueDate: '', amountCad: 0, status: 'upcoming' }
+                                                        ]
+                                                    });
+                                                }}
+                                                className="btn btn-xs btn-outline"
+                                            >
+                                                ↺ Cargar Defaults
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-md mt-lg">
                                         <button onClick={() => setEditing(false)} className="btn btn-outline">
                                             Cancelar
                                         </button>

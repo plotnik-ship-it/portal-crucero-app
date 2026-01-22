@@ -389,15 +389,24 @@ export const deletePayment = async (familyId, paymentId) => {
     try {
         console.log('🗑️ deletePayment called with:', { familyId, paymentId });
         const paymentRef = doc(db, 'families', familyId, 'payments', paymentId);
-        console.log('Payment ref path:', paymentRef.path);
         await deleteDoc(paymentRef);
         console.log(`✅ Payment ${paymentId} deleted successfully`);
     } catch (error) {
-        console.error('❌ Error deleting payment:', {
-            code: error.code,
-            message: error.message,
-            fullError: error
-        });
+        console.error('❌ Error deleting payment:', error);
+        throw error;
+    }
+};
+
+/**
+ * Delete a family (admin only)
+ */
+export const deleteFamily = async (familyId) => {
+    try {
+        const familyRef = doc(db, 'families', familyId);
+        await deleteDoc(familyRef);
+        console.log(`✅ Family ${familyId} deleted successfully`);
+    } catch (error) {
+        console.error('Error deleting family:', error);
         throw error;
     }
 };

@@ -5,6 +5,7 @@ import FamilyDetail from './FamilyDetail';
 import PaymentRequestsList from './PaymentRequestsList';
 import GroupConfig from './GroupConfig';
 import BulkFamilyImport from './BulkFamilyImport';
+import CreateFamilyModal from './CreateFamilyModal';
 import { getGroupData } from '../../services/firestore';
 import { formatDate } from '../../utils/formatters';
 
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const [groupInfo, setGroupInfo] = useState(null);
     const [showBulkImport, setShowBulkImport] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     useEffect(() => {
         const fetchGroup = async () => {
@@ -81,10 +83,16 @@ const AdminDashboard = () => {
                 {/* Tab Content */}
                 {activeTab === 'families' && (
                     <>
-                        <div className="mb-md flex justify-end">
+                        <div className="mb-md flex justify-end gap-sm">
+                            <button
+                                onClick={() => setShowCreateModal(true)}
+                                className="btn btn-primary"
+                            >
+                                ➕ Agregar Familia
+                            </button>
                             <button
                                 onClick={() => setShowBulkImport(true)}
-                                className="btn btn-primary"
+                                className="btn btn-outline"
                             >
                                 📥 Importar Familias
                             </button>
@@ -120,6 +128,14 @@ const AdminDashboard = () => {
                 {showBulkImport && (
                     <BulkFamilyImport
                         onClose={() => setShowBulkImport(false)}
+                        onSuccess={handleUpdate}
+                    />
+                )}
+
+                {/* Create Family Modal */}
+                {showCreateModal && (
+                    <CreateFamilyModal
+                        onClose={() => setShowCreateModal(false)}
                         onSuccess={handleUpdate}
                     />
                 )}

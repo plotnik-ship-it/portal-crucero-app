@@ -33,6 +33,13 @@ const Login = () => {
             background: 'linear-gradient(135deg, #1e40af 0%, #0891b2 100%)'
         }}>
             <div className="container" style={{ maxWidth: '450px' }}>
+                <div className="text-center mb-lg">
+                    <img
+                        src="/logo%20travelpoint%20english_bco.png"
+                        alt="TravelPoint"
+                        style={{ height: '80px', objectFit: 'contain' }}
+                    />
+                </div>
                 <div className="card">
                     <div className="card-header text-center">
                         <h1 className="card-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
