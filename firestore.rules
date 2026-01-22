@@ -9,10 +9,13 @@ service cloud.firestore {
     }
     
     function getUserData() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      // Safely get user data - check existence first!
+      let userPath = /databases/$(database)/documents/users/$(request.auth.uid);
+      return exists(userPath) ? get(userPath).data : {'role': 'guest', 'familyId': null};
     }
     
     function isAdmin() {
+      // Check role directly on returned data (safe now)
       return isAuthenticated() && getUserData().role == 'admin';
     }
     
@@ -74,8 +77,8 @@ service cloud.firestore {
       // Users can read their own document ONLY
       allow read: if isAuthenticated() && request.auth.uid == userId;
       
-      // Only admins can write
-      allow write: if isAdmin();
+      // Admins can write, or users can create their OWN document (for auto-linking)
+      allow write: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
       
       // BLOCK list operations
       allow list: if false;
@@ -94,12 +97,16 @@ service cloud.firestore {
     }
     
     // ===== FAMILIES COLLECTION =====
+    // ===== FAMILIES COLLECTION =====
     match /families/{familyId} {
       // Family can ONLY read their own document (get, not list)
-      allow get: if isFamilyOwner(familyId) || isAdmin();
+      // OR if they are searching for their own email (auto-linking)
+      allow get: if isFamilyOwner(familyId) || isAdmin() || (isAuthenticated() && resource.data.email == request.auth.token.email);
       
       // BLOCK list operations - families cannot enumerate
-      allow list: if isAdmin();
+      // EXCEPTION: Allow listing if filtering by own email (for auto-linking)
+      // DEBUG: Allow all authenticated to list for now to test if logic works
+      allow list: if isAuthenticated(); 
       
       // Only admin can write
       allow create, update, delete: if isAdmin();

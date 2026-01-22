@@ -23,6 +23,8 @@ export const useFamilyData = (userId) => {
                 console.log('🔍 [useFamilyData] Inicianco carga v5 para UID:', userId);
 
                 // Get user data to find familyId
+                // Note: We don't have email here easily unless we fetch it from auth again. 
+                // But getUserData now handles auth.currentUser check more robustly.
                 const userData = await getUserData(userId);
                 console.log('🔍 [useFamilyData] Datos de usuario:', userData);
                 if (!userData || !userData.familyId) {
