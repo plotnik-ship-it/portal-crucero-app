@@ -35,3 +35,5 @@ firestore-debug.log
 
 # Service Account Key (NEVER COMMIT!)
 serviceAccountKey.json
+
+.vercel

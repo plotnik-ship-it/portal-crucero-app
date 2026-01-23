@@ -483,3 +483,73 @@ export const deleteFamily = async (familyId) => {
         throw error;
     }
 };
+
+/**
+ * Get all groups for an agency
+ */
+export const getGroupsByAgency = async (agencyId) => {
+    try {
+        const groupsRef = collection(db, 'groups');
+        const q = query(
+            groupsRef,
+            where('agencyId', '==', agencyId),
+            orderBy('createdAt', 'desc')
+        );
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error getting groups by agency:', error);
+        throw error;
+    }
+};
+
+/**
+ * Get group by ID
+ */
+export const getGroupById = async (groupId) => {
+    try {
+        const groupRef = doc(db, 'groups', groupId);
+        const groupDoc = await getDoc(groupRef);
+        if (groupDoc.exists()) {
+            return { id: groupDoc.id, ...groupDoc.data() };
+        }
+        return null;
+    } catch (error) {
+        console.error('Error getting group by ID:', error);
+        throw error;
+    }
+};
+
+/**
+ * Create a new group
+ */
+export const createGroup = async (groupData) => {
+    try {
+        const groupsRef = collection(db, 'groups');
+        const docRef = await addDoc(groupsRef, {
+            ...groupData,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+        console.log(`✅ Group created with ID: ${docRef.id}`);
+        return docRef.id;
+    } catch (error) {
+        console.error('Error creating group:', error);
+        throw error;
+    }
+};
+
+/**
+ * Get families by group ID (filtered)
+ */
+export const getFamiliesByGroup = async (groupId) => {
+    try {
+        const familiesRef = collection(db, 'families');
+        const q = query(familiesRef, where('groupId', '==', groupId));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error getting families by group:', error);
+        throw error;
+    }
+};

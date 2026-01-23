@@ -1,20 +1,29 @@
 import { useState, useEffect } from 'react';
-import { getAllFamilies, deleteFamily } from '../../services/firestore';
+import { getFamiliesByGroup, deleteFamily } from '../../services/firestore';
 import Card from '../shared/Card';
 import { formatCurrencyWithLabel } from '../../services/currencyService';
 
-const FamilyList = ({ onSelectFamily }) => {
+const FamilyList = ({ groupId, onSelectFamily }) => {
     const [families, setFamilies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        loadFamilies();
-    }, []);
+        if (groupId) {
+            loadFamilies();
+        }
+    }, [groupId]);
 
     const loadFamilies = async () => {
+        if (!groupId) {
+            setFamilies([]);
+            setLoading(false);
+            return;
+        }
+
         try {
-            const data = await getAllFamilies();
+            setLoading(true);
+            const data = await getFamiliesByGroup(groupId);
             setFamilies(data);
         } catch (error) {
             console.error('Error loading families:', error);

@@ -1,0 +1,1916 @@
+{
+  "timestamp": "2026-01-23T03:41:13.853Z",
+  "project": "cruise-portal-trevello",
+  "collections": {
+    "groups": [
+      {
+        "id": "default",
+        "data": {
+          "currency": "CAD",
+          "finalPaymentDate": "2027-09-01",
+          "sailDate": "2027-12-26",
+          "duration": 7,
+          "embarkationPort": "GLS",
+          "name": "Grupo Crucero MSC Seascape 2027",
+          "itinerary": [
+            {
+              "day": 1,
+              "date": "Sun, Dec 26, 2027",
+              "port": "Galveston, Texas",
+              "arrive": "-",
+              "depart": "4:00 PM"
+            },
+            {
+              "day": 2,
+              "date": "Mon, Dec 27, 2027",
+              "port": "At Sea",
+              "arrive": "-",
+              "depart": "-"
+            },
+            {
+              "day": 3,
+              "date": "Tue, Dec 28, 2027",
+              "port": "At Sea",
+              "arrive": "-",
+              "depart": "-"
+            },
+            {
+              "day": 4,
+              "date": "Wed, Dec 29, 2027",
+              "port": "Costa Maya, Mexico",
+              "arrive": "8:00 AM",
+              "depart": "6:00 PM"
+            },
+            {
+              "day": 5,
+              "date": "Thu, Dec 30, 2027",
+              "port": "Isla de Roatan, Honduras",
+              "arrive": "8:00 AM",
+              "depart": "4:00 PM"
+            },
+            {
+              "day": 6,
+              "date": "Fri, Dec 31, 2027",
+              "port": "Cozumel, Mexico",
+              "arrive": "8:00 AM",
+              "depart": "4:00 PM"
+            },
+            {
+              "day": 7,
+              "date": "Sat, Jan 01, 2028",
+              "port": "At Sea",
+              "arrive": "-",
+              "depart": "-"
+            },
+            {
+              "day": 8,
+              "date": "Sun, Jan 02, 2028",
+              "port": "Galveston, Texas",
+              "arrive": "6:30 AM",
+              "depart": "-"
+            }
+          ],
+          "shipName": "MSC SEASCAPE",
+          "fxRateCadToMxn": 13,
+          "fxUpdatedAt": "2026-01-21T20:55:25.000Z",
+          "updatedAt": "2026-01-21T20:55:26.000Z"
+        }
+      }
+    ],
+    "families": [
+      {
+        "id": "MrcnJjPxy90AKQ5unhLX",
+        "data": {
+          "displayName": "Demo User",
+          "familyCode": "DEMO1",
+          "email": "demo@travelpoint.com",
+          "password": "demo123",
+          "role": "family",
+          "createdAt": "2026-01-22T05:07:32.000Z",
+          "updatedAt": "2026-01-22T05:07:32.000Z",
+          "cabinNumbers": [
+            "10105",
+            "10106",
+            "10107"
+          ],
+          "balanceCadGlobal": 12100,
+          "gratuitiesCadGlobal": 1000,
+          "subtotalCadGlobal": 15500,
+          "paidCadGlobal": 4400,
+          "cabinAccounts": [
+            {
+              "cabinNumber": "10105",
+              "bookingNumber": "12345678",
+              "subtotalCad": 6500,
+              "gratuitiesCad": 500,
+              "totalCad": 7000,
+              "paidCad": 200,
+              "balanceCad": 6800,
+              "paymentDeadlines": [
+                {
+                  "label": "Final Payment",
+                  "dueDate": "2026-11-01",
+                  "amountCad": 6500,
+                  "status": "upcoming"
+                }
+              ],
+              "depositPaid": true
+            },
+            {
+              "cabinNumber": "10106",
+              "bookingNumber": "87654321",
+              "subtotalCad": 5000,
+              "gratuitiesCad": 300,
+              "totalCad": 5300,
+              "paidCad": 0,
+              "balanceCad": 5300,
+              "paymentDeadlines": [
+                {
+                  "label": "Final Payment",
+                  "dueDate": "2026-04-24",
+                  "amountCad": 5300,
+                  "status": "upcoming"
+                }
+              ],
+              "depositPaid": false
+            },
+            {
+              "cabinNumber": "10107",
+              "bookingNumber": "147258369",
+              "subtotalCad": 4000,
+              "gratuitiesCad": 200,
+              "totalCad": 4200,
+              "paidCad": 4200,
+              "balanceCad": 0,
+              "paymentDeadlines": [
+                {
+                  "label": "Nuevo Pago",
+                  "dueDate": "2026-01-30",
+                  "amountCad": 4200,
+                  "status": "upcoming"
+                }
+              ],
+              "depositPaid": false
+            }
+          ],
+          "totalCadGlobal": 16500
+        }
+      },
+      {
+        "id": "fam001",
+        "data": {
+          "id": "fam001",
+          "groupId": "default",
+          "familyCode": "FAM001",
+          "email": "fam001@example.com",
+          "updatedAt": "2026-01-21T17:04:20.000Z",
+          "cabinNumbers": [
+            "14160"
+          ],
+          "gratuitiesCadGlobal": 588,
+          "subtotalCadGlobal": 6177.64,
+          "balanceCadGlobal": 5965.64,
+          "paidCadGlobal": 800,
+          "cabinAccounts": [
+            {
+              "subtotalCad": 6177.64,
+              "totalCad": 6765.64,
+              "paidCad": 800,
+              "balanceCad": 5965.64,
+              "cabinNumber": "14160",
+              "bookingNumber": "69496286",
+              "paymentDeadlines": [
+                {
+                  "amountCad": 800,
+                  "dueDate": "2026-01-31",
+                  "status": "paid",
+                  "label": "Depósito Inicial"
+                },
+                {
+                  "dueDate": "2027-09-01",
+                  "label": "Pago Final",
+                  "status": "Upcoming",
+                  "amountCad": 5965.64
+                }
+              ],
+              "gratuitiesCad": 588,
+              "depositPaid": true
+            }
+          ],
+          "totalCadGlobal": 6765.64,
+          "displayName": "SCHMAL JIMENEZ"
+        }
+      },
+      {
+        "id": "fam002",
+        "data": {
+          "id": "fam002",
+          "groupId": "default",
+          "familyCode": "FAM002",
+          "email": "fam002@example.com",
+          "updatedAt": "2026-01-21T17:04:20.000Z",
+          "cabinNumbers": [
+            "14126",
+            "14122"
+          ],
+          "gratuitiesCadGlobal": 588,
+          "subtotalCadGlobal": 9357.64,
+          "totalCadGlobal": 9945.64,
+          "balanceCadGlobal": 9145.64,
+          "paidCadGlobal": 800,
+          "cabinAccounts": [
+            {
+              "cabinNumber": "14126",
+              "subtotalCad": 4678.82,
+              "paidCad": 400,
+              "totalCad": 4972.82,
+              "gratuitiesCad": 294,
+              "balanceCad": 4572.82,
+              "paymentDeadlines": [
+                {
+                  "amountCad": 400,
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-31",
+                  "status": "Paid"
+                },
+                {
+                  "amountCad": 4572.82,
+                  "status": "Upcoming",
+                  "dueDate": "2027-09-01",
+                  "label": "Pago Final"
+                }
+              ],
+              "bookingNumber": " 69494590",
+              "depositPaid": true
+            },
+            {
+              "balanceCad": 4572.82,
+              "paymentDeadlines": [
+                {
+                  "dueDate": "2026-01-31",
+                  "status": "Paid",
+                  "amountCad": 1219.73,
+                  "label": "Depósito Inicial"
+                },
+                {
+                  "amountCad": 4572.82,
+                  "status": "Upcoming",
+                  "label": "Pago Final",
+                  "dueDate": "2027-09-01"
+                }
+              ],
+              "paidCad": 400,
+              "subtotalCad": 4678.82,
+              "gratuitiesCad": 294,
+              "totalCad": 4972.82,
+              "cabinNumber": "14122",
+              "bookingNumber": " 69494595",
+              "depositPaid": true
+            }
+          ],
+          "displayName": "SCHMAL VILLALOBOS"
+        }
+      },
+      {
+        "id": "fam003",
+        "data": {
+          "id": "fam003",
+          "groupId": "default",
+          "familyCode": "FAM003",
+          "email": "fcomurra@hotmail.com",
+          "cabinNumbers": [
+            "12223",
+            "12227"
+          ],
+          "gratuitiesCadGlobal": 735,
+          "subtotalCadGlobal": 9673.05,
+          "totalCadGlobal": 10408.05,
+          "displayName": "MURRA SCHMAL",
+          "balanceCadGlobal": 9408.05,
+          "paidCadGlobal": 1000,
+          "cabinAccounts": [
+            {
+              "cabinNumber": "12223",
+              "balanceCad": 4863.23,
+              "totalCad": 5463.23,
+              "paidCad": 600,
+              "paymentDeadlines": [
+                {
+                  "dueDate": "2026-01-31",
+                  "status": "Overdue",
+                  "label": "Depósito Inicial",
+                  "amountCad": 600
+                },
+                {
+                  "label": "Pago final",
+                  "dueDate": "2027-09-01",
+                  "amountCad": 4863.23,
+                  "status": "upcoming"
+                }
+              ],
+              "subtotalCad": 5022.23,
+              "gratuitiesCad": 441,
+              "bookingNumber": "69536080"
+            },
+            {
+              "cabinNumber": "12227",
+              "subtotalCad": 4650.82,
+              "gratuitiesCad": 294,
+              "totalCad": 4944.82,
+              "paidCad": 400,
+              "balanceCad": 4544.82,
+              "paymentDeadlines": [
+                {
+                  "label": "Pago Inicial",
+                  "dueDate": "2026-01-31",
+                  "amountCad": 400,
+                  "status": "upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2027-09-01",
+                  "amountCad": 4544.82,
+                  "status": "upcoming"
+                }
+              ],
+              "bookingNumber": "69536081"
+            }
+          ],
+          "updatedAt": "2026-01-23T02:42:27.000Z"
+        }
+      },
+      {
+        "id": "fam004",
+        "data": {
+          "id": "fam004",
+          "groupId": "default",
+          "familyCode": "FAM004",
+          "displayName": "Familia López",
+          "email": "fam004@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A104",
+              "subtotalCad": 4307.73,
+              "gratuitiesCad": 646.16,
+              "totalCad": 4953.89,
+              "paidCad": 195.71,
+              "balanceCad": 4758.18,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1238.47,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1238.47,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2476.95,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A104"
+          ],
+          "subtotalCadGlobal": 4307.73,
+          "gratuitiesCadGlobal": 646.16,
+          "totalCadGlobal": 4953.89,
+          "paidCadGlobal": 195.71,
+          "balanceCadGlobal": 4758.18,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam005",
+        "data": {
+          "id": "fam005",
+          "groupId": "default",
+          "familyCode": "FAM005",
+          "displayName": "Familia González",
+          "email": "fam005@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A105",
+              "subtotalCad": 3951.33,
+              "gratuitiesCad": 592.7,
+              "totalCad": 4544.03,
+              "paidCad": 1629.2,
+              "balanceCad": 2914.83,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1136.01,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1136.01,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2272.02,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A105"
+          ],
+          "subtotalCadGlobal": 3951.33,
+          "gratuitiesCadGlobal": 592.7,
+          "totalCadGlobal": 4544.03,
+          "paidCadGlobal": 1629.2,
+          "balanceCadGlobal": 2914.83,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam006",
+        "data": {
+          "id": "fam006",
+          "groupId": "default",
+          "familyCode": "FAM006",
+          "displayName": "Familia Hernández",
+          "email": "fam006@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A106",
+              "subtotalCad": 3705.2,
+              "gratuitiesCad": 555.78,
+              "totalCad": 4260.98,
+              "paidCad": 1682.53,
+              "balanceCad": 2578.45,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1065.24,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1065.24,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2130.49,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A106"
+          ],
+          "subtotalCadGlobal": 3705.2,
+          "gratuitiesCadGlobal": 555.78,
+          "totalCadGlobal": 4260.98,
+          "paidCadGlobal": 1682.53,
+          "balanceCadGlobal": 2578.45,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam007",
+        "data": {
+          "id": "fam007",
+          "groupId": "default",
+          "familyCode": "FAM007",
+          "displayName": "Familia Pérez",
+          "email": "fam007@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A107",
+              "subtotalCad": 4437.61,
+              "gratuitiesCad": 665.64,
+              "totalCad": 5103.25,
+              "paidCad": 1357.78,
+              "balanceCad": 3745.47,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1275.81,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1275.81,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2551.63,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A107"
+          ],
+          "subtotalCadGlobal": 4437.61,
+          "gratuitiesCadGlobal": 665.64,
+          "totalCadGlobal": 5103.25,
+          "paidCadGlobal": 1357.78,
+          "balanceCadGlobal": 3745.47,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam008",
+        "data": {
+          "id": "fam008",
+          "groupId": "default",
+          "familyCode": "FAM008",
+          "displayName": "Familia Sánchez",
+          "email": "fam008@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A108",
+              "subtotalCad": 3812.97,
+              "gratuitiesCad": 571.95,
+              "totalCad": 4384.92,
+              "paidCad": 1233.21,
+              "balanceCad": 3151.71,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1096.23,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1096.23,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2192.46,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A108"
+          ],
+          "subtotalCadGlobal": 3812.97,
+          "gratuitiesCadGlobal": 571.95,
+          "totalCadGlobal": 4384.92,
+          "paidCadGlobal": 1233.21,
+          "balanceCadGlobal": 3151.71,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam009",
+        "data": {
+          "id": "fam009",
+          "groupId": "default",
+          "familyCode": "FAM009",
+          "displayName": "Familia Ramírez",
+          "email": "fam009@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A109",
+              "subtotalCad": 4372.86,
+              "gratuitiesCad": 655.93,
+              "totalCad": 5028.79,
+              "paidCad": 875.18,
+              "balanceCad": 4153.61,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1257.2,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1257.2,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2514.4,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A109"
+          ],
+          "subtotalCadGlobal": 4372.86,
+          "gratuitiesCadGlobal": 655.93,
+          "totalCadGlobal": 5028.79,
+          "paidCadGlobal": 875.18,
+          "balanceCadGlobal": 4153.61,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam010",
+        "data": {
+          "id": "fam010",
+          "groupId": "default",
+          "familyCode": "FAM010",
+          "displayName": "Familia Torres",
+          "email": "fam010@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A110",
+              "subtotalCad": 3790.75,
+              "gratuitiesCad": 568.61,
+              "totalCad": 4359.36,
+              "paidCad": 917.57,
+              "balanceCad": 3441.79,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1089.84,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1089.84,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2179.68,
+                  "status": "Upcoming"
+                }
+              ]
+            },
+            {
+              "cabinNumber": "A210",
+              "subtotalCad": 3644.39,
+              "gratuitiesCad": 546.66,
+              "totalCad": 4191.05,
+              "paidCad": 1170.14,
+              "balanceCad": 3020.91,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1047.76,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1047.76,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2095.53,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A110",
+            "A210"
+          ],
+          "subtotalCadGlobal": 7435.14,
+          "gratuitiesCadGlobal": 1115.27,
+          "totalCadGlobal": 8550.41,
+          "paidCadGlobal": 2087.71,
+          "balanceCadGlobal": 6462.7,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam011",
+        "data": {
+          "id": "fam011",
+          "groupId": "default",
+          "familyCode": "FAM011",
+          "displayName": "Familia Flores",
+          "email": "fam011@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A111",
+              "subtotalCad": 3684.65,
+              "gratuitiesCad": 552.7,
+              "totalCad": 4237.35,
+              "paidCad": 2451.5,
+              "balanceCad": 1785.85,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1059.34,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1059.34,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2118.68,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A111"
+          ],
+          "subtotalCadGlobal": 3684.65,
+          "gratuitiesCadGlobal": 552.7,
+          "totalCadGlobal": 4237.35,
+          "paidCadGlobal": 2451.5,
+          "balanceCadGlobal": 1785.85,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam012",
+        "data": {
+          "id": "fam012",
+          "groupId": "default",
+          "familyCode": "FAM012",
+          "displayName": "Familia Rivera",
+          "email": "fam012@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A112",
+              "subtotalCad": 4103.15,
+              "gratuitiesCad": 615.47,
+              "totalCad": 4718.62,
+              "paidCad": 2154.95,
+              "balanceCad": 2563.67,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1179.66,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1179.66,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2359.31,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A112"
+          ],
+          "subtotalCadGlobal": 4103.15,
+          "gratuitiesCadGlobal": 615.47,
+          "totalCadGlobal": 4718.62,
+          "paidCadGlobal": 2154.95,
+          "balanceCadGlobal": 2563.67,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam013",
+        "data": {
+          "id": "fam013",
+          "groupId": "default",
+          "familyCode": "FAM013",
+          "displayName": "Familia Gómez",
+          "email": "fam013@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A113",
+              "subtotalCad": 3617.41,
+              "gratuitiesCad": 542.61,
+              "totalCad": 4160.02,
+              "paidCad": 1614.87,
+              "balanceCad": 2545.15,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1040.01,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1040.01,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2080.01,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A113"
+          ],
+          "subtotalCadGlobal": 3617.41,
+          "gratuitiesCadGlobal": 542.61,
+          "totalCadGlobal": 4160.02,
+          "paidCadGlobal": 1614.87,
+          "balanceCadGlobal": 2545.15,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam014",
+        "data": {
+          "id": "fam014",
+          "groupId": "default",
+          "familyCode": "FAM014",
+          "displayName": "Familia Díaz",
+          "email": "fam014@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A114",
+              "subtotalCad": 4485.21,
+              "gratuitiesCad": 672.78,
+              "totalCad": 5157.99,
+              "paidCad": 1644.3,
+              "balanceCad": 3513.69,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1289.5,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1289.5,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2579,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A114"
+          ],
+          "subtotalCadGlobal": 4485.21,
+          "gratuitiesCadGlobal": 672.78,
+          "totalCadGlobal": 5157.99,
+          "paidCadGlobal": 1644.3,
+          "balanceCadGlobal": 3513.69,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam015",
+        "data": {
+          "id": "fam015",
+          "groupId": "default",
+          "familyCode": "FAM015",
+          "displayName": "Familia Cruz",
+          "email": "fam015@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A115",
+              "subtotalCad": 3768.36,
+              "gratuitiesCad": 565.25,
+              "totalCad": 4333.61,
+              "paidCad": 2193.03,
+              "balanceCad": 2140.58,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1083.4,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1083.4,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2166.8,
+                  "status": "Upcoming"
+                }
+              ]
+            },
+            {
+              "cabinNumber": "A215",
+              "subtotalCad": 4346.92,
+              "gratuitiesCad": 652.04,
+              "totalCad": 4998.96,
+              "paidCad": 1397.57,
+              "balanceCad": 3601.39,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1249.74,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1249.74,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2499.48,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A115",
+            "A215"
+          ],
+          "subtotalCadGlobal": 8115.28,
+          "gratuitiesCadGlobal": 1217.29,
+          "totalCadGlobal": 9332.57,
+          "paidCadGlobal": 3590.6,
+          "balanceCadGlobal": 5741.97,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam016",
+        "data": {
+          "id": "fam016",
+          "groupId": "default",
+          "familyCode": "FAM016",
+          "displayName": "Familia Morales",
+          "email": "fam016@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A116",
+              "subtotalCad": 4370.8,
+              "gratuitiesCad": 655.62,
+              "totalCad": 5026.42,
+              "paidCad": 1638.98,
+              "balanceCad": 3387.44,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1256.61,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1256.61,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2513.21,
+                  "status": "Upcoming"
+                }
+              ]
+            },
+            {
+              "cabinNumber": "A216",
+              "subtotalCad": 3973.23,
+              "gratuitiesCad": 595.98,
+              "totalCad": 4569.21,
+              "paidCad": 1184.44,
+              "balanceCad": 3384.77,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1142.3,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1142.3,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2284.61,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A116",
+            "A216"
+          ],
+          "subtotalCadGlobal": 8344.03,
+          "gratuitiesCadGlobal": 1251.6,
+          "totalCadGlobal": 9595.63,
+          "paidCadGlobal": 2823.42,
+          "balanceCadGlobal": 6772.21,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam017",
+        "data": {
+          "id": "fam017",
+          "groupId": "default",
+          "familyCode": "FAM017",
+          "displayName": "Familia Reyes",
+          "email": "fam017@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A117",
+              "subtotalCad": 3617.41,
+              "gratuitiesCad": 542.61,
+              "totalCad": 4160.02,
+              "paidCad": 1586.25,
+              "balanceCad": 2573.77,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1040.01,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1040.01,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2080.01,
+                  "status": "Upcoming"
+                }
+              ]
+            },
+            {
+              "cabinNumber": "A217",
+              "subtotalCad": 3573.49,
+              "gratuitiesCad": 536.02,
+              "totalCad": 4109.51,
+              "paidCad": 1890.39,
+              "balanceCad": 2219.12,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1027.38,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1027.38,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2054.76,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A117",
+            "A217"
+          ],
+          "subtotalCadGlobal": 7190.9,
+          "gratuitiesCadGlobal": 1078.63,
+          "totalCadGlobal": 8269.53,
+          "paidCadGlobal": 3476.64,
+          "balanceCadGlobal": 4792.89,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam018",
+        "data": {
+          "id": "fam018",
+          "groupId": "default",
+          "familyCode": "FAM018",
+          "displayName": "Familia Jiménez",
+          "email": "fam018@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A118",
+              "subtotalCad": 4438.89,
+              "gratuitiesCad": 665.83,
+              "totalCad": 5104.72,
+              "paidCad": 1353.07,
+              "balanceCad": 3751.65,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1276.18,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1276.18,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2552.36,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A118"
+          ],
+          "subtotalCadGlobal": 4438.89,
+          "gratuitiesCadGlobal": 665.83,
+          "totalCadGlobal": 5104.72,
+          "paidCadGlobal": 1353.07,
+          "balanceCadGlobal": 3751.65,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam019",
+        "data": {
+          "id": "fam019",
+          "groupId": "default",
+          "familyCode": "FAM019",
+          "displayName": "Familia Ruiz",
+          "email": "fam019@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A119",
+              "subtotalCad": 3745.49,
+              "gratuitiesCad": 561.82,
+              "totalCad": 4307.31,
+              "paidCad": 2305.97,
+              "balanceCad": 2001.34,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1076.83,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1076.83,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2153.66,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A119"
+          ],
+          "subtotalCadGlobal": 3745.49,
+          "gratuitiesCadGlobal": 561.82,
+          "totalCadGlobal": 4307.31,
+          "paidCadGlobal": 2305.97,
+          "balanceCadGlobal": 2001.34,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam020",
+        "data": {
+          "id": "fam020",
+          "groupId": "default",
+          "familyCode": "FAM020",
+          "displayName": "Familia Álvarez",
+          "email": "fam020@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A120",
+              "subtotalCad": 3722.72,
+              "gratuitiesCad": 558.41,
+              "totalCad": 4281.13,
+              "paidCad": 2402,
+              "balanceCad": 1879.13,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1070.28,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1070.28,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2140.57,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A120"
+          ],
+          "subtotalCadGlobal": 3722.72,
+          "gratuitiesCadGlobal": 558.41,
+          "totalCadGlobal": 4281.13,
+          "paidCadGlobal": 2402,
+          "balanceCadGlobal": 1879.13,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam021",
+        "data": {
+          "id": "fam021",
+          "groupId": "default",
+          "familyCode": "FAM021",
+          "displayName": "Familia Romero",
+          "email": "fam021@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A121",
+              "subtotalCad": 3653.97,
+              "gratuitiesCad": 548.1,
+              "totalCad": 4202.07,
+              "paidCad": 2485.73,
+              "balanceCad": 1716.34,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1050.52,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1050.52,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2101.04,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A121"
+          ],
+          "subtotalCadGlobal": 3653.97,
+          "gratuitiesCadGlobal": 548.1,
+          "totalCadGlobal": 4202.07,
+          "paidCadGlobal": 2485.73,
+          "balanceCadGlobal": 1716.34,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam022",
+        "data": {
+          "id": "fam022",
+          "groupId": "default",
+          "familyCode": "FAM022",
+          "displayName": "Familia Méndez",
+          "email": "fam022@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A122",
+              "subtotalCad": 3790.81,
+              "gratuitiesCad": 568.62,
+              "totalCad": 4359.43,
+              "paidCad": 1238.26,
+              "balanceCad": 3121.17,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1089.86,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1089.86,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2179.72,
+                  "status": "Upcoming"
+                }
+              ]
+            },
+            {
+              "cabinNumber": "A222",
+              "subtotalCad": 4215.75,
+              "gratuitiesCad": 632.36,
+              "totalCad": 4848.11,
+              "paidCad": 1610.55,
+              "balanceCad": 3237.56,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1212.03,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1212.03,
+                  "status": "Upcoming"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2424.05,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A122",
+            "A222"
+          ],
+          "subtotalCadGlobal": 8006.56,
+          "gratuitiesCadGlobal": 1200.98,
+          "totalCadGlobal": 9207.54,
+          "paidCadGlobal": 2848.81,
+          "balanceCadGlobal": 6358.73,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam023",
+        "data": {
+          "id": "fam023",
+          "groupId": "default",
+          "familyCode": "FAM023",
+          "displayName": "Familia Castro",
+          "email": "fam023@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A123",
+              "subtotalCad": 4157.53,
+              "gratuitiesCad": 623.63,
+              "totalCad": 4781.16,
+              "paidCad": 379.21,
+              "balanceCad": 4401.95,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1195.29,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1195.29,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2390.58,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A123"
+          ],
+          "subtotalCadGlobal": 4157.53,
+          "gratuitiesCadGlobal": 623.63,
+          "totalCadGlobal": 4781.16,
+          "paidCadGlobal": 379.21,
+          "balanceCadGlobal": 4401.95,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam024",
+        "data": {
+          "id": "fam024",
+          "groupId": "default",
+          "familyCode": "FAM024",
+          "displayName": "Familia Vargas",
+          "email": "fam024@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A124",
+              "subtotalCad": 4157.38,
+              "gratuitiesCad": 623.61,
+              "totalCad": 4780.99,
+              "paidCad": 421.55,
+              "balanceCad": 4359.44,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1195.25,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1195.25,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2390.5,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A124"
+          ],
+          "subtotalCadGlobal": 4157.38,
+          "gratuitiesCadGlobal": 623.61,
+          "totalCadGlobal": 4780.99,
+          "paidCadGlobal": 421.55,
+          "balanceCadGlobal": 4359.44,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam025",
+        "data": {
+          "id": "fam025",
+          "groupId": "default",
+          "familyCode": "FAM025",
+          "displayName": "Familia Ortiz",
+          "email": "fam025@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A125",
+              "subtotalCad": 4071.02,
+              "gratuitiesCad": 610.65,
+              "totalCad": 4681.67,
+              "paidCad": 2706.96,
+              "balanceCad": 1974.71,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1170.42,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1170.42,
+                  "status": "Paid"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2340.84,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A125"
+          ],
+          "subtotalCadGlobal": 4071.02,
+          "gratuitiesCadGlobal": 610.65,
+          "totalCadGlobal": 4681.67,
+          "paidCadGlobal": 2706.96,
+          "balanceCadGlobal": 1974.71,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      },
+      {
+        "id": "fam026",
+        "data": {
+          "id": "fam026",
+          "groupId": "default",
+          "familyCode": "FAM026",
+          "displayName": "Familia Silva",
+          "email": "fam026@example.com",
+          "cabinAccounts": [
+            {
+              "cabinNumber": "A126",
+              "subtotalCad": 4398.15,
+              "gratuitiesCad": 659.72,
+              "totalCad": 5057.87,
+              "paidCad": 396.91,
+              "balanceCad": 4660.96,
+              "paymentDeadlines": [
+                {
+                  "label": "Depósito Inicial",
+                  "dueDate": "2026-01-15",
+                  "amountCad": 1264.47,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Segundo Pago",
+                  "dueDate": "2026-03-15",
+                  "amountCad": 1264.47,
+                  "status": "Overdue"
+                },
+                {
+                  "label": "Pago Final",
+                  "dueDate": "2026-05-15",
+                  "amountCad": 2528.94,
+                  "status": "Upcoming"
+                }
+              ]
+            }
+          ],
+          "cabinNumbers": [
+            "A126"
+          ],
+          "subtotalCadGlobal": 4398.15,
+          "gratuitiesCadGlobal": 659.72,
+          "totalCadGlobal": 5057.87,
+          "paidCadGlobal": 396.91,
+          "balanceCadGlobal": 4660.96,
+          "updatedAt": "2026-01-21T17:04:20.000Z"
+        }
+      }
+    ],
+    "users": [
+      {
+        "id": "0ErDBoFUx3eelctMDQqxLVkmrmF3",
+        "data": {
+          "email": "fam023@example.com",
+          "role": "family",
+          "familyId": "fam023"
+        }
+      },
+      {
+        "id": "0m9AMOmQQUTx3Wsz4o2eDTMsYkx1",
+        "data": {
+          "email": "fam010@example.com",
+          "role": "family",
+          "familyId": "fam010"
+        }
+      },
+      {
+        "id": "1P1RUOLasFSi6Y7UpE3BqbtMkvv1",
+        "data": {
+          "role": "admin",
+          "email": "dplotnik@travelpoint.mx",
+          "updatedAt": "2026-01-21T18:51:52.000Z"
+        }
+      },
+      {
+        "id": "6Vf3SI6rhoV26IaJ3Q0gm1VfuNg1",
+        "data": {
+          "email": "fam007@example.com",
+          "role": "family",
+          "familyId": "fam007"
+        }
+      },
+      {
+        "id": "Dwnmup5IC2Mx4BFXTaVjg3mZc7W2",
+        "data": {
+          "email": "fam006@example.com",
+          "role": "family",
+          "familyId": "fam006"
+        }
+      },
+      {
+        "id": "EvMRiN3BTnh5078SNU4qfvXgZv22",
+        "data": {
+          "email": "fam019@example.com",
+          "role": "family",
+          "familyId": "fam019"
+        }
+      },
+      {
+        "id": "FfXFVvWOZFShiYC925PkiNmK6kU2",
+        "data": {
+          "email": "fam025@example.com",
+          "role": "family",
+          "familyId": "fam025"
+        }
+      },
+      {
+        "id": "HVSeayzI1jT7VXuq6E6QXYEjhTr2",
+        "data": {
+          "email": "demo@travelpoint.com",
+          "role": "family",
+          "familyId": "MrcnJjPxy90AKQ5unhLX",
+          "createdAt": "2026-01-22T05:51:28.000Z",
+          "updatedAt": "2026-01-22T05:51:28.000Z"
+        }
+      },
+      {
+        "id": "JYf4ffazR9fSk8KhqgleCEthKpj2",
+        "data": {
+          "email": "dplotnik@trevelo.com",
+          "role": "admin"
+        }
+      },
+      {
+        "id": "KNIDqeZsA6dVKMo4eC3abfQVMQ23",
+        "data": {
+          "email": "fcomurra@hotmail.com",
+          "role": "family",
+          "familyId": "fam003",
+          "createdAt": "2026-01-23T02:57:55.000Z"
+        }
+      },
+      {
+        "id": "KVmASP4aT1bG55Zm2lYM3tTBBcF3",
+        "data": {
+          "email": "fam004@example.com",
+          "role": "family",
+          "familyId": "fam004"
+        }
+      },
+      {
+        "id": "KWWmzOQVc2eXWuHroj0a9pQdXZ63",
+        "data": {
+          "email": "fam014@example.com",
+          "role": "family",
+          "familyId": "fam014"
+        }
+      },
+      {
+        "id": "KjQ7gf8oPvbOtQ6qaQUUAOlQBfV2",
+        "data": {
+          "email": "fam024@example.com",
+          "role": "family",
+          "familyId": "fam024"
+        }
+      },
+      {
+        "id": "LG4MZAAC8GgBbdSEuuIZ53SizSf2",
+        "data": {
+          "email": "fam026@example.com",
+          "role": "family",
+          "familyId": "fam026"
+        }
+      },
+      {
+        "id": "N4pNu8UX9jTW7W7h3O1on5Ziumd2",
+        "data": {
+          "email": "fam017@example.com",
+          "role": "family",
+          "familyId": "fam017"
+        }
+      },
+      {
+        "id": "ODOPSt0lWnWq6xDZOJQ1hrohuX53",
+        "data": {
+          "email": "fam027@example.com",
+          "role": "family",
+          "familyId": "fam027"
+        }
+      },
+      {
+        "id": "OumR1qU7iBRFLh6JEtJBKPkKMyv2",
+        "data": {
+          "email": "fam021@example.com",
+          "role": "family",
+          "familyId": "fam021"
+        }
+      },
+      {
+        "id": "RBWB4hP50JX2tsgmYKhnriIc7ff2",
+        "data": {
+          "email": "fam016@example.com",
+          "role": "family",
+          "familyId": "fam016"
+        }
+      },
+      {
+        "id": "UNB4QqnDFZRV183ew6pMRQhDJVi2",
+        "data": {
+          "email": "dplotnik@trevelo.com",
+          "role": "admin"
+        }
+      },
+      {
+        "id": "W46YYrkZK0ROQ29gABv06X4q9cG2",
+        "data": {
+          "email": "fam001@example.com",
+          "role": "family",
+          "familyId": "fam001"
+        }
+      },
+      {
+        "id": "YeX9n0yz81M1mDiPbur7qU18CsB3",
+        "data": {
+          "email": "fam020@example.com",
+          "role": "family",
+          "familyId": "fam020"
+        }
+      },
+      {
+        "id": "ZQ3Fdxt0yGhRSQ0NJLvJzBQGst02",
+        "data": {
+          "email": "fam018@example.com",
+          "role": "family",
+          "familyId": "fam018"
+        }
+      },
+      {
+        "id": "e7GLz7OJJZSjCFExZEOh69jkDkh1",
+        "data": {
+          "email": "fam011@example.com",
+          "role": "family",
+          "familyId": "fam011"
+        }
+      },
+      {
+        "id": "kZET8WAO49PSsGM9Fb8jdjYcy043",
+        "data": {
+          "email": "fam005@example.com",
+          "role": "family",
+          "familyId": "fam005"
+        }
+      },
+      {
+        "id": "pLARStj6yfOnHeTpCjwJ3NnGcOX2",
+        "data": {
+          "email": "fam003@example.com",
+          "role": "family",
+          "familyId": "fam003"
+        }
+      },
+      {
+        "id": "q8Xc4Cn0TOYr9ZiTaj24ZrtLlM92",
+        "data": {
+          "email": "fam002@example.com",
+          "role": "family",
+          "familyId": "fam002"
+        }
+      },
+      {
+        "id": "rBhCa8dGIphdQVf1RESQHgGUmVB3",
+        "data": {
+          "email": "fam013@example.com",
+          "role": "family",
+          "familyId": "fam013"
+        }
+      },
+      {
+        "id": "rfXwJzuItxZccTIA7lg2fqZi87I2",
+        "data": {
+          "email": "fam015@example.com",
+          "role": "family",
+          "familyId": "fam015"
+        }
+      },
+      {
+        "id": "vpDRtb57DRUgGvbDmNDPeD9u3cJ2",
+        "data": {
+          "email": "fam022@example.com",
+          "role": "family",
+          "familyId": "fam022"
+        }
+      },
+      {
+        "id": "w31qyfaHyeVKwNe9PTdOjWrkD9s2",
+        "data": {
+          "role": "admin",
+          "email": "dplotnik@trevello.com",
+          "createdAt": "2026-01-21T16:47:27.000Z"
+        }
+      },
+      {
+        "id": "xO6nBmjWhJN86INHlPi90jbT22O2",
+        "data": {
+          "email": "fam009@example.com",
+          "role": "family",
+          "familyId": "fam009"
+        }
+      },
+      {
+        "id": "xlGOzICKF1cGLHVTghi4AhAY9Lt2",
+        "data": {
+          "email": "fam012@example.com",
+          "role": "family",
+          "familyId": "fam012"
+        }
+      },
+      {
+        "id": "y42oGD3k20g9SOqqHZGDRv8mlyD3",
+        "data": {
+          "role": "admin",
+          "email": "admin@trevelo.com",
+          "createdAt": "2026-01-21T16:38:15.000Z"
+        }
+      },
+      {
+        "id": "yZmBRqyfuEefn2E7Jh81Ej2YwPV2",
+        "data": {
+          "email": "fam008@example.com",
+          "role": "family",
+          "familyId": "fam008"
+        }
+      }
+    ],
+    "admins": [
+      {
+        "id": "1P1RUOLasFSi6Y7UpE3BqbtMkvv1",
+        "data": {
+          "email": "dplotnik@travelpoint.mx",
+          "active": true
+        }
+      },
+      {
+        "id": "JYf4ffazR9fSk8KhqgleCEthKpj2",
+        "data": {
+          "email": "dplotnik@trevelo.com",
+          "createdAt": "2026-01-21T19:29:22.000Z"
+        }
+      },
+      {
+        "id": "UNB4QqnDFZRV183ew6pMRQhDJVi2",
+        "data": {
+          "email": "dplotnik@trevelo.com",
+          "createdAt": "2026-01-21T17:17:18.000Z"
+        }
+      }
+    ],
+    "payments": [],
+    "paymentRequests": []
+  }
+}

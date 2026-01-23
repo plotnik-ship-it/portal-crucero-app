@@ -6,46 +6,74 @@ import PaymentRequestsList from './PaymentRequestsList';
 import GroupConfig from './GroupConfig';
 import BulkFamilyImport from './BulkFamilyImport';
 import CreateFamilyModal from './CreateFamilyModal';
+import GroupSelector from './GroupSelector';
+import CreateGroupModal from './CreateGroupModal';
+import { useGroup } from '../../contexts/GroupContext';
 import { getGroupData } from '../../services/firestore';
 import { formatDate } from '../../utils/formatters';
 
 const AdminDashboard = () => {
+    const { selectedGroup, refreshGroups } = useGroup();
     const [selectedFamily, setSelectedFamily] = useState(null);
     const [activeTab, setActiveTab] = useState('families');
     const [refreshKey, setRefreshKey] = useState(0);
     const [groupInfo, setGroupInfo] = useState(null);
     const [showBulkImport, setShowBulkImport] = useState(false);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
 
     useEffect(() => {
         const fetchGroup = async () => {
+            if (!selectedGroup?.id) {
+                setGroupInfo(null);
+                return;
+            }
             try {
-                const data = await getGroupData('default');
+                const data = await getGroupData(selectedGroup.id);
                 setGroupInfo(data);
             } catch (err) {
                 console.error("Error fetching group info:", err);
             }
         };
         fetchGroup();
-    }, [refreshKey]);
+    }, [selectedGroup, refreshKey]);
 
     const handleUpdate = () => {
         setRefreshKey(prev => prev + 1);
     };
 
+    const handleGroupCreated = async () => {
+        await refreshGroups();
+        handleUpdate();
+    };
+
     return (
         <Layout>
             <div className="container page">
-                <div className="page-header flex justify-between items-end">
-                    <div>
-                        <h1 className="page-title">Panel de Administración</h1>
-                        <p className="page-subtitle">Gestión de familias y solicitudes de pago</p>
+                <div className="page-header">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                        <div>
+                            <h1 className="page-title">Panel de Administración</h1>
+                            <p className="page-subtitle">Gestión de familias y solicitudes de pago</p>
+                        </div>
+                        <GroupSelector onCreateGroup={() => setShowCreateGroupModal(true)} />
                     </div>
-                    {groupInfo && (
-                        <div className="text-right bg-light p-sm rounded border border-light shadow-sm">
-                            <p className="text-xs text-muted uppercase font-bold tracking-wider">Crucero Activo</p>
-                            <p className="font-bold text-primary">{groupInfo.shipName || 'Sin barco'}</p>
-                            <p className="text-small">📅 {formatDate(groupInfo.sailDate)}</p>
+
+                    {selectedGroup && groupInfo && (
+                        <div className="bg-light p-sm rounded border border-light shadow-sm" style={{ marginBottom: '1rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div>
+                                    <p className="text-xs text-muted uppercase font-bold tracking-wider">Crucero Activo</p>
+                                    <p className="font-bold text-primary">{groupInfo.shipName || 'Sin barco'}</p>
+                                    <p className="text-small">📅 {formatDate(groupInfo.sailDate)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {!selectedGroup && (
+                        <div className="alert alert-info" style={{ marginBottom: '1rem' }}>
+                            <p>👋 Selecciona un grupo de crucero para comenzar, o crea uno nuevo.</p>
                         </div>
                     )}
                 </div>
@@ -81,7 +109,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Tab Content */}
-                {activeTab === 'families' && (
+                {activeTab === 'families' && selectedGroup && (
                     <>
                         <div className="mb-md flex justify-end gap-sm">
                             <button
@@ -98,7 +126,8 @@ const AdminDashboard = () => {
                             </button>
                         </div>
                         <FamilyList
-                            key={`families-${refreshKey}`}
+                            key={`families-${refreshKey}-${selectedGroup.id}`}
+                            groupId={selectedGroup.id}
                             onSelectFamily={setSelectedFamily}
                         />
                     </>
@@ -111,8 +140,8 @@ const AdminDashboard = () => {
                     />
                 )}
 
-                {activeTab === 'config' && (
-                    <GroupConfig groupId="default" />
+                {activeTab === 'config' && selectedGroup && (
+                    <GroupConfig groupId={selectedGroup.id} />
                 )}
 
                 {/* Family Detail Modal */}
@@ -137,6 +166,15 @@ const AdminDashboard = () => {
                     <CreateFamilyModal
                         onClose={() => setShowCreateModal(false)}
                         onSuccess={handleUpdate}
+                    />
+                )}
+
+                {/* Create Group Modal */}
+                {showCreateGroupModal && (
+                    <CreateGroupModal
+                        isOpen={showCreateGroupModal}
+                        onClose={() => setShowCreateGroupModal(false)}
+                        onGroupCreated={handleGroupCreated}
                     />
                 )}
             </div>
