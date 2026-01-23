@@ -251,8 +251,9 @@ const PaymentRequestForm = ({ familyData, exchangeRate, onSuccess, defaultNote =
         return (
             <Card>
                 <div className="alert alert-success">
-                    <p className="font-semibold">✅ Solicitud Enviada</p>
-                    <p>Envíanos tu información, aplicaremos el pago a la naviera y te confirmaremos en cuanto quede listo.</p>
+                    <p className="font-semibold">✅ Solicitud Enviada Exitosamente</p>
+                    <p>Hemos recibido tu solicitud. Aplicaremos el pago a tu reservación con la naviera y te confirmaremos cuando esté procesado.</p>
+                    <p className="text-small mt-sm">Podrás ver tu balance actualizado aquí una vez que se confirme el pago.</p>
                 </div>
             </Card>
         );
@@ -262,16 +263,16 @@ const PaymentRequestForm = ({ familyData, exchangeRate, onSuccess, defaultNote =
         return (
             <Card>
                 <div className="card-body text-center">
-                    <h3 className="card-title mb-md">¿Deseas realizar un adelanto?</h3>
+                    <h3 className="card-title mb-md">¿Deseas realizar un pago adelantado?</h3>
                     <p className="text-muted mb-lg">
-                        Solicita un cargo a tu cuenta. Te contactaremos para procesarlo de forma segura con la naviera.
+                        Solicita un pago a tu reservación. Una vez aplicado, te confirmaremos y podrás ver tu balance actualizado aquí.
                     </p>
                     <button
                         onClick={() => setShowForm(true)}
                         className="btn btn-primary btn-lg"
                         disabled={familyData.balanceCadGlobal <= 0}
                     >
-                        💳 Solicitar Adelanto
+                        💳 Solicitar Pago Adelantado
                     </button>
 
                     {familyData.balanceCadGlobal <= 0 && (
@@ -287,9 +288,9 @@ const PaymentRequestForm = ({ familyData, exchangeRate, onSuccess, defaultNote =
     return (
         <Card>
             <div className="card-header">
-                <h3 className="card-title">💳 Solicitud de Adelanto</h3>
+                <h3 className="card-title">💳 Solicitud de Pago Adelantado</h3>
                 <p className="card-subtitle">
-                    Completa el formulario para solicitar un cargo a cuenta
+                    Completa el formulario para solicitar un pago a tu reservación
                 </p>
             </div>
 

@@ -2,7 +2,10 @@ import {
     signInWithEmailAndPassword,
     signOut as firebaseSignOut,
     sendPasswordResetEmail,
-    onAuthStateChanged
+    onAuthStateChanged,
+    updatePassword,
+    EmailAuthProvider,
+    reauthenticateWithCredential
 } from 'firebase/auth';
 import {
     doc,
@@ -44,8 +47,21 @@ export const signOut = async () => {
  */
 export const resetPassword = async (email) => {
     try {
-        await sendPasswordResetEmail(auth, email);
+        // Configuration for the password reset email
+        const actionCodeSettings = {
+            // URL to redirect to after password reset
+            url: window.location.origin + '/login',
+            handleCodeInApp: false,
+        };
+
+        console.log('🔐 Sending password reset email to:', email);
+        console.log('🔐 Auth domain:', auth.config.authDomain);
+
+        await sendPasswordResetEmail(auth, email, actionCodeSettings);
+
+        console.log('✅ Password reset email sent successfully');
     } catch (error) {
+        console.error('❌ Password reset error:', error.code, error.message);
         throw new Error(getAuthErrorMessage(error.code));
     }
 };
@@ -139,6 +155,32 @@ export const getUserData = async (uid, forceEmail = null) => {
  */
 export const onAuthChange = (callback) => {
     return onAuthStateChanged(auth, callback);
+};
+
+/**
+ * Change user password
+ * Requires current password for reauthentication
+ */
+export const changePassword = async (currentPassword, newPassword) => {
+    try {
+        const user = auth.currentUser;
+
+        if (!user || !user.email) {
+            throw new Error('No hay usuario autenticado');
+        }
+
+        // Reauthenticate user before changing password
+        const credential = EmailAuthProvider.credential(user.email, currentPassword);
+        await reauthenticateWithCredential(user, credential);
+
+        // Update password
+        await updatePassword(user, newPassword);
+
+        console.log('✅ Password changed successfully');
+    } catch (error) {
+        console.error('❌ Password change error:', error.code, error.message);
+        throw new Error(getAuthErrorMessage(error.code));
+    }
 };
 
 /**

@@ -10,6 +10,7 @@ import CostBreakdown from './CostBreakdown';
 import ItineraryTable from './ItineraryTable';
 import PaymentHistory from './PaymentHistory';
 import PaymentRequestForm from './PaymentRequestForm';
+import ChangePasswordModal from './ChangePasswordModal';
 
 const FamilyDashboard = () => {
     const { user } = useAuth();
@@ -25,6 +26,7 @@ const FamilyDashboard = () => {
 
     const { rate: exchangeRate } = useExchangeRate(familyData?.groupId);
     const [activeTab, setActiveTab] = useState('global');
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
 
     if (loading) {
         return (
@@ -91,13 +93,22 @@ const FamilyDashboard = () => {
         <Layout>
             <div className="container page">
                 {/* Welcome Header */}
-                <div className="page-header">
-                    <h1 className="page-title">
-                        Bienvenido, {familyData.displayName}
-                    </h1>
-                    <p className="page-subtitle">
-                        Código de Familia: <strong>{familyData.familyCode}</strong>
-                    </p>
+                <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <h1 className="page-title">
+                            Bienvenido, {familyData.displayName}
+                        </h1>
+                        <p className="page-subtitle">
+                            Código de Familia: <strong>{familyData.familyCode}</strong>
+                        </p>
+                    </div>
+                    <button
+                        className="btn btn-outline"
+                        onClick={() => setShowPasswordModal(true)}
+                        title="Cambiar contraseña"
+                    >
+                        🔐 Cambiar Contraseña
+                    </button>
                 </div>
 
                 {/* Tabs */}
@@ -203,6 +214,12 @@ const FamilyDashboard = () => {
                         </div>
                     )}
                 </div>
+
+                {/* Change Password Modal */}
+                <ChangePasswordModal
+                    isOpen={showPasswordModal}
+                    onClose={() => setShowPasswordModal(false)}
+                />
             </div>
         </Layout>
     );
