@@ -43,6 +43,15 @@ const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
                         className="modal-close"
                         onClick={onClose}
                         disabled={loading}
+                        style={{
+                            fontSize: '1.5rem',
+                            width: '2rem',
+                            height: '2rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer'
+                        }}
                     >
                         ×
                     </button>
