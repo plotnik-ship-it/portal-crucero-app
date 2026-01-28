@@ -28,6 +28,7 @@ const es = {
             colors: 'Colores',
             brandColors: 'Colores de Marca',
             locale: 'es-MX',
+            backToHome: 'Volver al Inicio',
         },
 
         // Login
@@ -548,6 +549,33 @@ const es = {
             errorExists: 'Ya existe una agencia con ID "{{id}}"',
         },
 
+        // SuperAdmin Panel
+        superadmin: {
+            title: 'Panel de SuperAdmin',
+            subtitle: 'Gestión global de agencias y configuraciones',
+            allAgencies: 'Todas las Agencias',
+            active: 'Activas',
+            suspended: 'Suspendidas',
+            agencyName: 'Nombre de Agencia',
+            agencyId: 'ID de Agencia',
+            billingEmail: 'Email de Facturación',
+            betaStatus: 'Estado Beta',
+            status: 'Estado',
+            suspend: 'Suspender',
+            reactivate: 'Reactivar',
+            suspendSuccess: 'Agencia suspendida exitosamente',
+            reactivateSuccess: 'Agencia reactivada exitosamente',
+            suspendAgency: 'Suspender Agencia',
+            suspendWarning: 'Al suspender esta agencia, todos sus usuarios serán bloqueados del acceso al portal.',
+            suspensionReason: 'Razón de Suspensión',
+            suspensionReasonPlaceholder: 'Ej: Falta de pago, violación de términos...',
+            confirmSuspend: 'Confirmar Suspensión',
+            reactivateAgency: 'Reactivar Agencia',
+            reactivateConfirm: '¿Estás seguro de reactivar esta agencia?',
+            confirmReactivate: 'Confirmar Reactivación',
+            noAgencies: 'No se encontraron agencias',
+        },
+
         // Pagos
         payment: {
             request: 'Solicitud de Pago',
@@ -969,6 +997,7 @@ const en = {
             colors: 'Colors',
             brandColors: 'Brand Colors',
             locale: 'en-CA',
+            backToHome: 'Back to Home',
         },
 
         // Login
@@ -1485,6 +1514,33 @@ const en = {
             deleted: 'Agency deleted successfully',
             errorRequired: 'ID, name and email are required',
             errorExists: 'Agency with ID "{{id}}" already exists',
+        },
+
+        // SuperAdmin Panel
+        superadmin: {
+            title: 'SuperAdmin Panel',
+            subtitle: 'Global agency management and settings',
+            allAgencies: 'All Agencies',
+            active: 'Active',
+            suspended: 'Suspended',
+            agencyName: 'Agency Name',
+            agencyId: 'Agency ID',
+            billingEmail: 'Billing Email',
+            betaStatus: 'Beta Status',
+            status: 'Status',
+            suspend: 'Suspend',
+            reactivate: 'Reactivate',
+            suspendSuccess: 'Agency suspended successfully',
+            reactivateSuccess: 'Agency reactivated successfully',
+            suspendAgency: 'Suspend Agency',
+            suspendWarning: 'By suspending this agency, all its users will be blocked from accessing the portal.',
+            suspensionReason: 'Suspension Reason',
+            suspensionReasonPlaceholder: 'E.g.: Non-payment, terms violation...',
+            confirmSuspend: 'Confirm Suspension',
+            reactivateAgency: 'Reactivate Agency',
+            reactivateConfirm: 'Are you sure you want to reactivate this agency?',
+            confirmReactivate: 'Confirm Reactivation',
+            noAgencies: 'No agencies found',
         },
 
         // Payments
