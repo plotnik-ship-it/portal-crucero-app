@@ -22,6 +22,10 @@ service cloud.firestore {
       return getUserData().role == 'admin';
     }
     
+    function isSuperAdmin() {
+      return getUserData().isSuperAdmin == true;
+    }
+    
     function belongsToUserAgency(data) {
       return data.agencyId == getUserAgencyId();
     }
@@ -176,19 +180,27 @@ service cloud.firestore {
     // ============================================
     
     match /agencies/{agencyId} {
-      // Users can only read their own agency
-      allow read: if isAuthenticated() && agencyId == getUserAgencyId();
+      // Users can read their own agency
+      // SuperAdmin can read ALL agencies
+      allow read: if isAuthenticated() && (
+        agencyId == getUserAgencyId() ||
+        isSuperAdmin()
+      );
       
       // Authenticated users can create an agency during signup
       // (This is needed for the gated signup flow)
       allow create: if isAuthenticated() && 
                        request.resource.data.ownerId == request.auth.uid;
       
-      // Only admins can update their own agency
-      // BUT they CANNOT update billing fields (only Cloud Functions can)
-      allow update: if isAuthenticated() && isAdmin() &&
-                       agencyId == getUserAgencyId() &&
-                       !request.resource.data.diff(resource.data).affectedKeys().hasAny(['billing']);
+      // Admins can update their own agency (cannot change billing)
+      // SuperAdmin can update ANY agency (for suspend/reactivate)
+      allow update: if isAuthenticated() && (
+        // Regular admin updating their own agency
+        (isAdmin() && agencyId == getUserAgencyId() &&
+         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['billing'])) ||
+        // SuperAdmin can update any agency
+        isSuperAdmin()
+      );
       
       // No one can delete agencies (use Admin SDK)
       allow delete: if false;
