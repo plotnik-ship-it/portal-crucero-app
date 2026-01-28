@@ -768,14 +768,28 @@ export const getAllBookingsByAgency = async (agencyId) => {
  */
 export const deleteGroup = async (groupId) => {
     try {
-        // 1. Check if group has bookings
-        const bookings = await getBookingsByGroup(groupId);
+        // 1. Get group document to retrieve agencyId
+        const groupRef = doc(db, 'groups', groupId);
+        const groupDoc = await getDoc(groupRef);
+
+        if (!groupDoc.exists()) {
+            throw new Error('Grupo no encontrado');
+        }
+
+        const groupData = groupDoc.data();
+        const agencyId = groupData.agencyId;
+
+        if (!agencyId) {
+            throw new Error('El grupo no tiene agencyId asociado');
+        }
+
+        // 2. Check if group has bookings
+        const bookings = await getBookingsByGroup(groupId, agencyId);
         if (bookings.length > 0) {
             throw new Error(`No se puede eliminar el grupo porque tiene ${bookings.length} reserva(s) asignada(s)`);
         }
 
-        // 2. Delete group document
-        const groupRef = doc(db, 'groups', groupId);
+        // 3. Delete group document
         await deleteDoc(groupRef);
 
         console.log(`✅ Group ${groupId} deleted successfully`);
