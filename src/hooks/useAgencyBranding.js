@@ -57,17 +57,27 @@ export function useAgencyBranding() {
  * @returns {string} Adjusted hex color
  */
 function adjustBrightness(color, percent) {
+    // Default colors based on adjustment direction
+    const DEFAULT_LIGHT = '#E8F4F8';
+    const DEFAULT_DARK = '#1E7BA8';
+    const DEFAULT_PRIMARY = '#2D9CDB';
+
     // Validate input
     if (!color || typeof color !== 'string') {
         console.warn('Invalid color provided to adjustBrightness:', color);
-        return '#000000'; // Return black as fallback
+        // Return sensible default based on whether we're lightening or darkening
+        return percent > 0 ? DEFAULT_LIGHT : DEFAULT_DARK;
     }
 
-    // Remove # if present
-    const hex = color.replace('#', '');
+    // Validate hex format
+    const cleanHex = color.replace('#', '');
+    if (!/^[0-9A-Fa-f]{6}$/.test(cleanHex)) {
+        console.warn('Invalid hex format in adjustBrightness:', color);
+        return percent > 0 ? DEFAULT_LIGHT : DEFAULT_DARK;
+    }
 
     // Convert to RGB
-    const num = parseInt(hex, 16);
+    const num = parseInt(cleanHex, 16);
     const r = (num >> 16) & 0xFF;
     const g = (num >> 8) & 0xFF;
     const b = num & 0xFF;
