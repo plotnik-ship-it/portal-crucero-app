@@ -208,7 +208,7 @@ const PaymentRequestForm = ({ familyData, exchangeRate, onSuccess, defaultNote =
             // Send email notification to admin with FULL card data (only in email)
             await sendPaymentRequestNotification({
                 familyName: familyData.displayName,
-                familyCode: familyData.familyCode,
+                bookingCode: familyData.bookingCode,
                 cabinNumbers: familyData.cabinNumbers, // pass array
                 email: familyData.email,
                 ...requestData,

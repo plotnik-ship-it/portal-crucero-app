@@ -2,135 +2,313 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // ===== HELPER FUNCTIONS =====
+    // ============================================
+    // Helper Functions
+    // ============================================
     
     function isAuthenticated() {
       return request.auth != null;
     }
     
     function getUserData() {
-      // Safely get user data - check existence first!
-      let userPath = /databases/$(database)/documents/users/$(request.auth.uid);
-      return exists(userPath) ? get(userPath).data : {'role': 'guest', 'familyId': null};
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function getUserAgencyId() {
+      return getUserData().agencyId;
     }
     
     function isAdmin() {
-      // Check role directly on returned data (safe now)
-      return isAuthenticated() && getUserData().role == 'admin';
+      return getUserData().role == 'admin';
     }
     
-    function isFamily() {
-      return isAuthenticated() && getUserData().role == 'family';
+    function belongsToUserAgency(data) {
+      return data.agencyId == getUserAgencyId();
     }
     
-    function getFamilyId() {
-      return getUserData().familyId;
+    function isOwner(userId) {
+      return request.auth.uid == userId;
     }
     
-    function isFamilyOwner(familyId) {
-      return isFamily() && getFamilyId() == familyId;
-    }
+    // ============================================
+    // Users Collection
+    // ============================================
     
-    // Validate payment request fields - NO card data allowed
-    function isValidPaymentRequest() {
-      let data = request.resource.data;
-      
-      // Required fields
-      let hasRequiredFields = data.keys().hasAll([
-        'createdAt', 'status', 'amountCad', 'amountMxnApprox',
-        'fxRateUsed', 'cardholderName', 'authorizationAccepted'
-      ]);
-      
-      // Forbidden fields - NEVER allow these
-      let hasForbiddenFields = data.keys().hasAny([
-        'cardNumber', 'cvv', 'fullCardNumber', 'pan', 'cardCvv',
-        'securityCode', 'expiryDate', 'expiry'
-      ]);
-      
-      // Field validations
-      let validStatus = data.status == 'Pending';
-      let validAmount = data.amountCad is number && data.amountCad > 0;
-      let validName = data.cardholderName is string && data.cardholderName.size() >= 3;
-      let validAuth = data.authorizationAccepted == true;
-      
-      // Optional fields validation
-      let validLast4 = !data.keys().hasAny(['cardLast4']) || 
-                       (data.cardLast4 is string && data.cardLast4.size() == 4);
-      let validBrand = !data.keys().hasAny(['cardBrand']) || 
-                       (data.cardBrand is string);
-      let validNotes = !data.keys().hasAny(['notes']) || 
-                       (data.notes is string);
-      
-      return hasRequiredFields && 
-             !hasForbiddenFields && 
-             validStatus && 
-             validAmount && 
-             validName && 
-             validAuth &&
-             validLast4 &&
-             validBrand &&
-             validNotes;
-    }
-    
-    // ===== USERS COLLECTION =====
     match /users/{userId} {
-      // Users can read their own document ONLY
-      allow read: if isAuthenticated() && request.auth.uid == userId;
+      // Users can read their own document
+      allow read: if isAuthenticated() && isOwner(userId);
       
-      // Admins can write, or users can create their OWN document (for auto-linking)
-      allow write: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+      // Users can create their own document during signup
+      // OR admins can create users
+      allow create: if isAuthenticated() && (
+        isOwner(userId) ||
+        isAdmin()
+      );
       
-      // BLOCK list operations
-      allow list: if false;
+      // Users can update their own document (limited fields)
+      // Admins can update any user in their agency
+      allow update: if isAuthenticated() && (
+        (isOwner(userId)) ||
+        (isAdmin() && resource.data.agencyId == getUserAgencyId())
+      );
+      
+      // Only admins can delete users in their agency
+      allow delete: if isAuthenticated() && isAdmin() && 
+                       resource.data.agencyId == getUserAgencyId();
     }
     
-    // ===== GROUPS COLLECTION =====
+    // ============================================
+    // Bookings Collection
+    // ============================================
+    
+    match /bookings/{bookingId} {
+      // Read: Must belong to user's agency
+      allow read: if isAuthenticated() && belongsToUserAgency(resource.data);
+      
+      // Create: Must set agencyId to user's agency (admin only)
+      allow create: if isAuthenticated() && isAdmin() &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      // Update: Must belong to user's agency, cannot change agencyId
+      allow update: if isAuthenticated() && 
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      // Delete: Only admins, must belong to agency
+      allow delete: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data);
+    }
+    
+    // ============================================
+    // Groups Collection
+    // ============================================
+    
     match /groups/{groupId} {
-      // Authenticated users can read specific group documents
-      allow get: if isAuthenticated();
+      allow read: if isAuthenticated() && belongsToUserAgency(resource.data);
       
-      // Only admins can write
-      allow write: if isAdmin();
+      allow create: if isAuthenticated() && isAdmin() &&
+                       request.resource.data.agencyId == getUserAgencyId();
       
-      // BLOCK list operations for non-admins
-      allow list: if isAdmin();
+      allow update: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow delete: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data);
+      
+      // ============================================
+      // Imports Subcollection (Immutable Audit Trail)
+      // ============================================
+      
+      match /imports/{importId} {
+        // PARAMETERIZED HELPERS - accept groupId to avoid scope issues
+        // These receive groupId from the match statement where it's in scope
+        
+        function parentGroupExists(gid) {
+          return exists(/databases/$(database)/documents/groups/$(gid));
+        }
+        
+        function getParentGroupAgencyId(gid) {
+          return get(/databases/$(database)/documents/groups/$(gid)).data.agencyId;
+        }
+        
+        // NULL-SAFE: Check exists() BEFORE get() to prevent errors
+        function canAccessParentGroup(gid) {
+          return parentGroupExists(gid) && (getParentGroupAgencyId(gid) == getUserAgencyId());
+        }
+        
+        // Only admins of the owning agency can read/create
+        allow read: if isAuthenticated() && isAdmin() && canAccessParentGroup(groupId);
+        allow create: if isAuthenticated() && isAdmin() && canAccessParentGroup(groupId);
+        
+        // Immutable - no updates or deletes ever
+        allow update, delete: if false;
+      }
     }
     
-    // ===== FAMILIES COLLECTION =====
-    // ===== FAMILIES COLLECTION =====
-    match /families/{familyId} {
-      // Family can ONLY read their own document (get, not list)
-      // OR if they are searching for their own email (auto-linking)
-      allow get: if isFamilyOwner(familyId) || isAdmin() || (isAuthenticated() && resource.data.email == request.auth.token.email);
+    // ============================================
+    // Payment Requests Collection
+    // ============================================
+    
+    match /paymentRequests/{requestId} {
+      // Families can read their own requests
+      // Admins can read all requests in their agency
+      allow read: if isAuthenticated() && (
+        (resource.data.userId == request.auth.uid) ||
+        (isAdmin() && belongsToUserAgency(resource.data))
+      );
       
-      // BLOCK list operations - families cannot enumerate
-      // EXCEPTION: Allow listing if filtering by own email (for auto-linking)
-      // DEBUG: Allow all authenticated to list for now to test if logic works
-      allow list: if isAuthenticated(); 
+      // Families can create requests for themselves
+      allow create: if isAuthenticated() &&
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.agencyId == getUserAgencyId();
       
-      // Only admin can write
-      allow create, update, delete: if isAdmin();
+      // Only admins can update requests
+      allow update: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
       
-      // ===== PAYMENTS SUBCOLLECTION =====
-      match /payments/{paymentId} {
-        // Family can read their own payments (both get and list)
-        allow get, list: if isFamilyOwner(familyId) || isAdmin();
-        
-        // Only admin can write
-        allow write: if isAdmin();
-      }
+      // Only admins can delete requests
+      allow delete: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data);
+    }
+    
+    // ============================================
+    // Payments Collection
+    // ============================================
+    
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated() && belongsToUserAgency(resource.data);
       
-      // ===== PAYMENT REQUESTS SUBCOLLECTION =====
-      match /paymentRequests/{requestId} {
-        // Family can read their own requests (both get and list)
-        allow get, list: if isFamilyOwner(familyId) || isAdmin();
-        
-        // Family can ONLY CREATE with validated fields
-        allow create: if isFamilyOwner(familyId) && isValidPaymentRequest();
-        
-        // Only admin can update/delete
-        allow update, delete: if isAdmin();
-      }
+      allow create: if isAuthenticated() && isAdmin() &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow update: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow delete: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data);
+    }
+    
+    // ============================================
+    // Agencies Collection
+    // ============================================
+    
+    match /agencies/{agencyId} {
+      // Users can only read their own agency
+      allow read: if isAuthenticated() && agencyId == getUserAgencyId();
+      
+      // Authenticated users can create an agency during signup
+      // (This is needed for the gated signup flow)
+      allow create: if isAuthenticated() && 
+                       request.resource.data.ownerId == request.auth.uid;
+      
+      // Only admins can update their own agency
+      // BUT they CANNOT update billing fields (only Cloud Functions can)
+      allow update: if isAuthenticated() && isAdmin() &&
+                       agencyId == getUserAgencyId() &&
+                       !request.resource.data.diff(resource.data).affectedKeys().hasAny(['billing']);
+      
+      // No one can delete agencies (use Admin SDK)
+      allow delete: if false;
+    }
+    
+    // ============================================
+    // Activity Log Collection
+    // ============================================
+    
+    match /activityLog/{logId} {
+      // Only admins can read logs from their agency
+      allow read: if isAuthenticated() && isAdmin() &&
+                     resource.data.agencyId == getUserAgencyId();
+      
+      // System creates logs (via Cloud Functions or client)
+      allow create: if isAuthenticated() &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      // No updates or deletes (immutable audit trail)
+      allow update, delete: if false;
+    }
+    
+    // ============================================
+    // Invoices Collection
+    // ============================================
+    
+    match /invoices/{invoiceId} {
+      allow read: if isAuthenticated() && belongsToUserAgency(resource.data);
+      
+      allow create: if isAuthenticated() && isAdmin() &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow update: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow delete: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data);
+    }
+    
+    // ============================================
+    // Documents Collection
+    // ============================================
+    
+    match /documents/{documentId} {
+      allow read: if isAuthenticated() && belongsToUserAgency(resource.data);
+      
+      allow create: if isAuthenticated() &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow update: if isAuthenticated() &&
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow delete: if isAuthenticated() &&
+                       belongsToUserAgency(resource.data);
+    }
+    
+    // ============================================
+    // Quotations Collection
+    // ============================================
+    
+    match /quotations/{quotationId} {
+      allow read: if isAuthenticated() && belongsToUserAgency(resource.data);
+      
+      allow create: if isAuthenticated() && isAdmin() &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow update: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow delete: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data);
+    }
+    
+    // ============================================
+    // Reminders Collection
+    // ============================================
+    
+    match /reminders/{reminderId} {
+      allow read: if isAuthenticated() && belongsToUserAgency(resource.data);
+      
+      allow create: if isAuthenticated() && isAdmin() &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow update: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data) &&
+                       request.resource.data.agencyId == getUserAgencyId();
+      
+      allow delete: if isAuthenticated() && isAdmin() &&
+                       belongsToUserAgency(resource.data);
+    }
+    
+    // ============================================
+    // Agency Requests Collection (Public Write)
+    // ============================================
+    
+    match /agencyRequests/{requestId} {
+      // Anyone can create a request (even unauthenticated)
+      allow create: if request.resource.data.keys().hasAll([
+        'agencyName', 'contactEmail', 'groupType', 'status', 'createdAt'
+      ]) && request.resource.data.status == 'pending';
+      
+      // Only admins can read requests
+      allow read: if isAuthenticated() && isAdmin();
+      
+      // Only admins can update requests (for approval/rejection)
+      allow update: if isAuthenticated() && isAdmin();
+      
+      // No one can delete requests (keep for audit)
+      allow delete: if false;
+    }
+    
+    // ============================================
+    // Default Deny All
+    // ============================================
+    
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

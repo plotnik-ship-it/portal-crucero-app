@@ -22,20 +22,20 @@ export const useFamilyData = (userId) => {
                 setError(null);
                 console.log('🔍 [useFamilyData] Inicianco carga v5 para UID:', userId);
 
-                // Get user data to find familyId
+                // Get user data to find bookingId
                 // Note: We don't have email here easily unless we fetch it from auth again. 
                 // But getUserData now handles auth.currentUser check more robustly.
                 const userData = await getUserData(userId);
                 console.log('🔍 [useFamilyData] Datos de usuario:', userData);
-                if (!userData || !userData.familyId) {
+                if (!userData || !userData.bookingId) {
                     throw new Error('No se encontró información de familia para este usuario');
                 }
 
-                const familyId = userData.familyId;
+                const bookingId = userData.bookingId;
 
                 // Load family data
-                console.log('🔍 [useFamilyData] Cargando familia ID:', familyId);
-                const family = await getFamilyData(familyId);
+                console.log('🔍 [useFamilyData] Cargando familia ID:', bookingId);
+                const family = await getFamilyData(bookingId);
                 if (!family) {
                     throw new Error('Familia no encontrada');
                 }
@@ -54,8 +54,8 @@ export const useFamilyData = (userId) => {
                 // Load payments and requests
                 console.log('🔍 [useFamilyData] Cargando pagos y solicitudes...');
                 const [paymentsData, requestsData] = await Promise.all([
-                    getFamilyPayments(familyId),
-                    getFamilyPaymentRequests(familyId)
+                    getFamilyPayments(bookingId),
+                    getFamilyPaymentRequests(bookingId)
                 ]);
 
                 console.log('🔍 [useFamilyData] Carga completa exitosa');
@@ -77,14 +77,14 @@ export const useFamilyData = (userId) => {
 
         try {
             const userData = await getUserData(userId);
-            if (!userData || !userData.familyId) return;
+            if (!userData || !userData.bookingId) return;
 
-            const familyId = userData.familyId;
+            const bookingId = userData.bookingId;
 
             const [family, paymentsData, requestsData] = await Promise.all([
-                getFamilyData(familyId),
-                getFamilyPayments(familyId),
-                getFamilyPaymentRequests(familyId)
+                getFamilyData(bookingId),
+                getFamilyPayments(bookingId),
+                getFamilyPaymentRequests(bookingId)
             ]);
 
             setFamilyData(family);

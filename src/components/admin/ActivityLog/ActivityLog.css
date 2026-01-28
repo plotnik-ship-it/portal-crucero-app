@@ -1,0 +1,311 @@
+/* ============================================
+   Activity Log Styles
+   ============================================ */
+
+.activity-log {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+.activity-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border, #E2E8F0);
+}
+
+.activity-log-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: var(--color-text, #0F172A);
+}
+
+.activity-log-header .text-muted {
+    margin: 0;
+    color: var(--color-text-muted, #64748B);
+    font-size: 0.875rem;
+}
+
+/* Filters */
+.activity-filters {
+    background: white;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filters-header {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.filters-panel {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border-light, #F1F5F9);
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary, #475569);
+}
+
+.filter-group select {
+    padding: 0.5rem;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    background: white;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--color-primary, #0F766E);
+    box-shadow: 0 0 0 3px var(--color-primary-light, #CCFBF1);
+}
+
+.filters-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Timeline */
+.activity-timeline {
+    background: white;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.activity-count {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #64748B);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-light, #F1F5F9);
+}
+
+/* Activity Entry */
+.activity-entry {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-left: 3px solid transparent;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.activity-entry:hover {
+    background: var(--color-background-hover, #F8FAFC);
+}
+
+.activity-entry.severity-info {
+    border-left-color: #3B82F6;
+}
+
+.activity-entry.severity-warning {
+    border-left-color: #F59E0B;
+    background: #FFFBEB;
+}
+
+.activity-entry.severity-critical {
+    border-left-color: #EF4444;
+    background: #FEF2F2;
+}
+
+.activity-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background, #F8FAFC);
+    border-radius: 50%;
+}
+
+.activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.activity-message {
+    font-size: 0.9375rem;
+    color: var(--color-text, #0F172A);
+    font-weight: 500;
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #64748B);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.activity-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.detail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-background, #F8FAFC);
+    border: 1px solid var(--color-border-light, #F1F5F9);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary, #475569);
+}
+
+.activity-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #64748B);
+}
+
+.meta-user::before {
+    content: '👤 ';
+}
+
+.meta-entity::before {
+    content: '• ';
+}
+
+/* States */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-border-light, #F1F5F9);
+    border-top-color: var(--color-primary, #0F766E);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-state p {
+    color: var(--color-text-muted, #64748B);
+    margin: 0;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text, #0F172A);
+}
+
+.empty-state p {
+    margin: 0;
+    color: var(--color-text-muted, #64748B);
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.alert-error {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #DC2626;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .activity-log {
+        padding: 1rem;
+    }
+
+    .activity-log-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-entry {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .activity-main {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .activity-time {
+        align-self: flex-start;
+    }
+}

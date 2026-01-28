@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { createFamily } from '../../services/firestore';
+import { useTranslation } from 'react-i18next';
+import { createBooking } from '../../services/firestore';
 
-const CreateFamilyModal = ({ onClose, onSuccess }) => {
+const createBookingModal = ({ onClose, onSuccess }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         displayName: '',
-        familyCode: '',
+        bookingCode: '',
         email: '',
         cabinCount: 1, // Default to 1 cabin
-        password: 'password123' // Default password as per requirement (or empty to let them set it?)
-        // User previously used 'password123' for bulk import. I'll stick to that default.
+        password: 'password123' // Default password as per requirement
     });
 
     const handleSubmit = async (e) => {
@@ -34,7 +35,7 @@ const CreateFamilyModal = ({ onClose, onSuccess }) => {
 
             const familyData = {
                 displayName: formData.displayName,
-                familyCode: formData.familyCode.toUpperCase(),
+                bookingCode: formData.bookingCode.toUpperCase(),
                 email: formData.email,
                 password: formData.password,
                 cabinNumbers,
@@ -47,15 +48,15 @@ const CreateFamilyModal = ({ onClose, onSuccess }) => {
                 balanceCadGlobal: 0
             };
 
-            await createFamily(familyData);
+            await createBooking(familyData);
 
-            alert(`Familia ${formData.displayName} creada exitosamente.`);
+            alert(t('admin.BookingCreatedSuccess', { name: formData.displayName }));
             onSuccess();
             onClose();
 
         } catch (error) {
-            console.error('Error creating family:', error);
-            alert(`Error al crear la familia: ${error.message}`);
+            console.error('Error creating booking:', error);
+            alert(t('admin.errorCreatingbooking', { error: error.message }));
         } finally {
             setLoading(false);
         }
@@ -67,48 +68,48 @@ const CreateFamilyModal = ({ onClose, onSuccess }) => {
         }}>
             <div className="modal-content">
                 <div className="modal-header">
-                    <h3 className="modal-title">Nueva Familia</h3>
+                    <h3 className="modal-title">{t('admin.newbooking')}</h3>
                     <button onClick={onClose} className="btn-close">&times;</button>
                 </div>
 
                 <div className="modal-body">
-                    <form onSubmit={handleSubmit} id="createFamilyForm">
+                    <form onSubmit={handleSubmit} id="createBookingForm">
                         <div className="form-group">
-                            <label className="form-label required">Código de Familia</label>
+                            <label className="form-label required">{t('admin.bookingCodeLabel')}</label>
                             <input
                                 className="form-input"
-                                value={formData.familyCode}
-                                onChange={(e) => setFormData({ ...formData, familyCode: e.target.value })}
-                                placeholder="Ej: FAM028"
+                                value={formData.bookingCode}
+                                onChange={(e) => setFormData({ ...formData, bookingCode: e.target.value })}
+                                placeholder={t('admin.bookingCodePlaceholder')}
                                 required
                             />
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label required">Nombre de Familia</label>
+                            <label className="form-label required">{t('admin.BookingNameLabel')}</label>
                             <input
                                 className="form-input"
                                 value={formData.displayName}
                                 onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                                placeholder="Ej: Familia Rodriguez"
+                                placeholder={t('admin.BookingNamePlaceholder')}
                                 required
                             />
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label required">Email</label>
+                            <label className="form-label required">{t('admin.emailLabel')}</label>
                             <input
                                 type="email"
                                 className="form-input"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                placeholder="correo@ejemplo.com"
+                                placeholder={t('admin.emailPlaceholder')}
                                 required
                             />
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Número Inicial de Cabinas</label>
+                            <label className="form-label">{t('admin.initialCabinCount')}</label>
                             <input
                                 type="number"
                                 className="form-input"
@@ -120,27 +121,27 @@ const CreateFamilyModal = ({ onClose, onSuccess }) => {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label required">Contraseña Temporal</label>
+                            <label className="form-label required">{t('admin.temporaryPassword')}</label>
                             <input
                                 className="form-input"
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 required
                             />
-                            <small className="text-muted">La familia usará esta contraseña para su primer ingreso.</small>
+                            <small className="text-muted">{t('admin.temporaryPasswordHelp')}</small>
                         </div>
                     </form>
                 </div>
 
                 <div className="modal-footer">
-                    <button onClick={onClose} className="btn btn-outline" type="button">Cancelar</button>
+                    <button onClick={onClose} className="btn btn-outline" type="button">{t('common.cancel')}</button>
                     <button
                         type="submit"
-                        form="createFamilyForm"
+                        form="createBookingForm"
                         className="btn btn-primary"
                         disabled={loading}
                     >
-                        {loading ? 'Creando...' : 'Crear Familia'}
+                        {loading ? t('common.loading') : t('admin.createbooking')}
                     </button>
                 </div>
             </div>
@@ -148,4 +149,4 @@ const CreateFamilyModal = ({ onClose, onSuccess }) => {
     );
 };
 
-export default CreateFamilyModal;
+export default createBookingModal;

@@ -1,8 +1,13 @@
+import i18n from '../i18n/config';
+
 /**
- * Format date to readable Spanish format
+ * Format date with i18n support
  */
-export const formatDate = (date) => {
+export const formatDate = (date, language = null) => {
     if (!date) return '';
+
+    const lang = language || i18n.language || 'es';
+    const locale = lang === 'en' ? 'en-CA' : 'es-MX';
 
     let d;
     if (date instanceof Date) {
@@ -15,7 +20,7 @@ export const formatDate = (date) => {
         d = new Date(date);
     }
 
-    return d.toLocaleDateString('es-MX', {
+    return d.toLocaleDateString(locale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -23,14 +28,16 @@ export const formatDate = (date) => {
 };
 
 /**
- * Format timestamp from Firestore
+ * Format timestamp from Firestore with i18n support
  */
-export const formatTimestamp = (timestamp) => {
+export const formatTimestamp = (timestamp, language = null) => {
     if (!timestamp) return '';
 
+    const lang = language || i18n.language || 'es';
+    const locale = lang === 'en' ? 'en-CA' : 'es-MX';
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
 
-    return date.toLocaleString('es-MX', {
+    return date.toLocaleString(locale, {
         dateStyle: 'medium',
         timeStyle: 'short'
     });
@@ -53,17 +60,41 @@ export const getStatusColor = (status) => {
 };
 
 /**
- * Get status label in Spanish
+ * Get status label with i18n support
  */
-export const getStatusLabel = (status) => {
-    const labels = {
-        'Pending': 'Pendiente',
-        'Applied': 'Aplicado',
-        'Rejected': 'Rechazado',
-        'Paid': 'Pagado',
-        'Overdue': 'Vencido',
-        'Upcoming': 'Próximo'
-    };
+export const getStatusLabel = (status, t) => {
+    if (!t) {
+        // Fallback to Spanish if no translation function
+        const labels = {
+            'Pending': 'Pendiente',
+            'Applied': 'Aplicado',
+            'Rejected': 'Rechazado',
+            'Paid': 'Pagado',
+            'Overdue': 'Vencido',
+            'Upcoming': 'Próximo'
+        };
+        return labels[status] || status;
+    }
 
-    return labels[status] || status;
+    // Use translation function
+    const key = `payment.${status.toLowerCase()}`;
+    return t(key, status);
+};
+
+/**
+ * Format currency amount with i18n support
+ */
+export const formatCurrency = (amount, language = null) => {
+    if (amount === null || amount === undefined) return '-';
+
+    const lang = language || i18n.language || 'es';
+    const locale = lang === 'en' ? 'en-CA' : 'es-MX';
+    const currency = lang === 'en' ? 'CAD' : 'MXN';
+
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
 };

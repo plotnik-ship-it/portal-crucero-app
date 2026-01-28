@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import { useFamilyData } from '../../hooks/useFamilyData';
 import { useExchangeRate } from '../../hooks/useExchangeRate';
@@ -10,9 +11,12 @@ import CostBreakdown from './CostBreakdown';
 import ItineraryTable from './ItineraryTable';
 import PaymentHistory from './PaymentHistory';
 import PaymentRequestForm from './PaymentRequestForm';
+import InvoiceList from './InvoiceList';
 import ChangePasswordModal from './ChangePasswordModal';
+import OnboardingTour from '../shared/OnboardingTour';
 
 const FamilyDashboard = () => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const {
         familyData,
@@ -27,11 +31,26 @@ const FamilyDashboard = () => {
     const { rate: exchangeRate } = useExchangeRate(familyData?.groupId);
     const [activeTab, setActiveTab] = useState('global');
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [showOnboarding, setShowOnboarding] = useState(false);
+
+    // Check if user needs onboarding
+    useEffect(() => {
+        const onboardingCompleted = localStorage.getItem('onboarding_completed');
+        const onboardingSkipped = localStorage.getItem('onboarding_skipped');
+
+        if (!onboardingCompleted && !onboardingSkipped && !loading && familyData) {
+            // Show onboarding after a short delay
+            const timer = setTimeout(() => {
+                setShowOnboarding(true);
+            }, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [loading, familyData]);
 
     if (loading) {
         return (
             <Layout>
-                <Loading message="Cargando tu información..." />
+                <Loading message={t('family.loadingInfo', 'Cargando tu información...')} />
             </Layout>
         );
     }
@@ -50,7 +69,7 @@ const FamilyDashboard = () => {
         return (
             <Layout>
                 <div className="container page">
-                    <ErrorMessage message="No se encontró información de la familia" />
+                    <ErrorMessage message={t('family.noData', 'No se encontró información de la familia')} />
                 </div>
             </Layout>
         );
@@ -96,18 +115,18 @@ const FamilyDashboard = () => {
                 <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <h1 className="page-title">
-                            Bienvenido, {familyData.displayName}
+                            {t('common.welcome')}, {familyData.displayName}
                         </h1>
                         <p className="page-subtitle">
-                            Código de Familia: <strong>{familyData.familyCode}</strong>
+                            {t('family.bookingCode', 'Código de Familia')}: <strong>{familyData.bookingCode}</strong>
                         </p>
                     </div>
                     <button
                         className="btn btn-outline"
                         onClick={() => setShowPasswordModal(true)}
-                        title="Cambiar contraseña"
+                        title={t('family.changePassword', 'Cambiar contraseña')}
                     >
-                        🔐 Cambiar Contraseña
+                        🔐 {t('family.changePassword', 'Cambiar Contraseña')}
                     </button>
                 </div>
 
@@ -118,7 +137,7 @@ const FamilyDashboard = () => {
                         style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0, borderBottom: activeTab === 'global' ? 'none' : '' }}
                         onClick={() => setActiveTab('global')}
                     >
-                        🌐 Resumen Global
+                        🌐 {t('family.globalSummary', 'Resumen Global')}
                     </button>
                     {familyData.cabinAccounts?.map((cabin, index) => (
                         <button
@@ -157,7 +176,7 @@ const FamilyDashboard = () => {
                         familyData={familyData} // Pass full family data
                         exchangeRate={exchangeRate}
                         onSuccess={refreshData}
-                        defaultNote={activeCabinNumber ? `Pago adelantado - Cabina ${activeCabinNumber}` : ''}
+                        defaultNote={activeCabinNumber ? `${t('family.advancePayment', 'Pago adelantado')} - ${t('family.cabin')} ${activeCabinNumber}` : ''}
                     />
 
                     {/* Itinerary - Only show on Global Tab to reduce noise? Or always? Always is fine. */}
@@ -170,20 +189,35 @@ const FamilyDashboard = () => {
                         <PaymentHistory payments={payments} />
                     )}
 
+                    {/* Invoice List - Always visible (GLOBAL) */}
+                    {activeTab === 'global' && (
+                        <InvoiceList
+                            bookingId={familyData.id}
+                            familyData={familyData}
+                            agencyBranding={{
+                                name: 'Travel Point',
+                                email: familyData.agencyEmail || 'info@travelpoint.com',
+                                phone: '+1 (555) 123-4567',
+                                primaryColor: [41, 128, 185],
+                                secondaryColor: [52, 73, 94]
+                            }}
+                        />
+                    )}
+
                     {/* Payment Requests Status - Always visible (GLOBAL) */}
                     {activeTab === 'global' && paymentRequests && paymentRequests.length > 0 && (
                         <div className="card">
                             <div className="card-header">
-                                <h3 className="card-title">📝 Mis Solicitudes de Adelanto</h3>
+                                <h3 className="card-title">📝 {t('family.myRequests', 'Mis Solicitudes de Adelanto')}</h3>
                             </div>
                             <div className="card-body">
                                 <div className="table-container">
                                     <table className="table">
                                         <thead>
                                             <tr>
-                                                <th>Fecha</th>
-                                                <th>Monto</th>
-                                                <th>Estado</th>
+                                                <th>{t('payment.date', 'Fecha')}</th>
+                                                <th>{t('payment.amount', 'Monto')}</th>
+                                                <th>{t('payment.status', 'Estado')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -200,9 +234,9 @@ const FamilyDashboard = () => {
                                                             request.status === 'Rejected' ? 'error' :
                                                                 'warning'
                                                             }`}>
-                                                            {request.status === 'Applied' ? 'Aplicado' :
-                                                                request.status === 'Rejected' ? 'Rechazado' :
-                                                                    'Pendiente'}
+                                                            {request.status === 'Applied' ? t('payment.applied', 'Aplicado') :
+                                                                request.status === 'Rejected' ? t('payment.rejected', 'Rechazado') :
+                                                                    t('payment.pending', 'Pendiente')}
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -219,6 +253,13 @@ const FamilyDashboard = () => {
                 <ChangePasswordModal
                     isOpen={showPasswordModal}
                     onClose={() => setShowPasswordModal(false)}
+                />
+
+                {/* Onboarding Tour */}
+                <OnboardingTour
+                    isActive={showOnboarding}
+                    onComplete={() => setShowOnboarding(false)}
+                    onSkip={() => setShowOnboarding(false)}
                 />
             </div>
         </Layout>

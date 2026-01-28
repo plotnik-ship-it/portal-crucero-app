@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGroup } from '../../contexts/GroupContext';
 
-const GroupSelector = ({ onCreateGroup }) => {
+const GroupSelector = ({ onCreateGroup, onDeleteGroup }) => {
+    const { t } = useTranslation();
     const { selectedGroup, groups, loading, selectGroup } = useGroup();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -26,7 +28,7 @@ const GroupSelector = ({ onCreateGroup }) => {
     if (loading) {
         return (
             <div className="btn btn-outline" style={{ minWidth: '250px' }}>
-                <span>⏳ Cargando grupos...</span>
+                <span>⏳ {t('admin.loadingGroups')}</span>
             </div>
         );
     }
@@ -37,13 +39,13 @@ const GroupSelector = ({ onCreateGroup }) => {
                 onClick={onCreateGroup}
                 className="btn btn-primary"
             >
-                + Crear Primer Grupo
+                + {t('admin.createFirstGroup')}
             </button>
         );
     }
 
     return (
-        <div className="relative" ref={dropdownRef}>
+        <div ref={dropdownRef} style={{ position: 'relative', display: 'inline-block' }}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="btn btn-outline"
@@ -56,7 +58,7 @@ const GroupSelector = ({ onCreateGroup }) => {
                 }}
             >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    🚢 {selectedGroup?.name || 'Seleccionar Grupo'}
+                    🚢 {selectedGroup?.name || t('admin.selectGroup')}
                 </span>
                 <span style={{ fontSize: '0.75rem' }}>
                     {isOpen ? '▲' : '▼'}
@@ -70,11 +72,14 @@ const GroupSelector = ({ onCreateGroup }) => {
                         position: 'absolute',
                         top: 'calc(100% + 0.5rem)',
                         left: 0,
+                        right: 0,
                         minWidth: '300px',
                         maxHeight: '400px',
                         overflowY: 'auto',
                         zIndex: 1000,
-                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                        backgroundColor: 'var(--color-surface, white)',
+                        color: 'var(--color-text, #2C3E50)'
                     }}
                 >
                     <div className="card-body" style={{ padding: '0.5rem' }}>
@@ -94,11 +99,11 @@ const GroupSelector = ({ onCreateGroup }) => {
                                 }}
                             >
                                 <div>
-                                    <div style={{ fontWeight: 'bold' }}>
+                                    <div style={{ fontWeight: 'bold', color: 'inherit' }}>
                                         {group.name}
                                     </div>
                                     {group.shipName && (
-                                        <div style={{ fontSize: '0.875rem', opacity: 0.8 }}>
+                                        <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted, #7F8C8D)' }}>
                                             {group.shipName}
                                         </div>
                                     )}
@@ -117,10 +122,28 @@ const GroupSelector = ({ onCreateGroup }) => {
                                 onCreateGroup();
                             }}
                             className="btn btn-primary"
-                            style={{ width: '100%' }}
+                            style={{ width: '100%', marginBottom: '0.5rem' }}
                         >
-                            + Crear Nuevo Grupo
+                            + {t('admin.createNewGroup')}
                         </button>
+
+                        {/* Delete Current Group Button */}
+                        {onDeleteGroup && selectedGroup && (
+                            <button
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    onDeleteGroup(selectedGroup);
+                                }}
+                                className="btn btn-outline"
+                                style={{
+                                    width: '100%',
+                                    color: 'var(--color-danger, #dc3545)',
+                                    borderColor: 'var(--color-danger, #dc3545)'
+                                }}
+                            >
+                                🗑️ {t('admin.deleteCurrentGroup')}
+                            </button>
+                        )}
                     </div>
                 </div>
             )}

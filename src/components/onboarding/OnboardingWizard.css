@@ -1,0 +1,222 @@
+.onboarding-wizard {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.onboarding-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    width: 100%;
+    padding: 3rem;
+    animation: slideUp 0.4s ease-out;
+    position: relative;
+}
+
+/* Language Toggle Button */
+.language-toggle-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    color: #4a5568;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.language-toggle-btn:hover {
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.language-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.onboarding-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.onboarding-header h1 {
+    font-size: 2rem;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.onboarding-header .subtitle {
+    color: #718096;
+    font-size: 1.1rem;
+}
+
+.onboarding-error {
+    background: #fed7d7;
+    border: 1px solid #fc8181;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #c53030;
+}
+
+.onboarding-error .error-icon {
+    font-size: 1.5rem;
+}
+
+.onboarding-content {
+    margin: 2rem 0;
+    min-height: 400px;
+}
+
+.onboarding-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.onboarding-actions .btn {
+    flex: 1;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.onboarding-actions .btn-outline {
+    background: white;
+    border: 2px solid #cbd5e0;
+    color: #4a5568;
+}
+
+.onboarding-actions .btn-outline:hover {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.onboarding-actions .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+}
+
+.onboarding-actions .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+.onboarding-actions .btn-secondary {
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    color: #718096;
+}
+
+.onboarding-actions .btn-secondary:hover {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+    color: #4a5568;
+}
+
+.onboarding-actions .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Form styles */
+.onboarding-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 0.95rem;
+}
+
+.form-group label .required {
+    color: #e53e3e;
+    margin-left: 0.25rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-group .help-text {
+    font-size: 0.875rem;
+    color: #718096;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .onboarding-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .onboarding-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .onboarding-actions {
+        flex-direction: column-reverse;
+    }
+}

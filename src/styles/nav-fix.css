@@ -1,0 +1,7 @@
+/* Navigation Tab Buttons - Custom Hover Fix */
+.module-nav .btn-outline:hover:not(:disabled) {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background: rgba(45, 156, 219, 0.08) !important;
+    transform: translateY(-1px);
+}

@@ -29,7 +29,7 @@ const generateFamilies = () => {
     const firstNames = ['García', 'Rodríguez', 'Martínez', 'López', 'González', 'Hernández', 'Pérez', 'Sánchez', 'Ramírez', 'Torres', 'Flores', 'Rivera', 'Gómez', 'Díaz', 'Cruz', 'Morales', 'Reyes', 'Jiménez', 'Ruiz', 'Álvarez', 'Romero', 'Méndez', 'Castro', 'Vargas', 'Ortiz', 'Silva', 'Ramos'];
 
     for (let i = 1; i <= 27; i++) {
-        const familyCode = `FAM${String(i).padStart(3, '0')}`;
+        const bookingCode = `FAM${String(i).padStart(3, '0')}`;
         const lastName = firstNames[i - 1];
 
         // Randomly assign 1 or 2 cabins
@@ -49,11 +49,11 @@ const generateFamilies = () => {
         const balanceCad = totalCad - paidCad;
 
         families.push({
-            id: familyCode.toLowerCase(),
+            id: bookingCode.toLowerCase(),
             groupId: 'default',
-            familyCode,
+            bookingCode,
             displayName: `Familia ${lastName}`,
-            email: `${familyCode.toLowerCase()}@example.com`,
+            email: `${bookingCode.toLowerCase()}@example.com`,
             cabinNumbers,
             subtotalCad,
             gratuitiesCad,
@@ -99,7 +99,7 @@ export const seedDatabase = async () => {
         const families = generateFamilies();
         for (const family of families) {
             await setDoc(doc(db, 'families', family.id), family);
-            console.log(`✓ Created ${family.familyCode}`);
+            console.log(`✓ Created ${family.bookingCode}`);
         }
 
         console.log('✓ Database seeded successfully!');

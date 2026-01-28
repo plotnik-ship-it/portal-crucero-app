@@ -1,0 +1,351 @@
+/* ============================================
+   Portal Crucero - Professional SaaS Design
+   White-Label Ready for Enterprise Agencies
+   ============================================ */
+
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Professional SaaS Design Variables */
+.new-design {
+    /* ===== Neutral Base (Dominant 85%) ===== */
+    --color-background: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-surface-hover: #F1F5F9;
+    --color-border: #E2E8F0;
+    --color-border-light: #F1F5F9;
+    --color-divider: #CBD5E1;
+
+    /* Text Colors */
+    --color-text: #0F172A;
+    --color-text-secondary: #475569;
+    --color-text-muted: #64748B;
+    --color-text-disabled: #94A3B8;
+
+    /* ===== Brand Colors (Accent 15%) ===== */
+    /* Primary - Corporate Teal (configurable per agency) */
+    --color-primary: #0F766E;
+    --color-primary-dark: #115E59;
+    --color-primary-light: #CCFBF1;
+    --color-primary-hover: #14B8A6;
+
+    /* Accent - Muted Coral (less saturated) */
+    --color-accent: #F47272;
+    --color-accent-dark: #EF4444;
+    --color-accent-light: #FEE2E2;
+
+    /* ===== Semantic Colors (Sobrio) ===== */
+    /* Success - Professional Green */
+    --color-success: #16A34A;
+    --color-success-light: #DCFCE7;
+    --color-success-dark: #15803D;
+
+    /* Warning - Elegant Amber */
+    --color-warning: #FBBF24;
+    --color-warning-light: #FEF3C7;
+    --color-warning-dark: #D97706;
+
+    /* Error - Subtle Red */
+    --color-error: #DC2626;
+    --color-error-light: #FEE2E2;
+    --color-error-dark: #B91C1C;
+
+    /* Info - Calm Blue */
+    --color-info: #3B82F6;
+    --color-info-light: #DBEAFE;
+
+    /* ===== Gradients (Subtle) ===== */
+    --gradient-primary: linear-gradient(135deg, #0891B2 0%, #0E7490 100%);
+    --gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    --gradient-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
+
+    /* ===== Typography ===== */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--color-text);
+
+    /* ===== Spacing ===== */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+
+    /* ===== Borders & Radius ===== */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    /* ===== Shadows (Subtle) ===== */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   Button Hierarchy (SaaS Professional)
+   ============================================ */
+
+.new-design .btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+/* Primary - Only for main actions */
+.new-design .btn-primary-new {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: var(--shadow-xs);
+}
+
+.new-design .btn-primary-new:hover {
+    background: var(--color-primary-hover);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Secondary - Most common button */
+.new-design .btn-secondary-new {
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-xs);
+}
+
+.new-design .btn-secondary-new:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-text-muted);
+}
+
+/* Ghost - Subtle actions */
+.new-design .btn-ghost-new {
+    background: transparent;
+    color: var(--color-text-secondary);
+}
+
+.new-design .btn-ghost-new:hover {
+    background: var(--color-surface-hover);
+}
+
+/* Danger - Only for destructive actions */
+.new-design .btn-danger-new {
+    background: var(--color-error);
+    color: white;
+    box-shadow: var(--shadow-xs);
+}
+
+.new-design .btn-danger-new:hover {
+    background: var(--color-error-dark);
+}
+
+/* Small size */
+.new-design .btn-sm-new {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+}
+
+/* ============================================
+   Cards (Clean & Professional)
+   ============================================ */
+
+.new-design .card-new {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    padding: var(--spacing-lg);
+    transition: all 0.2s ease;
+}
+
+.new-design .card-new:hover {
+    border-color: var(--color-divider);
+    box-shadow: var(--shadow-sm);
+}
+
+.new-design .card-header-new {
+    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+/* Stat Card - For metrics */
+.new-design .stat-card-new {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    transition: all 0.2s ease;
+}
+
+.new-design .stat-card-new:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.new-design .stat-value-new {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0.5rem 0;
+}
+
+.new-design .stat-label-new {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+/* ============================================
+   Badges (Subtle & Professional)
+   ============================================ */
+
+.new-design .badge-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+}
+
+.new-design .badge-success-new {
+    background-color: var(--color-success-light);
+    color: var(--color-success-dark);
+    border-color: var(--color-success);
+}
+
+.new-design .badge-warning-new {
+    background-color: var(--color-warning-light);
+    color: var(--color-warning-dark);
+    border-color: var(--color-warning);
+}
+
+.new-design .badge-error-new {
+    background-color: var(--color-error-light);
+    color: var(--color-error-dark);
+    border-color: var(--color-error);
+}
+
+.new-design .badge-neutral-new {
+    background-color: var(--color-border-light);
+    color: var(--color-text-secondary);
+    border-color: var(--color-border);
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+.new-design h1,
+.new-design h2,
+.new-design h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.new-design .text-muted-new {
+    color: var(--color-text-muted);
+}
+
+.new-design .text-secondary-new {
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   Layout Utilities
+   ============================================ */
+
+.new-design .grid-new {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.new-design .grid-2-new {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.new-design .grid-3-new {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.new-design .grid-4-new {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.new-design .flex-new {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.new-design .flex-between-new {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ============================================
+   Data Display (Tables, Lists)
+   ============================================ */
+
+.new-design .table-new {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.new-design .table-new th {
+    background: var(--color-background);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.new-design .table-new td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border-light);
+    color: var(--color-text);
+    font-size: 0.875rem;
+}
+
+.new-design .table-new tr:hover {
+    background: var(--color-surface-hover);
+}
+
+.new-design .table-new tr:last-child td {
+    border-bottom: none;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    .new-design .grid-2-new,
+    .new-design .grid-3-new,
+    .new-design .grid-4-new {
+        grid-template-columns: 1fr;
+    }
+}

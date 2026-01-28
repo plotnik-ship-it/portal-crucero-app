@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>⚠️ URGENTE: Pago Mañana - {{family_code}}</title>
+    <style type="text/css">
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: #fef3c7;
+        }
+
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+
+<body width="100%" style="margin: 0; padding: 0; background-color: #fef3c7;">
+    <center style="width: 100%; background-color: #fef3c7;">
+
+        <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600"
+            style="margin: auto;" class="email-container">
+
+            <!-- HEADER - Warning Style -->
+            <tr>
+                <td
+                    style="padding: 40px 20px 20px 20px; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <h1
+                        style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 32px; color: #ffffff; font-weight: bold;">
+                        ⚠️ TravelPoint
+                    </h1>
+                    <p
+                        style="margin: 8px 0 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; color: #fef3c7;">
+                        Portal de Cruceros
+                    </p>
+                </td>
+            </tr>
+
+            <!-- MAIN CONTENT -->
+            <tr>
+                <td style="padding: 0; background-color: #ffffff;">
+
+                    <!-- Greeting -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td
+                                style="padding: 40px 30px 20px 30px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; color: #111827;">
+                                <p style="margin: 0;">
+                                    Hola <strong>{{to_name}}</strong>,
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- URGENT Banner -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td style="padding: 0 30px 30px 30px;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                                    style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                                    <tr>
+                                        <td style="padding: 24px; text-align: center;">
+                                            <p
+                                                style="margin: 0 0 8px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 24px; font-weight: 700; color: #92400e;">
+                                                ⚠️ RECORDATORIO URGENTE ⚠️
+                                            </p>
+                                            <p
+                                                style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 600; color: #b45309;">
+                                                Tu pago vence MAÑANA
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Message -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td
+                                style="padding: 0 30px 30px 30px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; line-height: 24px; color: #374151;">
+                                <p style="margin: 0 0 16px 0;">
+                                    <strong>Este es un recordatorio urgente.</strong> Tu pago para el crucero vence
+                                    mañana. Por favor, realiza tu pago lo antes posible para asegurar tu reservación.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Payment Details Card -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td style="padding: 0 30px 30px 30px;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                                    style="background-color: #fef3c7; border-radius: 8px; border: 2px solid #f59e0b;">
+                                    <tr>
+                                        <td style="padding: 24px;">
+
+                                            <!-- Ship & Date -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                                width="100%">
+                                                <tr>
+                                                    <td
+                                                        style="padding-bottom: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                        <p
+                                                            style="margin: 0 0 4px 0; font-size: 12px; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                                                            Crucero
+                                                        </p>
+                                                        <p
+                                                            style="margin: 0; font-size: 16px; font-weight: 700; color: #111827;">
+                                                            🚢 {{ship_name}}
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td
+                                                        style="padding-bottom: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                        <p
+                                                            style="margin: 0 0 4px 0; font-size: 12px; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                                                            Fecha de Salida
+                                                        </p>
+                                                        <p
+                                                            style="margin: 0; font-size: 16px; font-weight: 700; color: #111827;">
+                                                            📅 {{sail_date}}
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td
+                                                        style="padding-bottom: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                        <p
+                                                            style="margin: 0 0 4px 0; font-size: 12px; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+                                                            Cabina
+                                                        </p>
+                                                        <p
+                                                            style="margin: 0; font-size: 16px; font-weight: 700; color: #111827;">
+                                                            🛏️ {{cabin_number}}
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Divider -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                                width="100%">
+                                                <tr>
+                                                    <td style="padding: 16px 0; border-top: 2px solid #f59e0b;">
+                                                        &nbsp;
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Payment Info -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                                width="100%">
+                                                <tr>
+                                                    <td
+                                                        style="padding-bottom: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                        <table role="presentation" cellspacing="0" cellpadding="0"
+                                                            border="0" width="100%">
+                                                            <tr>
+                                                                <td
+                                                                    style="font-size: 14px; color: #78350f; font-weight: 600;">
+                                                                    Total del Viaje
+                                                                </td>
+                                                                <td
+                                                                    style="text-align: right; font-size: 14px; font-weight: 700; color: #111827;">
+                                                                    {{total_amount}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td
+                                                        style="padding-bottom: 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                        <table role="presentation" cellspacing="0" cellpadding="0"
+                                                            border="0" width="100%">
+                                                            <tr>
+                                                                <td
+                                                                    style="font-size: 14px; color: #78350f; font-weight: 600;">
+                                                                    Pagado Hasta Ahora
+                                                                </td>
+                                                                <td
+                                                                    style="text-align: right; font-size: 14px; font-weight: 700; color: #10b981;">
+                                                                    {{paid_amount}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td
+                                                        style="padding-top: 12px; border-top: 2px solid #f59e0b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                        <table role="presentation" cellspacing="0" cellpadding="0"
+                                                            border="0" width="100%">
+                                                            <tr>
+                                                                <td
+                                                                    style="font-size: 16px; font-weight: 700; color: #111827;">
+                                                                    Saldo Pendiente
+                                                                </td>
+                                                                <td
+                                                                    style="text-align: right; font-size: 24px; font-weight: 900; color: #f59e0b;">
+                                                                    {{balance_amount}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <!-- Deadline - URGENT -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                                                width="100%">
+                                                <tr>
+                                                    <td
+                                                        style="padding-top: 20px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                                                        <p
+                                                            style="margin: 0 0 4px 0; font-size: 12px; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">
+                                                            ⏰ FECHA LÍMITE
+                                                        </p>
+                                                        <p
+                                                            style="margin: 0; font-size: 20px; font-weight: 900; color: #d97706;">
+                                                            {{deadline_date}}
+                                                        </p>
+                                                        <p
+                                                            style="margin: 8px 0 0 0; font-size: 14px; font-weight: 700; color: #b45309;">
+                                                            ¡VENCE MAÑANA!
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Family Code -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td style="padding: 0 30px 40px 30px; text-align: center;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr>
+                                        <td
+                                            style="background-color: #f59e0b; border-radius: 6px; padding: 12px 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 700; color: #ffffff;">
+                                            Código: {{family_code}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+                <td style="padding: 30px; background-color: #ffffff; border-top: 1px solid #e5e7eb;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                            <td
+                                style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 20px; color: #6b7280; text-align: center;">
+                                <p style="margin: 0 0 8px 0; font-weight: 600; color: #111827;">
+                                    {{from_name}}
+                                </p>
+                                <p style="margin: 0 0 4px 0;">
+                                    ¡Gracias por tu atención inmediata!
+                                </p>
+                                <p style="margin: 0;">
+                                    Si tienes alguna pregunta, contacta a tu agente de viajes de inmediato
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 20px; background-color: #fef3c7;">&nbsp;</td>
+            </tr>
+
+        </table>
+    </center>
+</body>
+
+</html>

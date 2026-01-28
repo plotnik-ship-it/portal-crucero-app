@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getGroupData, updateGroupData } from '../../services/firestore';
 import Card from '../shared/Card';
 import { formatTimestamp } from '../../utils/formatters';
+import ItineraryEditor from './ItineraryEditor';
 
 const GroupConfig = ({ groupId = 'default' }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [groupData, setGroupData] = useState(null);
@@ -13,7 +16,7 @@ const GroupConfig = ({ groupId = 'default' }) => {
     const [shipName, setShipName] = useState('');
     const [sailDate, setSailDate] = useState('');
     const [finalPaymentDate, setFinalPaymentDate] = useState('');
-    const [itineraryText, setItineraryText] = useState(''); // JSON string for editing
+    const [itinerary, setItinerary] = useState([]); // Array of itinerary days
 
     useEffect(() => {
         loadData();
@@ -28,7 +31,7 @@ const GroupConfig = ({ groupId = 'default' }) => {
                 setShipName(data.shipName || '');
                 setSailDate(data.sailDate || '');
                 setFinalPaymentDate(data.finalPaymentDate || '');
-                setItineraryText(JSON.stringify(data.itinerary || [], null, 2));
+                setItinerary(data.itinerary || []);
             }
         } catch (error) {
             console.error('Error loading group data:', error);
@@ -42,24 +45,12 @@ const GroupConfig = ({ groupId = 'default' }) => {
         setSaving(true);
 
         try {
-            // Validate JSON
-            let itinerary = [];
-            try {
-                itinerary = JSON.parse(itineraryText);
-            } catch (err) {
-                alert('El formato del itinerario (JSON) es inválido.');
-                setSaving(false);
-                return;
-            }
-
             const updates = {
                 fxRateCadToMxn: parseFloat(rate),
                 shipName,
                 sailDate,
                 finalPaymentDate,
                 itinerary,
-                // If rate changed, we might want fxUpdatedAt, but updateGroupData sets updatedAt globally
-                // Let's set specific fxUpdatedAt only if rate changed? For simplicity, we just rely on general updatedAt or custom logic
             };
 
             // If we want to track separate timestamps:
@@ -79,19 +70,19 @@ const GroupConfig = ({ groupId = 'default' }) => {
         }
     };
 
-    if (loading) return <div>Cargando configuración...</div>;
+    if (loading) return <div>{t('common.loading')}</div>;
 
     return (
         <div className="grid grid-2 gap-lg">
             {/* General Settings */}
             <Card>
                 <div className="card-header">
-                    <h3 className="card-title">⚙️ Configuración del Grupo</h3>
+                    <h3 className="card-title">⚙️ {t('admin.groupConfig')}</h3>
                 </div>
                 <div className="card-body">
                     <form onSubmit={handleSave}>
                         <div className="form-group">
-                            <label className="form-label">Naviera / Barco</label>
+                            <label className="form-label">{t('admin.shipName')}</label>
                             <input
                                 className="form-input"
                                 value={shipName}
@@ -101,7 +92,7 @@ const GroupConfig = ({ groupId = 'default' }) => {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Fecha de Salida</label>
+                            <label className="form-label">{t('admin.sailDate')}</label>
                             <input
                                 type="date"
                                 className="form-input"
@@ -111,68 +102,42 @@ const GroupConfig = ({ groupId = 'default' }) => {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Fecha Límite (Pago 100%)</label>
+                            <label className="form-label">{t('admin.deadlineDate')}</label>
                             <input
                                 type="date"
                                 className="form-input"
                                 value={finalPaymentDate}
                                 onChange={e => setFinalPaymentDate(e.target.value)}
                             />
-                            <div className="form-help">Se mostrará en el dashboard de las familias.</div>
+                            <div className="form-help">{t('admin.deadlineHelp')}</div>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">Tasa de Cambio (CAD a MXN)</label>
-                            <input
-                                type="number"
-                                step="0.0001"
-                                className="form-input"
-                                value={rate}
-                                onChange={e => setRate(e.target.value)}
-                            />
-                            <div className="form-help">
-                                Actual: 1 CAD = {groupData?.fxRateCadToMxn?.toFixed(4)} MXN
-                                <br />
-                                Última act: {formatTimestamp(groupData?.fxUpdatedAt)}
+
+                        {/* Exchange Rate - Only show for CAD groups */}
+                        {groupData?.groupCurrency === 'CAD' && (
+                            <div className="form-group">
+                                <label className="form-label">{t('admin.exchangeRate')}</label>
+                                <input
+                                    type="number"
+                                    step="0.0001"
+                                    className="form-input"
+                                    value={rate}
+                                    onChange={e => setRate(e.target.value)}
+                                />
+                                <div className="form-help">
+                                    {t('admin.currentRate', { rate: groupData?.fxRateCadToMxn?.toFixed(4) })}
+                                    <br />
+                                    {t('admin.lastUpdated', { date: formatTimestamp(groupData?.fxUpdatedAt) })}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="form-group">
-                            <label className="form-label flex justify-between">
-                                Itinerario (JSON)
-                                <button
-                                    type="button"
-                                    className="text-xs text-primary underline"
-                                    onClick={() => setItineraryText(JSON.stringify([
-                                        { day: 1, port: 'Miami, Florida', arrive: '-', depart: '17:00' },
-                                        { day: 2, port: 'Perfect Day at Cococay', arrive: '07:00', depart: '17:00' },
-                                        { day: 3, port: 'Nassau, Bahamas', arrive: '08:00', depart: '17:00' },
-                                        { day: 4, port: 'Navegación', arrive: '-', depart: '-' }
-                                    ], null, 2))}
-                                >
-                                    Cargar Ejemplo
-                                </button>
-                            </label>
-                            <textarea
-                                className="form-input"
-                                rows="12"
-                                value={itineraryText}
-                                onChange={e => setItineraryText(e.target.value)}
-                                style={{ fontFamily: 'monospace', fontSize: '0.8rem', whiteSpace: 'pre' }}
+                            <label className="form-label">{t('admin.itinerary')}</label>
+                            <ItineraryEditor
+                                value={itinerary}
+                                onChange={(newItinerary) => setItinerary(newItinerary)}
                             />
-                            <div className="form-help bg-light p-sm rounded mt-xs">
-                                <p className="mb-xs"><strong>Formato Requerido:</strong></p>
-                                <pre className="text-xs overflow-x-auto">
-                                    {`[
-  {
-    "day": 1,
-    "port": "Puerto Ejemplo",
-    "arrive": "08:00",
-    "depart": "17:00"
-  }
-]`}
-                                </pre>
-                            </div>
                         </div>
 
                         <button
@@ -180,7 +145,7 @@ const GroupConfig = ({ groupId = 'default' }) => {
                             className="btn btn-primary w-full"
                             disabled={saving}
                         >
-                            {saving ? 'Guardando...' : 'Guardar Cambios'}
+                            {saving ? t('common.loading') : t('common.saveChanges')}
                         </button>
                     </form>
                 </div>

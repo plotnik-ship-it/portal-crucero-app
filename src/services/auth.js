@@ -18,6 +18,25 @@ import {
     serverTimestamp
 } from 'firebase/firestore';
 import { auth, db } from './firebase';
+import i18n from '../i18n/config';
+
+/**
+ * Get user-friendly error messages using i18n
+ */
+const getAuthErrorMessage = (errorCode) => {
+    const errorKeyMap = {
+        'auth/invalid-email': 'login.errors.invalidEmail',
+        'auth/user-disabled': 'login.errors.userDisabled',
+        'auth/user-not-found': 'login.errors.userNotFound',
+        'auth/wrong-password': 'login.errors.wrongPassword',
+        'auth/invalid-credential': 'login.errors.wrongPassword',
+        'auth/too-many-requests': 'login.errors.tooManyAttempts',
+        'auth/network-request-failed': 'login.errors.networkError',
+    };
+
+    const errorKey = errorKeyMap[errorCode] || 'login.errors.unknownError';
+    return i18n.t(errorKey);
+};
 
 /**
  * Sign in with email and password
@@ -181,21 +200,4 @@ export const changePassword = async (currentPassword, newPassword) => {
         console.error('❌ Password change error:', error.code, error.message);
         throw new Error(getAuthErrorMessage(error.code));
     }
-};
-
-/**
- * Get user-friendly error messages
- */
-const getAuthErrorMessage = (errorCode) => {
-    const errorMessages = {
-        'auth/invalid-email': 'El correo electrónico no es válido',
-        'auth/user-disabled': 'Esta cuenta ha sido deshabilitada',
-        'auth/user-not-found': 'No existe una cuenta con este correo',
-        'auth/wrong-password': 'Contraseña incorrecta',
-        'auth/invalid-credential': 'Credenciales inválidas',
-        'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde',
-        'auth/network-request-failed': 'Error de conexión. Verifica tu internet',
-    };
-
-    return errorMessages[errorCode] || 'Error de autenticación';
 };

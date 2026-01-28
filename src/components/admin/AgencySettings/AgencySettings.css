@@ -1,0 +1,454 @@
+/* ============================================
+   Agency Settings Styles
+   ============================================ */
+
+.agency-settings {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header */
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border, #E2E8F0);
+}
+
+.settings-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: var(--color-text, #0F172A);
+}
+
+.settings-header .text-muted {
+    margin: 0;
+    color: var(--color-text-muted, #64748B);
+}
+
+/* Grid Layout */
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-sidebar {
+        order: -1;
+    }
+}
+
+/* Sections */
+.settings-section {
+    background: white;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.settings-section h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text, #0F172A);
+}
+
+.section-description {
+    margin: 0 0 1.5rem 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #64748B);
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text, #0F172A);
+    margin-bottom: 0.5rem;
+}
+
+.form-hint {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #64748B);
+    line-height: 1.5;
+}
+
+.form-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border-light, #F1F5F9);
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.alert-success {
+    background-color: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #16A34A;
+}
+
+.alert-error {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #DC2626;
+}
+
+/* ============================================
+   Logo Upload
+   ============================================ */
+
+.logo-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.logo-preview {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--color-background, #F8FAFC);
+}
+
+.logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1rem;
+}
+
+.logo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-text-muted, #64748B);
+    text-align: center;
+    padding: 1rem;
+}
+
+.logo-placeholder svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+}
+
+.logo-placeholder span {
+    font-size: 0.875rem;
+}
+
+.logo-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.logo-error {
+    color: var(--color-error, #DC2626);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* ============================================
+   Color Picker
+   ============================================ */
+
+.color-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.color-presets {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.75rem;
+}
+
+.color-preset {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.color-preset:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.color-preset.active {
+    border-color: var(--color-text, #0F172A);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-text, #0F172A);
+}
+
+.color-preset svg {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.color-custom {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.color-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.color-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary, #475569);
+}
+
+.color-inputs {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.color-input-native {
+    width: 60px;
+    height: 40px;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.color-input-text {
+    flex: 1;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 8px;
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 0.875rem;
+}
+
+.color-input-text:focus {
+    outline: none;
+    border-color: var(--color-primary, #0F766E);
+    box-shadow: 0 0 0 3px var(--color-primary-light, #CCFBF1);
+}
+
+.color-preview {
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border, #E2E8F0);
+}
+
+.color-error {
+    color: var(--color-error, #DC2626);
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   Branding Preview
+   ============================================ */
+
+.branding-preview {
+    position: sticky;
+    top: 2rem;
+    background: white;
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.preview-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text, #0F172A);
+}
+
+.preview-subtitle {
+    margin: 0 0 1.5rem 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #64748B);
+}
+
+.preview-card {
+    border: 1px solid var(--color-border, #E2E8F0);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.preview-header {
+    padding: 1.5rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+}
+
+.preview-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.preview-portal-name {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+}
+
+.preview-body {
+    padding: 1.5rem;
+    background: white;
+}
+
+.preview-description {
+    margin: 0 0 1.5rem 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #64748B);
+}
+
+.preview-elements {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.preview-button {
+    padding: 0.625rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.preview-button-outline {
+    padding: 0.625rem 1.25rem;
+    background: transparent;
+    border: 1.5px solid;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.preview-link-example {
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border-light, #F1F5F9);
+}
+
+.preview-link-example a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.preview-link-example a:hover {
+    text-decoration: underline;
+}
+
+.preview-section {
+    margin-top: 1.5rem;
+}
+
+.preview-section-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary, #475569);
+}
+
+.preview-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.preview-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.preview-badge-success {
+    background-color: #DCFCE7;
+    color: #15803D;
+}
+
+.preview-badge-warning {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 768px) {
+    .agency-settings {
+        padding: 1rem;
+    }
+
+    .settings-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .color-presets {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .logo-preview {
+        width: 150px;
+        height: 150px;
+    }
+}

@@ -1,0 +1,84 @@
+/* Metric Card Styles */
+.metric-card {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.metric-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.metric-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.metric-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.metric-card-body {
+    margin-top: 0.5rem;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.metric-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0.5rem 0 0 0;
+}
+
+/* Color variants */
+.metric-card-primary .metric-value {
+    color: var(--color-primary);
+}
+
+.metric-card-success .metric-value {
+    color: var(--color-success);
+}
+
+.metric-card-warning .metric-value {
+    color: var(--color-warning);
+}
+
+.metric-card-danger .metric-value {
+    color: var(--color-danger);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .metric-card {
+        padding: 1rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+    }
+
+    .metric-icon {
+        font-size: 1.5rem;
+    }
+}

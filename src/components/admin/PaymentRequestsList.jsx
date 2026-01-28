@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     getAllPendingPaymentRequests,
     applyPaymentRequest,
@@ -13,6 +14,7 @@ import { formatCurrencyWithLabel } from '../../services/currencyService';
 import { formatTimestamp } from '../../utils/formatters';
 
 const PaymentRequestsList = ({ onUpdate }) => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
         setProcessing(selectedRequest.id);
         try {
             // 1. Transactional Update (DB + Status)
-            await applyPaymentRequest(selectedRequest.familyId, selectedRequest.id, {
+            await applyPaymentRequest(selectedRequest.bookingId, selectedRequest.id, {
                 amountCad: amountAppliedCad,
                 targetCabinIndex: modalData.targetCabinIndex !== '' ? parseInt(modalData.targetCabinIndex) : null,
                 reference: modalData.reference,
@@ -88,7 +90,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
 
             try {
                 await sendFamilyApprovedEmail({
-                    familyEmail: selectedRequest.email || (selectedRequest.familyId + '@example.com'), // Fallback if email not in request, but it usually is seeded
+                    familyEmail: selectedRequest.email || (selectedRequest.bookingId + '@example.com'), // Fallback if email not in request, but it usually is seeded
                     variables: {
                         familyName: selectedRequest.familyName,
                         familyCode: selectedRequest.familyCode,
@@ -104,7 +106,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
 
                 // 4a. Success Hook
                 await updatePaymentRequestNotificationStatus(
-                    selectedRequest.familyId,
+                    selectedRequest.bookingId,
                     selectedRequest.id,
                     'sent'
                 );
@@ -114,7 +116,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
                 // 4b. Failure Hook
                 console.error("Email failed", emailError);
                 await updatePaymentRequestNotificationStatus(
-                    selectedRequest.familyId,
+                    selectedRequest.bookingId,
                     selectedRequest.id,
                     'failed',
                     emailError.message
@@ -142,7 +144,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
         try {
             const reason = note || 'Rechazado por admin';
             // 1. Transactional Update
-            await rejectPaymentRequest(request.familyId, request.id, reason, user.uid);
+            await rejectPaymentRequest(request.bookingId, request.id, reason, user.uid);
 
             // 2. Refresh to show rejected
             await loadRequests();
@@ -150,7 +152,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
             // 3. Send Email
             try {
                 await sendFamilyRejectedEmail({
-                    familyEmail: request.email || (request.familyId + '@example.com'),
+                    familyEmail: request.email || (request.bookingId + '@example.com'),
                     variables: {
                         familyName: request.familyName,
                         familyCode: request.familyCode,
@@ -163,13 +165,13 @@ const PaymentRequestsList = ({ onUpdate }) => {
                 });
 
                 // 4a. Success
-                await updatePaymentRequestNotificationStatus(request.familyId, request.id, 'sent');
+                await updatePaymentRequestNotificationStatus(request.bookingId, request.id, 'sent');
                 alert('Solicitud rechazada y notificada.');
 
             } catch (emailError) {
                 // 4b. Fail
                 console.error("Email failed", emailError);
-                await updatePaymentRequestNotificationStatus(request.familyId, request.id, 'failed', emailError.message);
+                await updatePaymentRequestNotificationStatus(request.bookingId, request.id, 'failed', emailError.message);
                 alert('Solicitud rechazada, pero falló el envío del email.');
             }
 
@@ -191,7 +193,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
         try {
             if (request.notificationType === 'approved') {
                 await sendFamilyApprovedEmail({
-                    familyEmail: request.email || (request.familyId + '@example.com'),
+                    familyEmail: request.email || (request.bookingId + '@example.com'),
                     variables: {
                         familyName: request.familyName,
                         familyCode: request.familyCode,
@@ -203,7 +205,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
                 });
             } else if (request.notificationType === 'rejected') {
                 await sendFamilyRejectedEmail({
-                    familyEmail: request.email || (request.familyId + '@example.com'),
+                    familyEmail: request.email || (request.bookingId + '@example.com'),
                     variables: {
                         familyName: request.familyName,
                         familyCode: request.familyCode,
@@ -216,12 +218,12 @@ const PaymentRequestsList = ({ onUpdate }) => {
                 });
             }
 
-            await updatePaymentRequestNotificationStatus(request.familyId, request.id, 'sent');
+            await updatePaymentRequestNotificationStatus(request.bookingId, request.id, 'sent');
             await loadRequests();
             alert('Email reenviado correctamente');
         } catch (error) {
             console.error('Retry failed', error);
-            await updatePaymentRequestNotificationStatus(request.familyId, request.id, 'failed', error.message);
+            await updatePaymentRequestNotificationStatus(request.bookingId, request.id, 'failed', error.message);
             alert('Falló el reintento del email');
         } finally {
             setProcessing(null);
@@ -235,7 +237,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
 
         setProcessing(request.id);
         try {
-            await deletePaymentRequest(request.familyId, request.id);
+            await deletePaymentRequest(request.bookingId, request.id);
             await loadRequests();
             if (onUpdate) onUpdate();
             alert('Solicitud eliminada exitosamente');
@@ -255,21 +257,21 @@ const PaymentRequestsList = ({ onUpdate }) => {
         <>
             <Card>
                 <div className="card-header">
-                    <h3 className="card-title">📋 Solicitudes Pendientes ({requests.length})</h3>
+                    <h3 className="card-title">📋 {t('admin.pendingRequestsCount', { count: requests.length })}</h3>
                 </div>
                 <div className="card-body">
                     {requests.length === 0 ? (
-                        <p className="text-muted text-center">No hay solicitudes pendientes</p>
+                        <p className="text-muted text-center">{t('admin.noPendingRequests')}</p>
                     ) : (
                         <div className="table-container">
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th>Fecha</th>
-                                        <th>Familia</th>
-                                        <th>Monto</th>
-                                        <th>Detalles</th>
-                                        <th>Acciones</th>
+                                        <th>{t('admin.date')}</th>
+                                        <th>{t('admin.family')}</th>
+                                        <th>{t('admin.amount')}</th>
+                                        <th>{t('admin.details')}</th>
+                                        <th>{t('common.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -310,7 +312,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
                                                 */}
                                                 {request.notificationStatus === 'failed' && (
                                                     <div className="badge badge-error mt-xs">
-                                                        ⚠ Email Falló
+                                                        {t('admin.emailFailed')}
                                                     </div>
                                                 )}
                                             </td>
@@ -323,20 +325,20 @@ const PaymentRequestsList = ({ onUpdate }) => {
                                                                 className="btn btn-sm btn-success"
                                                                 disabled={processing === request.id}
                                                             >
-                                                                ✓ Aplicar
+                                                                ✓ {t('admin.apply')}
                                                             </button>
                                                             <button
                                                                 onClick={() => handleReject(request)}
                                                                 className="btn btn-sm btn-danger"
                                                                 disabled={processing === request.id}
                                                             >
-                                                                ✗ Rechazar
+                                                                ✗ {t('admin.reject')}
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDelete(request)}
                                                                 className="btn btn-sm btn-outline"
                                                                 disabled={processing === request.id}
-                                                                title="Eliminar solicitud"
+                                                                title={t('admin.deleteRequest')}
                                                             >
                                                                 🗑️
                                                             </button>
@@ -353,7 +355,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
                                                             className="btn btn-sm btn-outline"
                                                             disabled={processing === request.id}
                                                         >
-                                                            ↻ Reenviar Email
+                                                            {t('admin.resendEmail')}
                                                         </button>
                                                     )}
                                                 </div>
@@ -386,13 +388,13 @@ const PaymentRequestsList = ({ onUpdate }) => {
                     }}>
                         <Card>
                             <div className="card-header">
-                                <h3 className="card-title">Aprobar Pago - {selectedRequest.familyCode}</h3>
+                                <h3 className="card-title">{t('admin.approvePayment')} - {selectedRequest.familyCode}</h3>
                             </div>
                             <div className="card-body">
                                 <form onSubmit={handleConfirmApprove}>
                                     {/* Amount */}
                                     <div className="form-group">
-                                        <label className="form-label required">Monto Real (CAD)</label>
+                                        <label className="form-label required">{t('admin.realAmount')}</label>
                                         <input
                                             type="number"
                                             className="form-input"
@@ -405,28 +407,28 @@ const PaymentRequestsList = ({ onUpdate }) => {
 
                                     {/* Target Cabin */}
                                     <div className="form-group">
-                                        <label className="form-label required">Aplicar a Cabina</label>
+                                        <label className="form-label required">{t('admin.applyToCabin')}</label>
                                         <select
                                             className="form-select"
                                             value={modalData.targetCabinIndex}
                                             onChange={(e) => setModalData({ ...modalData, targetCabinIndex: e.target.value })}
                                             required
                                         >
-                                            <option value="" disabled>-- Selecciona Cabina --</option>
+                                            <option value="" disabled>{t('admin.selectCabin')}</option>
                                             {selectedRequest.cabinNumbers?.map((cabin, index) => (
                                                 <option key={index} value={index}>
-                                                    Cabina {cabin}
+                                                    {t('admin.cabin')} {cabin}
                                                 </option>
                                             ))}
                                         </select>
                                         <div className="form-help">
-                                            Selecciona la cabina para reducir su saldo específico.
+                                            {t('admin.selectCabinHelp')}
                                         </div>
                                     </div>
 
                                     {/* Reference */}
                                     <div className="form-group">
-                                        <label className="form-label required">Referencia / Auth Code</label>
+                                        <label className="form-label required">{t('admin.reference')}</label>
                                         <input
                                             type="text"
                                             className="form-input"
@@ -439,7 +441,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
 
                                     {/* Note */}
                                     <div className="form-group">
-                                        <label className="form-label">Nota Interna</label>
+                                        <label className="form-label">{t('admin.internalNote')}</label>
                                         <textarea
                                             className="form-input"
                                             value={modalData.adminNote}
@@ -449,7 +451,7 @@ const PaymentRequestsList = ({ onUpdate }) => {
                                     </div>
 
                                     <div className="alert alert-info text-small mb-md">
-                                        Al aprobar, se creará el pago y se actualizará el saldo de la familia automáticamente.
+                                        {t('admin.approvalNote')}
                                     </div>
 
                                     <div className="flex gap-md justify-end">
@@ -458,13 +460,13 @@ const PaymentRequestsList = ({ onUpdate }) => {
                                             className="btn btn-outline"
                                             onClick={() => setShowModal(false)}
                                         >
-                                            Cancelar
+                                            {t('common.cancel')}
                                         </button>
                                         <button
                                             type="submit"
                                             className="btn btn-primary"
                                         >
-                                            Confirmar y Aplicar
+                                            {t('admin.confirmApply')}
                                         </button>
                                     </div>
                                 </form>

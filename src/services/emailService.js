@@ -1,4 +1,5 @@
 import emailjs from '@emailjs/browser';
+import { getTemplateId } from './emailLanguageHelper';
 
 /**
  * Initialize EmailJS
@@ -33,7 +34,7 @@ export const sendPaymentRequestNotification = async (requestData) => {
         const templateParams = {
             to_email: import.meta.env.VITE_ADMIN_EMAIL,
             family_name: requestData.familyName,
-            family_code: requestData.familyCode,
+            family_code: requestData.bookingCode,
             cabin_numbers: requestData.cabinNumbers.join(', '),
             cabin_distribution: cabinDistributionText || 'Distribución no especificada',
             amount_cad: requestData.amountCad.toFixed(2),
@@ -90,7 +91,7 @@ export const sendFamilyApprovedEmail = async ({ familyEmail, variables }) => {
         const templateParams = {
             to_email: familyEmail,
             family_name: variables.familyName,
-            family_code: variables.familyCode,
+            family_code: variables.bookingCode,
             amount_applied_cad: variables.amountAppliedCad?.toFixed(2),
             amount_applied_mxn: variables.amountAppliedMxnApprox?.toFixed(2),
             balance_cad_global: variables.balanceCadGlobal?.toFixed(2),
@@ -131,7 +132,7 @@ export const sendFamilyRejectedEmail = async ({ familyEmail, variables }) => {
         const templateParams = {
             to_email: familyEmail,
             family_name: variables.familyName,
-            family_code: variables.familyCode,
+            family_code: variables.bookingCode,
             amount_requested_cad: variables.amountRequestedCad?.toFixed(2),
             amount_requested_mxn: variables.amountRequestedMxnApprox?.toFixed(2),
             cabin_number: variables.targetCabinNumber || 'N/A',
@@ -160,3 +161,78 @@ export const sendFamilyRejectedEmail = async ({ familyEmail, variables }) => {
         throw error;
     }
 };
+
+/**
+ * Send mass communication email to multiple families
+ * Replaces dynamic variables in subject and body for each recipient
+ */
+export const sendMassEmail = async ({ subject, body, recipients }) => {
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+
+    // Get template ID based on current language
+    const templateId = getTemplateId('mass_comm');
+
+    if (!publicKey || !serviceId || !templateId) {
+        console.warn('⚠️ EmailJS not fully configured. Skipping mass email.');
+        throw new Error('EmailJS no está configurado. Verifica tus variables de entorno.');
+    }
+
+    const results = {
+        sent: [],
+        failed: [],
+        total: recipients.length
+    };
+
+    // Helper function to replace variables in text
+    const replaceVariables = (text, family) => {
+        return text
+            .replace(/{nombre}/g, family.displayName || 'Familia')
+            .replace(/{codigo}/g, family.bookingCode || 'N/A')
+            .replace(/{saldo}/g, `$${(family.balanceCadGlobal || 0).toFixed(2)} CAD`)
+            .replace(/{total}/g, `$${(family.totalCostCad || 0).toFixed(2)} CAD`)
+            .replace(/{pagado}/g, `$${(family.totalPaidCad || 0).toFixed(2)} CAD`)
+            .replace(/{barco}/g, family.shipName || 'Crucero')
+            .replace(/{fecha}/g, family.sailDate || 'Por confirmar');
+    };
+
+    // Send emails sequentially to avoid rate limiting
+    for (const family of recipients) {
+        try {
+            const personalizedSubject = replaceVariables(subject, family);
+            const personalizedBody = replaceVariables(body, family);
+
+            const templateParams = {
+                to_email: family.email,
+                to_name: family.displayName || 'Estimado cliente',
+                subject: personalizedSubject,
+                message: personalizedBody,
+                family_code: family.bookingCode || 'N/A',
+                from_name: 'TravelPoint - Portal de Cruceros'
+            };
+
+            await emailjs.send(serviceId, templateId, templateParams);
+
+            results.sent.push({
+                bookingCode: family.bookingCode,
+                email: family.email,
+                name: family.displayName
+            });
+
+            // Small delay to avoid rate limiting (200ms between emails)
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+        } catch (error) {
+            console.error(`Error sending email to ${family.email}:`, error);
+            results.failed.push({
+                bookingCode: family.bookingCode,
+                email: family.email,
+                name: family.displayName,
+                error: error.message
+            });
+        }
+    }
+
+    return results;
+};
+

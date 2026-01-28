@@ -1,17 +1,20 @@
+import { useTranslation } from 'react-i18next';
 import Card from '../shared/Card';
 import Badge from '../shared/Badge';
 import { formatCurrencyWithLabel } from '../../services/currencyService';
 import { formatTimestamp } from '../../utils/formatters';
 
 const PaymentHistory = ({ payments }) => {
+    const { t } = useTranslation();
+
     if (!payments || payments.length === 0) {
         return (
             <Card>
                 <div className="card-header">
-                    <h3 className="card-title">📋 Historial de Pagos</h3>
+                    <h3 className="card-title">{t('family.paymentHistoryTitle')}</h3>
                 </div>
                 <div className="card-body">
-                    <p className="text-muted text-center">No hay pagos registrados aún.</p>
+                    <p className="text-muted text-center">{t('family.noPaymentsYet')}</p>
                 </div>
             </Card>
         );
@@ -20,17 +23,17 @@ const PaymentHistory = ({ payments }) => {
     return (
         <Card>
             <div className="card-header">
-                <h3 className="card-title">📋 Historial de Pagos</h3>
+                <h3 className="card-title">{t('family.paymentHistoryTitle')}</h3>
             </div>
             <div className="card-body">
                 <div className="table-container">
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>Fecha</th>
-                                <th>Monto</th>
-                                <th>Método</th>
-                                <th>Referencia</th>
+                                <th>{t('family.paymentDate')}</th>
+                                <th>{t('family.paymentAmount')}</th>
+                                <th>{t('family.paymentMethod')}</th>
+                                <th>{t('family.paymentReference')}</th>
                             </tr>
                         </thead>
                         <tbody>

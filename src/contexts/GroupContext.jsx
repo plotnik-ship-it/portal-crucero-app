@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 const GroupContext = createContext(null);
 
 export const GroupProvider = ({ children }) => {
-    const { user, userData } = useAuth();
+    const { user } = useAuth();
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -13,14 +13,14 @@ export const GroupProvider = ({ children }) => {
 
     // Load groups when user logs in as admin
     useEffect(() => {
-        if (user && userData?.role === 'admin' && userData?.agencyId) {
-            loadGroups(userData.agencyId);
+        if (user?.role === 'admin' && user?.agencyId) {
+            loadGroups(user.agencyId);
         } else {
             // Clear groups if not admin
             setGroups([]);
             setSelectedGroup(null);
         }
-    }, [user, userData]);
+    }, [user]);
 
     const loadGroups = async (agencyId) => {
         setLoading(true);
@@ -30,19 +30,20 @@ export const GroupProvider = ({ children }) => {
             const fetchedGroups = await getGroupsByAgency(agencyId);
             setGroups(fetchedGroups);
 
-            // Auto-select group
-            if (fetchedGroups.length > 0) {
-                // Try to restore last selected group from localStorage
-                const savedGroupId = localStorage.getItem('selectedGroupId');
+            // Don't auto-select any group - let user choose from dashboard home
+            // Only restore if there was a previously selected group
+            const savedGroupId = localStorage.getItem('selectedGroupId');
+            if (savedGroupId) {
                 const savedGroup = fetchedGroups.find(g => g.id === savedGroupId);
-
                 if (savedGroup) {
                     setSelectedGroup(savedGroup);
                 } else {
-                    // Select first group by default
-                    setSelectedGroup(fetchedGroups[0]);
-                    localStorage.setItem('selectedGroupId', fetchedGroups[0].id);
+                    // Clear invalid saved group
+                    localStorage.removeItem('selectedGroupId');
+                    setSelectedGroup(null);
                 }
+            } else {
+                setSelectedGroup(null);
             }
         } catch (err) {
             console.error('Error loading groups:', err);
@@ -53,6 +54,13 @@ export const GroupProvider = ({ children }) => {
     };
 
     const selectGroup = (groupId) => {
+        if (groupId === null) {
+            // Deselect group - return to dashboard home
+            setSelectedGroup(null);
+            localStorage.removeItem('selectedGroupId');
+            return;
+        }
+
         const group = groups.find(g => g.id === groupId);
         if (group) {
             setSelectedGroup(group);
@@ -61,8 +69,8 @@ export const GroupProvider = ({ children }) => {
     };
 
     const refreshGroups = async () => {
-        if (userData?.agencyId) {
-            await loadGroups(userData.agencyId);
+        if (user?.agencyId) {
+            await loadGroups(user.agencyId);
         }
     };
 

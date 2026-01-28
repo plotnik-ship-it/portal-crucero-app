@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { parseCSV, validateFamilies, transformFamilyForFirestore, downloadCSVTemplate } from '../../utils/csvParser';
-import { bulkCreateFamilies } from '../../services/firestore';
+import { useTranslation } from 'react-i18next';
+import { parseCSV, validateBookings, mergeBookingsByCode, transformMergedBookingForFirestore, downloadCSVTemplate } from '../../utils/csvParser';
+import { bulkCreateBookings } from '../../services/firestore';
 import Card from '../shared/Card';
 import Badge from '../shared/Badge';
 
-const BulkFamilyImport = ({ onClose, onSuccess }) => {
+const BulkBookingImport = ({ onClose, onSuccess }) => {
+    const { t } = useTranslation();
     const [file, setFile] = useState(null);
     const [parseResult, setParseResult] = useState(null);
     const [importing, setImporting] = useState(false);
@@ -39,7 +41,7 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
 
     const handleFileSelect = async (selectedFile) => {
         if (!selectedFile.name.endsWith('.csv')) {
-            alert('Por favor selecciona un archivo CSV');
+            alert(t('admin.bulkImportErrorSelectCSV'));
             return;
         }
 
@@ -50,10 +52,18 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
         try {
             const text = await selectedFile.text();
             const families = parseCSV(text);
-            const validation = validateFamilies(families);
-            setParseResult(validation);
+            const validation = validateBookings(families);
+
+            // Merge families by bookingCode
+            const mergedBookings = mergeBookingsByCode(validation.validFamilies);
+
+            setParseResult({
+                ...validation,
+                mergedBookings, // Add merged families to result
+                mergedCount: mergedBookings.length
+            });
         } catch (error) {
-            alert(`Error al procesar el archivo: ${error.message}`);
+            alert(`${t('admin.bulkImportErrorProcessing')} ${error.message}`);
             setFile(null);
         }
     };
@@ -65,18 +75,21 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
 
         setImporting(true);
         try {
-            // Transform families to Firestore format
-            const transformedFamilies = parseResult.validFamilies.map(transformFamilyForFirestore);
+            // Transform merged families to Firestore format
+            const transformPromises = parseResult.mergedBookings.map(family =>
+                transformMergedBookingForFirestore(family)
+            );
+            const transformedFamilies = await Promise.all(transformPromises);
 
             // Bulk create
-            const result = await bulkCreateFamilies(transformedFamilies);
+            const result = await bulkCreateBookings(transformedFamilies);
             setImportResult(result);
 
             if (result.successful.length > 0 && onSuccess) {
                 onSuccess();
             }
         } catch (error) {
-            alert(`Error al importar familias: ${error.message}`);
+            alert(`${t('admin.bulkImportErrorImporting')} ${error.message}`);
         } finally {
             setImporting(false);
         }
@@ -92,7 +105,7 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '800px' }}>
                 <div className="modal-header">
-                    <h2 className="modal-title">📥 Importación Masiva de Familias</h2>
+                    <h2 className="modal-title">📥 {t('admin.bulkImportTitle')}</h2>
                     <button onClick={onClose} className="btn-close">×</button>
                 </div>
 
@@ -101,20 +114,22 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                     {!file && !importResult && (
                         <div className="mb-lg">
                             <p className="text-muted mb-md">
-                                Sube un archivo CSV con la información de las familias. El archivo debe contener las siguientes columnas:
+                                {t('admin.bulkImportInstructions')}
                             </p>
                             <ul className="text-small text-muted mb-md">
-                                <li><strong>familyCode</strong> (requerido): Código único de la familia</li>
-                                <li><strong>displayName</strong> (requerido): Apellido o nombre de la familia</li>
-                                <li><strong>email</strong> (requerido): Email de contacto</li>
-                                <li><strong>cabinNumbers</strong> (opcional): Números de cabina separados por punto y coma</li>
-                                <li><strong>defaultPassword</strong> (opcional): Contraseña inicial</li>
+                                <li><strong>{t('admin.bulkImportBookingCode')}</strong> {t('admin.bulkImportBookingCodeDesc')}</li>
+                                <li><strong>{t('admin.bulkImportDisplayName')}</strong> {t('admin.bulkImportDisplayNameDesc')}</li>
+                                <li><strong>{t('admin.bulkImportEmail')}</strong> {t('admin.bulkImportEmailDesc')}</li>
+                                <li><strong>{t('admin.bulkImportCabinNumbers')}</strong> {t('admin.bulkImportCabinNumbersDesc')}</li>
                             </ul>
+                            <div className="alert alert-info mb-md">
+                                <strong>💡 {t('admin.bulkImportMultipleCabins')}</strong> {t('admin.bulkImportMultipleCabinsDesc')} <code>{t('admin.bulkImportBookingCode')}</code>{t('admin.bulkImportMultipleCabinsDesc2')}
+                            </div>
                             <button
                                 onClick={downloadCSVTemplate}
                                 className="btn btn-outline btn-sm"
                             >
-                                📄 Descargar Plantilla CSV
+                                📄 {t('admin.bulkImportDownloadTemplate')}
                             </button>
                         </div>
                     )}
@@ -132,10 +147,10 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                             <div className="mb-md">
                                 <span style={{ fontSize: '3rem' }}>📂</span>
                             </div>
-                            <p className="mb-sm">Arrastra y suelta tu archivo CSV aquí</p>
-                            <p className="text-muted text-small mb-md">o</p>
+                            <p className="mb-sm">{t('admin.bulkImportDragDrop')}</p>
+                            <p className="text-muted text-small mb-md">{t('admin.bulkImportOr')}</p>
                             <label className="btn btn-primary">
-                                Seleccionar Archivo
+                                {t('admin.bulkImportSelectFile')}
                                 <input
                                     type="file"
                                     accept=".csv"
@@ -150,9 +165,9 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                     {parseResult && !importResult && (
                         <div>
                             <div className="flex justify-between items-center mb-md">
-                                <h3 className="text-lg font-bold">Vista Previa</h3>
+                                <h3 className="text-lg font-bold">{t('admin.bulkImportPreview')}</h3>
                                 <button onClick={handleReset} className="btn btn-outline btn-sm">
-                                    🔄 Cambiar Archivo
+                                    🔄 {t('admin.bulkImportChangeFile')}
                                 </button>
                             </div>
 
@@ -160,45 +175,55 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                             <div className="grid grid-cols-3 gap-md mb-lg">
                                 <Card>
                                     <div className="text-center">
-                                        <p className="text-xs text-muted uppercase">Total</p>
+                                        <p className="text-xs text-muted uppercase">{t('admin.bulkImportTotal')}</p>
                                         <p className="text-2xl font-bold">{parseResult.totalCount}</p>
                                     </div>
                                 </Card>
                                 <Card>
                                     <div className="text-center">
-                                        <p className="text-xs text-success uppercase">Válidas</p>
+                                        <p className="text-xs text-success uppercase">{t('admin.bulkImportValid')}</p>
                                         <p className="text-2xl font-bold text-success">{parseResult.validCount}</p>
                                     </div>
                                 </Card>
                                 <Card>
                                     <div className="text-center">
-                                        <p className="text-xs text-danger uppercase">Inválidas</p>
+                                        <p className="text-xs text-danger uppercase">{t('admin.bulkImportInvalid')}</p>
                                         <p className="text-2xl font-bold text-danger">{parseResult.invalidCount}</p>
                                     </div>
                                 </Card>
                             </div>
 
-                            {/* Valid Families */}
-                            {parseResult.validCount > 0 && (
+                            {/* Merged Families Preview */}
+                            {parseResult.mergedCount > 0 && (
                                 <div className="mb-lg">
-                                    <h4 className="text-md font-bold mb-sm text-success">✅ Familias Válidas ({parseResult.validCount})</h4>
+                                    <h4 className="text-md font-bold mb-sm text-success">✅ {t('admin.bulkImportFamiliesToImport')} ({parseResult.mergedCount})</h4>
+                                    <p className="text-small text-muted mb-sm">
+                                        {parseResult.validCount} {t('admin.bulkImportValidRows')} → {parseResult.mergedCount} {t('admin.bulkImportMergedFamilies')}
+                                    </p>
                                     <div className="border border-light rounded" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                         <table className="table">
                                             <thead>
                                                 <tr>
-                                                    <th>Código</th>
-                                                    <th>Nombre</th>
-                                                    <th>Email</th>
-                                                    <th>Cabinas</th>
+                                                    <th>{t('admin.code')}</th>
+                                                    <th>{t('admin.name')}</th>
+                                                    <th>{t('admin.emailLabel')}</th>
+                                                    <th>{t('admin.cabins')}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {parseResult.validFamilies.map((family, idx) => (
+                                                {parseResult.mergedBookings.map((family, idx) => (
                                                     <tr key={idx}>
-                                                        <td><code>{family.familyCode}</code></td>
+                                                        <td><code>{family.bookingCode}</code></td>
                                                         <td>{family.displayName}</td>
                                                         <td>{family.email}</td>
-                                                        <td>{family.cabinNumbers || '-'}</td>
+                                                        <td>
+                                                            {family.cabinNumbers.length > 0 ? (
+                                                                <span>
+                                                                    {family.cabinNumbers.join(', ')}
+                                                                    <Badge variant="info" className="ml-sm">{family.cabinNumbers.length}</Badge>
+                                                                </span>
+                                                            ) : '-'}
+                                                        </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -210,12 +235,12 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                             {/* Invalid Families */}
                             {parseResult.invalidCount > 0 && (
                                 <div className="mb-lg">
-                                    <h4 className="text-md font-bold mb-sm text-danger">❌ Familias Inválidas ({parseResult.invalidCount})</h4>
+                                    <h4 className="text-md font-bold mb-sm text-danger">❌ {t('admin.bulkImportInvalidRows')} ({parseResult.invalidCount})</h4>
                                     <div className="border border-danger rounded p-md" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                         {parseResult.invalidFamilies.map((item, idx) => (
                                             <div key={idx} className="mb-sm">
                                                 <p className="font-bold text-small">
-                                                    Fila {item.rowNumber}: {item.family.familyCode || '(sin código)'} - {item.family.displayName || '(sin nombre)'}
+                                                    {t('admin.bulkImportRow')} {item.rowNumber}: {item.family.bookingCode || '(sin código)'} - {item.family.displayName || '(sin nombre)'}
                                                 </p>
                                                 <ul className="text-xs text-danger ml-md">
                                                     {item.errors.map((error, errIdx) => (
@@ -233,19 +258,19 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                     {/* Import Results */}
                     {importResult && (
                         <div>
-                            <h3 className="text-lg font-bold mb-md">Resultado de la Importación</h3>
+                            <h3 className="text-lg font-bold mb-md">{t('admin.bulkImportResults')}</h3>
 
                             {/* Summary */}
                             <div className="grid grid-cols-2 gap-md mb-lg">
                                 <Card>
                                     <div className="text-center">
-                                        <p className="text-xs text-success uppercase">Exitosas</p>
+                                        <p className="text-xs text-success uppercase">{t('admin.bulkImportSuccessful')}</p>
                                         <p className="text-2xl font-bold text-success">{importResult.successful.length}</p>
                                     </div>
                                 </Card>
                                 <Card>
                                     <div className="text-center">
-                                        <p className="text-xs text-danger uppercase">Fallidas</p>
+                                        <p className="text-xs text-danger uppercase">{t('admin.bulkImportFailed')}</p>
                                         <p className="text-2xl font-bold text-danger">{importResult.failed.length}</p>
                                     </div>
                                 </Card>
@@ -254,11 +279,11 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                             {/* Successful */}
                             {importResult.successful.length > 0 && (
                                 <div className="mb-lg">
-                                    <h4 className="text-md font-bold mb-sm text-success">✅ Familias Creadas</h4>
+                                    <h4 className="text-md font-bold mb-sm text-success">✅ {t('admin.bulkImportFamiliesToImport')}</h4>
                                     <div className="border border-success rounded p-md" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                         {importResult.successful.map((item, idx) => (
                                             <div key={idx} className="mb-xs">
-                                                <Badge variant="success">{item.familyCode}</Badge>
+                                                <Badge variant="success">{item.bookingCode}</Badge>
                                                 <span className="ml-sm">{item.displayName}</span>
                                             </div>
                                         ))}
@@ -269,15 +294,15 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                             {/* Failed */}
                             {importResult.failed.length > 0 && (
                                 <div className="mb-lg">
-                                    <h4 className="text-md font-bold mb-sm text-danger">❌ Familias Fallidas</h4>
+                                    <h4 className="text-md font-bold mb-sm text-danger">❌ {t('admin.bulkImportFailedList')}</h4>
                                     <div className="border border-danger rounded p-md" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                         {importResult.failed.map((item, idx) => (
                                             <div key={idx} className="mb-sm">
                                                 <p className="font-bold text-small">
-                                                    <Badge variant="danger">{item.familyCode}</Badge>
+                                                    <Badge variant="danger">{item.bookingCode}</Badge>
                                                     <span className="ml-sm">{item.displayName}</span>
                                                 </p>
-                                                <p className="text-xs text-danger ml-md">Error: {item.error}</p>
+                                                <p className="text-xs text-danger ml-md">{t('admin.bulkImportError')}: {item.error}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -285,7 +310,7 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                             )}
 
                             <button onClick={handleReset} className="btn btn-outline w-full">
-                                Importar Más Familias
+                                {t('admin.bulkImportDownloadTemplate')}
                             </button>
                         </div>
                     )}
@@ -295,14 +320,14 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                 {parseResult && !importResult && (
                     <div className="modal-footer">
                         <button onClick={onClose} className="btn btn-outline">
-                            Cancelar
+                            {t('common.cancel')}
                         </button>
                         <button
                             onClick={handleImport}
                             className="btn btn-primary"
-                            disabled={importing || parseResult.validCount === 0}
+                            disabled={importing || parseResult.mergedCount === 0}
                         >
-                            {importing ? '⏳ Importando...' : `✅ Importar ${parseResult.validCount} Familia(s)`}
+                            {importing ? `⏳ ${t('admin.bulkImportImporting')}` : `✅ ${t('admin.bulkImportStartImport')} (${parseResult.mergedCount})`}
                         </button>
                     </div>
                 )}
@@ -310,7 +335,7 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
                 {importResult && (
                     <div className="modal-footer">
                         <button onClick={onClose} className="btn btn-primary w-full">
-                            Cerrar
+                            {t('admin.bulkImportClose')}
                         </button>
                     </div>
                 )}
@@ -319,4 +344,4 @@ const BulkFamilyImport = ({ onClose, onSuccess }) => {
     );
 };
 
-export default BulkFamilyImport;
+export default BulkBookingImport;
