@@ -33,6 +33,7 @@ const TravelerDashboard = lazy(() => import('./components/traveler/TravelerDashb
 const SuperAdminPanel = lazy(() => import('./components/superadmin/SuperAdminPanel'));
 const ContractImportPage = lazy(() => import('./components/admin/ContractImport/ContractImportPage'));
 const AcceptInvite = lazy(() => import('./components/auth/AcceptInvite'));
+const TeamManagement = lazy(() => import('./components/admin/TeamManagement'));
 
 // Guards
 import SuperAdminGuard from './components/guards/SuperAdminGuard';
@@ -162,6 +163,18 @@ function App() {
                 element={
                   <ProtectedRoute adminOnly>
                     <AgencySettings />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Team Management (Enterprise) */}
+              <Route
+                path="/admin/team"
+                element={
+                  <ProtectedRoute adminOnly>
+                    <Suspense fallback={<Loading />}>
+                      <TeamManagement />
+                    </Suspense>
                   </ProtectedRoute>
                 }
               />

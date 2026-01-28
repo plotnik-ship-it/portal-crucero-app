@@ -33,7 +33,8 @@ const FEATURE_MATRIX = {
     'api_access': ['enterprise'],
     'custom_domain': ['enterprise'],
     'multi_currency': ['pro', 'enterprise'],
-    'ocr_parsing': ['pro', 'enterprise']  // Changed from enterprise-only to include pro
+    'ocr_parsing': ['pro', 'enterprise'],  // Changed from enterprise-only to include pro
+    'team_management': ['enterprise']  // Enterprise only - manage team members and invites
 };
 
 // Plan limits
@@ -93,6 +94,10 @@ const UPSELL_MESSAGES = {
     'default': {
         en: 'Upgrade your plan to unlock this feature',
         es: 'Actualiza tu plan para desbloquear esta función'
+    },
+    'team_management': {
+        en: 'Upgrade to Enterprise to manage team members and agents',
+        es: 'Actualiza a Enterprise para gestionar miembros del equipo y agentes'
     }
 };
 
