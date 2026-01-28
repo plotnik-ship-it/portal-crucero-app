@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from '../services/firebase';
 
 /**
  * Validate that an agency ID is provided

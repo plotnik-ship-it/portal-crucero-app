@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from './firebase';
 
 /**
  * Get all bookings for a specific agency (across all groups)

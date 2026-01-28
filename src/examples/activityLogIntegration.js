@@ -7,7 +7,7 @@
 
 import { logActivity, ACTIVITY_TYPES, SEVERITY_LEVELS } from '../services/activityLogService';
 import { doc, updateDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from '../services/firebase';
 
 // ============================================
 // Example 1: Log Payment Applied
