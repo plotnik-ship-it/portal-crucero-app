@@ -1,14 +1,16 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { deleteGroup } from '../../services/firestore';
 
 const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [confirmed, setConfirmed] = useState(false);
 
     const handleDelete = async () => {
         if (!confirmed) {
-            setError('Debes confirmar que deseas eliminar el grupo');
+            setError(t('admin.deleteGroup.mustConfirm'));
             return;
         }
 
@@ -26,7 +28,7 @@ const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
             onClose();
         } catch (err) {
             console.error('Error deleting group:', err);
-            setError(err.message || 'Error al eliminar el grupo');
+            setError(err.message || t('admin.deleteGroup.error'));
         } finally {
             setLoading(false);
         }
@@ -38,7 +40,7 @@ const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
         <div className="modal-overlay">
             <div className="modal-content" style={{ maxWidth: '500px', padding: '2.5rem' }}>
                 <div className="modal-header">
-                    <h2 className="modal-title">⚠️ Eliminar Grupo</h2>
+                    <h2 className="modal-title">⚠️ {t('admin.deleteGroup.title')}</h2>
                     <button
                         className="modal-close"
                         onClick={onClose}
@@ -59,11 +61,11 @@ const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
 
                 <div style={{ marginTop: '1.5rem' }}>
                     <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>
-                        <strong>¡Advertencia!</strong> Esta acción no se puede deshacer.
+                        <strong>{t('admin.deleteGroup.warning')}</strong> {t('admin.deleteGroup.irreversible')}
                     </div>
 
                     <p style={{ marginBottom: '1rem' }}>
-                        Estás a punto de eliminar el grupo:
+                        {t('admin.deleteGroup.aboutToDelete')}
                     </p>
 
                     <div style={{
@@ -91,7 +93,7 @@ const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
                                 disabled={loading}
                                 style={{ width: '1.25rem', height: '1.25rem', cursor: 'pointer' }}
                             />
-                            <span>Confirmo que deseo eliminar este grupo permanentemente</span>
+                            <span>{t('admin.deleteGroup.confirmCheckbox')}</span>
                         </label>
                     </div>
 
@@ -115,7 +117,7 @@ const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
                             disabled={loading}
                             style={{ flex: 1, padding: '0.75rem 1.5rem' }}
                         >
-                            Cancelar
+                            {t('common.cancel')}
                         </button>
                         <button
                             type="button"
@@ -129,7 +131,7 @@ const DeleteGroupModal = ({ isOpen, group, onClose, onDeleted }) => {
                                 borderColor: 'var(--color-danger, #dc3545)'
                             }}
                         >
-                            {loading ? 'Eliminando...' : 'Eliminar Grupo'}
+                            {loading ? t('admin.deleteGroup.deleting') : t('admin.deleteGroup.deleteButton')}
                         </button>
                     </div>
                 </div>

@@ -158,6 +158,18 @@ const es = {
             createFirstGroup: 'Crear Primer Grupo',
             createNewGroup: 'Crear Nuevo Grupo',
             deleteCurrentGroup: 'Eliminar Grupo Actual',
+            // Delete Group Modal
+            deleteGroup: {
+                title: 'Eliminar Grupo',
+                warning: '¡Advertencia!',
+                irreversible: 'Esta acción no se puede deshacer.',
+                aboutToDelete: 'Estás a punto de eliminar el grupo:',
+                confirmCheckbox: 'Confirmo que deseo eliminar este grupo permanentemente',
+                mustConfirm: 'Debes confirmar que deseas eliminar el grupo',
+                error: 'Error al eliminar el grupo',
+                deleting: 'Eliminando...',
+                deleteButton: 'Eliminar Grupo'
+            },
             exchangeRate: 'Tasa de Cambio (CAD a MXN)',
             currentRate: 'Actual: 1 CAD = {{rate}} MXN',
             lastUpdated: 'Última act: {{date}}',
@@ -1085,6 +1097,18 @@ const en = {
             createFirstGroup: 'Create First Group',
             createNewGroup: 'Create New Group',
             deleteCurrentGroup: 'Delete Current Group',
+            // Delete Group Modal
+            deleteGroup: {
+                title: 'Delete Group',
+                warning: 'Warning!',
+                irreversible: 'This action cannot be undone.',
+                aboutToDelete: 'You are about to delete the group:',
+                confirmCheckbox: 'I confirm I want to permanently delete this group',
+                mustConfirm: 'You must confirm that you want to delete the group',
+                error: 'Error deleting group',
+                deleting: 'Deleting...',
+                deleteButton: 'Delete Group'
+            },
             exchangeRate: 'Exchange Rate (CAD to MXN)',
             currentRate: 'Current: 1 CAD = {{rate}} MXN',
             lastUpdated: 'Last updated: {{date}}',
