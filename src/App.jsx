@@ -32,6 +32,7 @@ const OnboardingWizard = lazy(() => import('./components/onboarding/OnboardingWi
 const TravelerDashboard = lazy(() => import('./components/traveler/TravelerDashboard'));
 const SuperAdminPanel = lazy(() => import('./components/superadmin/SuperAdminPanel'));
 const ContractImportPage = lazy(() => import('./components/admin/ContractImport/ContractImportPage'));
+const AcceptInvite = lazy(() => import('./components/auth/AcceptInvite'));
 
 // Guards
 import SuperAdminGuard from './components/guards/SuperAdminGuard';
@@ -61,6 +62,7 @@ function App() {
                 element={user ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace /> : <LoginWhiteLabel />}
               />
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/accept-invite" element={<Suspense fallback={<Loading />}><AcceptInvite /></Suspense>} />
 
               {/* Request Access Routes */}
               <Route path="/request-access" element={<Suspense fallback={<Loading />}><RequestAccessForm lang="es" /></Suspense>} />

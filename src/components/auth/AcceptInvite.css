@@ -1,0 +1,119 @@
+/**
+ * Accept Invite Page Styles
+ */
+
+.accept-invite-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    padding: 1rem;
+}
+
+.accept-invite-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.accept-invite-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.accept-invite-card h2 {
+    margin: 0 0 0.75rem 0;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.accept-invite-card p {
+    color: #6b7280;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.5;
+}
+
+.accept-invite-card .btn-primary {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: #0f766e;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.accept-invite-card .btn-primary:hover {
+    background: #0d6660;
+}
+
+.accept-invite-card.success {
+    border-top: 4px solid #10b981;
+}
+
+.accept-invite-card.error {
+    border-top: 4px solid #ef4444;
+}
+
+.accept-invite-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.accept-invite-loading .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #0f766e;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.accept-invite-hint {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-top: 1rem !important;
+}
+
+.accept-invite-hint a {
+    color: #0f766e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.accept-invite-hint a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .accept-invite-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .accept-invite-icon {
+        font-size: 2.5rem;
+    }
+
+    .accept-invite-card h2 {
+        font-size: 1.25rem;
+    }
+}
