@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { validateForConfirm } from '../../../services/contractImportService';
+import { validateForConfirm, validateReadyForConfirm } from '../../../services/contractImportService';
 import UnparsedRowsPanel from './UnparsedRowsPanel';
 
 const SUPPORTED_CURRENCIES = ['USD', 'CAD', 'EUR', 'MXN', 'GBP'];
@@ -19,6 +19,7 @@ function ContractReviewModal({
 }) {
     const [data, setData] = useState(initialData);
     const [validation, setValidation] = useState({ valid: true, errors: [], warnings: [] });
+    const [readiness, setReadiness] = useState({ ready: false, missing: [] });
     const [activeTab, setActiveTab] = useState('cabins');
 
     // Initialize data from props
@@ -33,6 +34,9 @@ function ContractReviewModal({
         if (data) {
             const result = validateForConfirm(data);
             setValidation(result);
+            // Also check readiness for button gating
+            const ready = validateReadyForConfirm(data);
+            setReadiness(ready);
         }
     }, [data]);
 
@@ -340,7 +344,8 @@ function ContractReviewModal({
                     <button
                         className="btn btn-primary"
                         onClick={handleConfirm}
-                        disabled={!validation.valid}
+                        disabled={!validation.valid || !readiness.ready}
+                        title={!readiness.ready ? `Missing: ${readiness.missing.join(', ')}` : ''}
                     >
                         {locale === 'es' ? 'Confirmar Importación' : 'Confirm Import'}
                     </button>

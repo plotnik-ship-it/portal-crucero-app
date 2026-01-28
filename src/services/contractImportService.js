@@ -149,6 +149,47 @@ export function validateForConfirm(data) {
 }
 
 /**
+ * Check if data is ready for confirm button to be enabled (UX validation)
+ * This is stricter than validateForConfirm - all REQUIRED fields must be set
+ * 
+ * @param {Object} data - Edited data to check
+ * @returns {{ ready: boolean, missing: string[] }}
+ */
+export function validateReadyForConfirm(data) {
+    const missing = [];
+
+    // Currency MUST be selected
+    if (!data.baseCurrency) {
+        missing.push('currency');
+    }
+
+    // Sail date MUST be defined
+    if (!data.keyDates?.sailDate) {
+        missing.push('sailDate');
+    }
+
+    // At least 1 valid cabin row with:
+    // - priceCents > 0 (integer, in cents)
+    // - categoryCode or cabinNumber
+    const validCabins = (data.cabinInventory || []).filter(cabin => {
+        const hasIdentifier = cabin.categoryCode || cabin.cabinNumber;
+        const hasValidPrice = typeof cabin.priceCents === 'number' &&
+            cabin.priceCents > 0 &&
+            Number.isInteger(cabin.priceCents);
+        return hasIdentifier && hasValidPrice;
+    });
+
+    if (validCabins.length === 0) {
+        missing.push('validCabinRow');
+    }
+
+    return {
+        ready: missing.length === 0,
+        missing
+    };
+}
+
+/**
  * Normalize cabin inventory to consistent schema
  * Converts OCR output to flexible schema
  */
@@ -282,8 +323,12 @@ export async function confirmImport({
             updatedAt: serverTimestamp()
         };
 
-        // Create immutable import record
+        // Create immutable import record with observability fields
         const importData = {
+            // Status for observability: 'confirmed' | 'failed'
+            status: 'confirmed',
+
+            // OCR data (no PII - only parsed structure)
             originalOcrOutput: ocrOriginal || {},
             userEdits,
             finalData: {
@@ -291,14 +336,25 @@ export async function confirmImport({
                 cabinInventory: normalizedCabins,
                 keyDates: groupData.keyDates
             },
+
+            // Enhanced telemetry for debugging/monitoring
             telemetry: {
                 ...telemetry,
                 parserVersion: PARSER_VERSION,
-                outputSchemaVersion: OUTPUT_SCHEMA_VERSION
+                outputSchemaVersion: OUTPUT_SCHEMA_VERSION,
+                parseTimeMs: telemetry?.parseTimeMs || 0,
+                parseRate: telemetry?.parsedRowCount && telemetry?.totalRowCount
+                    ? (telemetry.parsedRowCount / telemetry.totalRowCount)
+                    : 1,
+                failureStage: null  // Only set on failure
             },
+
+            // Error tracking (null on success)
+            errorSummary: null,
+
             duplicateOfImportId,
             createdAt: serverTimestamp(),
-            createdBy
+            createdBy  // UID only, no PII
         };
 
         // Write both documents
@@ -464,10 +520,12 @@ function calculateEditsDiff(ocrOriginal, editedData) {
 export default {
     runOcrParse,
     validateForConfirm,
+    validateReadyForConfirm,
     normalizeCabinInventory,
     findImportByFingerprint,
     confirmImport
 };
 
-// Named export for testing internal function
-export { calculateEditsDiff };
+// Named exports for testing
+export { calculateEditsDiff, validateReadyForConfirm };
+

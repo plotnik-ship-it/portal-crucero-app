@@ -1,6 +1,7 @@
 /**
  * Contract Preview
  * Read-only preview when OCR succeeds with no review needed
+ * Shows status, parseRate, unparsedCount for observability
  */
 
 function ContractPreview({ data, ocrResult, onConfirm, onEdit, locale = 'en' }) {
@@ -24,13 +25,40 @@ function ContractPreview({ data, ocrResult, onConfirm, onEdit, locale = 'en' }) 
         }
     };
 
+    // Extract observability metrics
+    const telemetry = ocrResult?.telemetry || {};
+    const parseRate = telemetry.parseRate ??
+        (telemetry.parsedRowCount && telemetry.totalRowCount
+            ? Math.round((telemetry.parsedRowCount / telemetry.totalRowCount) * 100)
+            : 100);
+    const unparsedCount = ocrResult?.unparsedRows?.length || 0;
+    const needsReview = ocrResult?.needsReview || false;
+
     return (
         <div className="contract-preview">
             <div className="preview-header">
                 <h2>{locale === 'es' ? 'Vista Previa' : 'Preview'}</h2>
-                <div className="preview-confidence">
-                    <span className="confidence-badge success">
-                        ✓ {locale === 'es' ? 'Datos Extraídos' : 'Data Extracted'}
+
+                {/* Status indicators row */}
+                <div className="preview-indicators">
+                    {/* Parse rate badge */}
+                    <span className={`indicator-badge ${parseRate >= 80 ? 'success' : parseRate >= 50 ? 'warning' : 'error'}`}>
+                        📊 {parseRate}% {locale === 'es' ? 'extraído' : 'parsed'}
+                    </span>
+
+                    {/* Unparsed count warning */}
+                    {unparsedCount > 0 && (
+                        <span className="indicator-badge warning">
+                            ⚠️ {unparsedCount} {locale === 'es' ? 'sin procesar' : 'unparsed'}
+                        </span>
+                    )}
+
+                    {/* Status badge */}
+                    <span className={`indicator-badge ${needsReview ? 'warning' : 'success'}`}>
+                        {needsReview
+                            ? (locale === 'es' ? '⏳ Revisar' : '⏳ Review')
+                            : (locale === 'es' ? '✓ Listo' : '✓ Ready')
+                        }
                     </span>
                 </div>
             </div>

@@ -35,7 +35,7 @@ vi.mock('../skills/ocr/ocrParserService.js', () => ({
 }));
 
 // Now import after mocks are set up
-const { validateForConfirm, normalizeCabinInventory } = await import('./contractImportService.js');
+const { validateForConfirm, validateReadyForConfirm, normalizeCabinInventory } = await import('./contractImportService.js');
 
 describe('contractImportService', () => {
     describe('validateForConfirm', () => {
@@ -148,6 +148,138 @@ describe('contractImportService', () => {
             const result = validateForConfirm(data);
 
             expect(result.warnings.some(w => w.includes('differs from base'))).toBe(true);
+        });
+    });
+
+    // =====================================================================
+    // validateReadyForConfirm Tests - UX button gating
+    // =====================================================================
+
+    describe('validateReadyForConfirm', () => {
+        it('returns ready=true when all required fields are set', () => {
+            const data = {
+                baseCurrency: 'USD',
+                cabinInventory: [
+                    { categoryCode: 'OV', priceCents: 350000 }
+                ],
+                keyDates: { sailDate: '2025-06-15' }
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(true);
+            expect(result.missing).toHaveLength(0);
+        });
+
+        it('returns missing=["currency"] when baseCurrency is not set', () => {
+            const data = {
+                cabinInventory: [{ categoryCode: 'OV', priceCents: 100000 }],
+                keyDates: { sailDate: '2025-06-15' }
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(false);
+            expect(result.missing).toContain('currency');
+        });
+
+        it('returns missing=["sailDate"] when sailDate is not set', () => {
+            const data = {
+                baseCurrency: 'USD',
+                cabinInventory: [{ categoryCode: 'OV', priceCents: 100000 }],
+                keyDates: {}
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(false);
+            expect(result.missing).toContain('sailDate');
+        });
+
+        it('returns missing=["validCabinRow"] when no valid cabin exists', () => {
+            const data = {
+                baseCurrency: 'USD',
+                cabinInventory: [],
+                keyDates: { sailDate: '2025-06-15' }
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(false);
+            expect(result.missing).toContain('validCabinRow');
+        });
+
+        it('rejects cabin with priceCents=0', () => {
+            const data = {
+                baseCurrency: 'USD',
+                cabinInventory: [
+                    { categoryCode: 'OV', priceCents: 0 }
+                ],
+                keyDates: { sailDate: '2025-06-15' }
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(false);
+            expect(result.missing).toContain('validCabinRow');
+        });
+
+        it('rejects cabin with non-integer priceCents', () => {
+            const data = {
+                baseCurrency: 'USD',
+                cabinInventory: [
+                    { categoryCode: 'OV', priceCents: 350.50 }
+                ],
+                keyDates: { sailDate: '2025-06-15' }
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(false);
+            expect(result.missing).toContain('validCabinRow');
+        });
+
+        it('rejects cabin without identifier (no categoryCode or cabinNumber)', () => {
+            const data = {
+                baseCurrency: 'USD',
+                cabinInventory: [
+                    { priceCents: 350000 }
+                ],
+                keyDates: { sailDate: '2025-06-15' }
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(false);
+            expect(result.missing).toContain('validCabinRow');
+        });
+
+        it('accepts cabin with cabinNumber instead of categoryCode', () => {
+            const data = {
+                baseCurrency: 'USD',
+                cabinInventory: [
+                    { cabinNumber: '12345', priceCents: 350000 }
+                ],
+                keyDates: { sailDate: '2025-06-15' }
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(true);
+        });
+
+        it('returns all missing items when multiple are missing', () => {
+            const data = {
+                cabinInventory: [],
+                keyDates: {}
+            };
+
+            const result = validateReadyForConfirm(data);
+
+            expect(result.ready).toBe(false);
+            expect(result.missing).toContain('currency');
+            expect(result.missing).toContain('sailDate');
+            expect(result.missing).toContain('validCabinRow');
         });
     });
 
