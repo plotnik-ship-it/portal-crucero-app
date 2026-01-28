@@ -1,8 +1,10 @@
 # OCR Contract Import - Release Notes (Beta)
 
 > **Version**: 1.0.0-beta  
-> **Date**: January 2026  
-> **Feature Flag**: `ocr_parsing` (Enterprise tier)
+> **Status**: ✅ BETA READY  
+> **Sign-Off Date**: January 27, 2026  
+> **Feature Flag**: `ocr_parsing` (Pro/Enterprise tier)  
+> **Signed-off by**: Daniel Plotnik
 
 ---
 
