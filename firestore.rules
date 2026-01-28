@@ -204,6 +204,58 @@ service cloud.firestore {
       
       // No one can delete agencies (use Admin SDK)
       allow delete: if false;
+      
+      // ============================================
+      // Team Members Subcollection
+      // ============================================
+      
+      match /members/{memberUid} {
+        // Helper: Check if caller is a member of this agency
+        // Null-safe: check exists before get
+        function isMemberOfAgency() {
+          let memberPath = /databases/$(database)/documents/agencies/$(agencyId)/members/$(request.auth.uid);
+          return exists(memberPath) && 
+                 get(memberPath).data.status == 'active';
+        }
+        
+        // Helper: Check if caller is owner or admin of this agency
+        function isAgencyOwnerOrAdmin() {
+          let memberPath = /databases/$(database)/documents/agencies/$(agencyId)/members/$(request.auth.uid);
+          return exists(memberPath) && 
+                 get(memberPath).data.status == 'active' &&
+                 get(memberPath).data.role in ['owner', 'admin'];
+        }
+        
+        // Members can read their own membership
+        // Owners/admins can read/list all members
+        allow read: if isAuthenticated() && (
+          request.auth.uid == memberUid ||
+          isAgencyOwnerOrAdmin()
+        );
+        
+        // All writes via Cloud Functions Admin SDK only
+        allow create, update, delete: if false;
+      }
+      
+      // ============================================
+      // Team Invites Subcollection
+      // ============================================
+      
+      match /invites/{inviteId} {
+        // Reuse helper from members subcollection context
+        function isAgencyOwnerOrAdminForInvites() {
+          let memberPath = /databases/$(database)/documents/agencies/$(agencyId)/members/$(request.auth.uid);
+          return exists(memberPath) && 
+                 get(memberPath).data.status == 'active' &&
+                 get(memberPath).data.role in ['owner', 'admin'];
+        }
+        
+        // Only owners/admins can read invites
+        allow read: if isAuthenticated() && isAgencyOwnerOrAdminForInvites();
+        
+        // All writes via Cloud Functions Admin SDK only
+        allow create, update, delete: if false;
+      }
     }
     
     // ============================================
