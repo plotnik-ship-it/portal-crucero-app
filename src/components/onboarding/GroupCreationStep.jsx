@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { parseCSV, mergeFamiliesByCode, downloadCSVTemplate } from '../../utils/csvParser';
+import { parseCSV, mergeBookingsByCode, downloadCSVTemplate } from '../../utils/csvParser';
 import './GroupCreationStep.css';
 
 const GroupCreationStep = ({ data, onChange }) => {
@@ -88,7 +88,7 @@ const GroupCreationStep = ({ data, onChange }) => {
             }
 
             // Merge families by bookingCode
-            const mergedFamilies = mergeFamiliesByCode(result.families);
+            const mergedFamilies = mergeBookingsByCode(result.families);
 
             setCsvPreview(result);
             onChange({
