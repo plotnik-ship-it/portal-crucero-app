@@ -3,6 +3,7 @@ import { useGroupStats } from '../../hooks/useGroupStats';
 import { useGroup } from '../../contexts/GroupContext';
 import { formatCurrency } from '../../utils/formatters';
 import StatCard from '../shared/StatCard';
+import PlanStatusCard from './PlanStatusCard';
 
 const AdminDashboardHome = ({ onSelectGroup, onCreateGroup }) => {
     const { t } = useTranslation();
@@ -62,6 +63,9 @@ const AdminDashboardHome = ({ onSelectGroup, onCreateGroup }) => {
                     </button>
                 </div>
             </div>
+
+            {/* Plan Status Card */}
+            <PlanStatusCard />
 
             {/* Global Summary Cards - Using New StatCard Component */}
             <div style={{

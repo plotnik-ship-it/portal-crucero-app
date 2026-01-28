@@ -914,6 +914,20 @@ const es = {
             closeConfirmation: '¿Estás seguro de que quieres cerrar? Las credenciales se perderán permanentemente.',
             confirmClose: 'Sí, Cerrar'
         },
+        // Plan Status
+        plan: {
+            yourPlan: 'Tu Plan',
+            managePlan: 'Gestionar Plan',
+            upgradeAvailable: 'Mejora disponible',
+            upgradeMessage: 'Actualiza a Pro para grupos ilimitados y funciones de IA',
+            viewPlans: 'Ver Planes',
+            features: {
+                multiGroup: 'Multi-Grupo',
+                ocrImport: 'Importar con IA',
+                massComms: 'Comunicaciones Masivas',
+                apiAccess: 'Acceso API'
+            }
+        },
     }
 };
 
@@ -1826,6 +1840,20 @@ const en = {
             warningMessage: 'These passwords are NOT saved in the database. Once you close this modal, they will be permanently lost. Make sure to copy or export them before closing.',
             closeConfirmation: 'Are you sure you want to close? Credentials will be permanently lost.',
             confirmClose: 'Yes, Close'
+        },
+        // Plan Status
+        plan: {
+            yourPlan: 'Your Plan',
+            managePlan: 'Manage Plan',
+            upgradeAvailable: 'Upgrade available',
+            upgradeMessage: 'Upgrade to Pro for unlimited groups and AI features',
+            viewPlans: 'View Plans',
+            features: {
+                multiGroup: 'Multi-Group',
+                ocrImport: 'AI Import',
+                massComms: 'Mass Communications',
+                apiAccess: 'API Access'
+            }
         },
     }
 };
