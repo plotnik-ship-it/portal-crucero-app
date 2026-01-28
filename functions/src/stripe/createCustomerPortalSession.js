@@ -9,7 +9,15 @@
 
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const admin = require('firebase-admin');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Lazy-load Stripe (secret only available at runtime, not parse time)
+let _stripe = null;
+function getStripe() {
+    if (!_stripe) {
+        _stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    }
+    return _stripe;
+}
 
 exports.createCustomerPortalSession = onCall({
     secrets: ['STRIPE_SECRET_KEY'],
@@ -79,7 +87,7 @@ exports.createCustomerPortalSession = onCall({
         // 6. Create portal session
         console.log('Creating customer portal session for customer:', customerId);
 
-        const session = await stripe.billingPortal.sessions.create({
+        const session = await getStripe().billingPortal.sessions.create({
             customer: customerId,
             return_url: `${appUrl}/billing`
         });

@@ -13,8 +13,16 @@
 
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const admin = require('firebase-admin');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { getPriceIdForPlan } = require('./helpers');
+
+// Lazy-load Stripe (secret only available at runtime, not parse time)
+let _stripe = null;
+function getStripe() {
+    if (!_stripe) {
+        _stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    }
+    return _stripe;
+}
 
 exports.createCheckoutSession = onCall({
     secrets: ['STRIPE_SECRET_KEY'],
@@ -96,7 +104,7 @@ exports.createCheckoutSession = onCall({
         if (!customerId) {
             console.log('Creating new Stripe customer for agency:', agencyId);
 
-            const customer = await stripe.customers.create({
+            const customer = await getStripe().customers.create({
                 email: agency.contactEmail,
                 name: agency.name,
                 metadata: {
@@ -125,7 +133,7 @@ exports.createCheckoutSession = onCall({
         // 9. Create checkout session
         console.log('Creating checkout session for plan:', planKey);
 
-        const session = await stripe.checkout.sessions.create({
+        const session = await getStripe().checkout.sessions.create({
             customer: customerId,
             payment_method_types: ['card'],
             line_items: [{

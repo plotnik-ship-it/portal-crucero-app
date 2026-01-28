@@ -15,7 +15,15 @@
 
 const { onRequest } = require('firebase-functions/v2/https');
 const admin = require('firebase-admin');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Lazy-load Stripe (secret only available at runtime, not parse time)
+let _stripe = null;
+function getStripe() {
+    if (!_stripe) {
+        _stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    }
+    return _stripe;
+}
 
 exports.stripeWebhook = onRequest({
     secrets: ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET'],
@@ -29,7 +37,7 @@ exports.stripeWebhook = onRequest({
 
     try {
         // Verify webhook signature
-        event = stripe.webhooks.constructEvent(
+        event = getStripe().webhooks.constructEvent(
             req.rawBody,
             sig,
             process.env.STRIPE_WEBHOOK_SECRET
