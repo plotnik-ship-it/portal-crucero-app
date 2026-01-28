@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getFamilyData, getGroupData, getFamilyPayments, getFamilyPaymentRequests } from '../services/firestore';
+import { getBookingData, getGroupData, getBookingPayments, getBookingPaymentRequests } from '../services/firestore';
 import { getUserData } from '../services/auth';
 
 export const useFamilyData = (userId) => {
@@ -35,7 +35,7 @@ export const useFamilyData = (userId) => {
 
                 // Load family data
                 console.log('🔍 [useFamilyData] Cargando familia ID:', bookingId);
-                const family = await getFamilyData(bookingId);
+                const family = await getBookingData(bookingId);
                 if (!family) {
                     throw new Error('Familia no encontrada');
                 }
@@ -54,8 +54,8 @@ export const useFamilyData = (userId) => {
                 // Load payments and requests
                 console.log('🔍 [useFamilyData] Cargando pagos y solicitudes...');
                 const [paymentsData, requestsData] = await Promise.all([
-                    getFamilyPayments(bookingId),
-                    getFamilyPaymentRequests(bookingId)
+                    getBookingPayments(bookingId),
+                    getBookingPaymentRequests(bookingId)
                 ]);
 
                 console.log('🔍 [useFamilyData] Carga completa exitosa');
@@ -82,9 +82,9 @@ export const useFamilyData = (userId) => {
             const bookingId = userData.bookingId;
 
             const [family, paymentsData, requestsData] = await Promise.all([
-                getFamilyData(bookingId),
-                getFamilyPayments(bookingId),
-                getFamilyPaymentRequests(bookingId)
+                getBookingData(bookingId),
+                getBookingPayments(bookingId),
+                getBookingPaymentRequests(bookingId)
             ]);
 
             setFamilyData(family);
