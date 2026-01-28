@@ -234,3 +234,14 @@ const { stripeWebhook } = require('./src/stripe/webhook');
 exports.createCheckoutSession = createCheckoutSession;
 exports.createCustomerPortalSession = createCustomerPortalSession;
 exports.stripeWebhook = stripeWebhook;
+
+// ============================================
+// Team Management Functions
+// ============================================
+
+const { createTeamInvite, acceptTeamInvite, revokeTeamInvite } = require('./src/team/teamManagement');
+
+exports.createTeamInvite = createTeamInvite;
+exports.acceptTeamInvite = acceptTeamInvite;
+exports.revokeTeamInvite = revokeTeamInvite;
+
