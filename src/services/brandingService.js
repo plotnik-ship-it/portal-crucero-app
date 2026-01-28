@@ -1,6 +1,6 @@
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { doc, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { storage, db } from '../config/firebase';
+import { storage, db } from './firebase';
 
 /**
  * Upload agency logo to Firebase Storage
