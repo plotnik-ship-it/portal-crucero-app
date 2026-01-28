@@ -527,5 +527,5 @@ export default {
 };
 
 // Named exports for testing
-export { calculateEditsDiff, validateReadyForConfirm };
+export { calculateEditsDiff };
 
