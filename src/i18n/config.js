@@ -999,6 +999,37 @@ const es = {
             closeConfirmation: '¿Estás seguro de que quieres cerrar? Las credenciales se perderán permanentemente.',
             confirmClose: 'Sí, Cerrar'
         },
+        // Agency Management Module
+        agency: {
+            title: 'Gestión de Agencia',
+            subtitle: 'Configura tu agencia y equipo',
+            noAccess: 'Sin Acceso a Agencia',
+            noAccessDesc: 'Debes estar asociado a una agencia para acceder a este módulo.',
+            tabs: {
+                team: 'Equipo',
+                teamDesc: 'Administrar miembros e invitaciones',
+                branding: 'Marca',
+                brandingDesc: 'Logo, colores y apariencia',
+                settings: 'Configuración',
+                settingsDesc: 'Información de contacto y preferencias'
+            },
+            settings: {
+                contact: 'Información de Contacto',
+                contactEmail: 'Correo de Contacto',
+                contactPhone: 'Teléfono de Contacto',
+                website: 'Sitio Web',
+                address: 'Dirección Comercial',
+                legal: 'Legal y Políticas',
+                termsUrl: 'URL de Términos y Condiciones',
+                privacyUrl: 'URL de Política de Privacidad',
+                preferences: 'Preferencias',
+                defaultLanguage: 'Idioma Predeterminado',
+                timezone: 'Zona Horaria',
+                businessHours: 'Horario de Atención',
+                saved: 'Configuración guardada correctamente',
+                error: 'Error al guardar configuración'
+            }
+        },
         // Plan Status
         plan: {
             yourPlan: 'Tu Plan',
@@ -2010,6 +2041,37 @@ const en = {
             warningMessage: 'These passwords are NOT saved in the database. Once you close this modal, they will be permanently lost. Make sure to copy or export them before closing.',
             closeConfirmation: 'Are you sure you want to close? Credentials will be permanently lost.',
             confirmClose: 'Yes, Close'
+        },
+        // Agency Management Module
+        agency: {
+            title: 'Agency Management',
+            subtitle: 'Configure your agency settings and team',
+            noAccess: 'No Agency Access',
+            noAccessDesc: 'You must be associated with an agency to access this module.',
+            tabs: {
+                team: 'Team',
+                teamDesc: 'Manage members and invitations',
+                branding: 'Branding',
+                brandingDesc: 'Logo, colors, and appearance',
+                settings: 'Settings',
+                settingsDesc: 'Contact info and preferences'
+            },
+            settings: {
+                contact: 'Contact Information',
+                contactEmail: 'Contact Email',
+                contactPhone: 'Contact Phone',
+                website: 'Website',
+                address: 'Business Address',
+                legal: 'Legal & Policies',
+                termsUrl: 'Terms & Conditions URL',
+                privacyUrl: 'Privacy Policy URL',
+                preferences: 'Preferences',
+                defaultLanguage: 'Default Language',
+                timezone: 'Timezone',
+                businessHours: 'Business Hours',
+                saved: 'Settings saved successfully',
+                error: 'Error saving settings'
+            }
         },
         // Plan Status
         plan: {

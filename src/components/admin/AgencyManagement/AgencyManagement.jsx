@@ -9,6 +9,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import TeamManagement from '../TeamManagement';
 import AgencySettings from '../AgencySettings/AgencySettings';
@@ -24,6 +25,7 @@ const TABS = {
 const AgencyManagement = () => {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(TABS.TEAM);
 
     // Feedback toast state
@@ -42,6 +44,13 @@ const AgencyManagement = () => {
                     <div className="error-icon">⚠️</div>
                     <h2>{t('agency.noAccess', 'No Agency Access')}</h2>
                     <p>{t('agency.noAccessDesc', 'You must be associated with an agency to access this module.')}</p>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => navigate('/admin')}
+                        style={{ marginTop: '1rem' }}
+                    >
+                        ← {t('common.backToHome', 'Back to Dashboard')}
+                    </button>
                 </div>
             </div>
         );
@@ -86,6 +95,13 @@ const AgencyManagement = () => {
             {/* Header */}
             <header className="agency-management__header">
                 <div className="header-content">
+                    <button
+                        className="back-button"
+                        onClick={() => navigate('/admin')}
+                        title={t('common.backToHome', 'Back to Dashboard')}
+                    >
+                        ← {t('admin.dashboard', 'Dashboard')}
+                    </button>
                     <h1>{t('agency.title', 'Agency Management')}</h1>
                     <p className="header-subtitle">
                         {t('agency.subtitle', 'Configure your agency settings and team')}

@@ -73,13 +73,31 @@ const Header = () => {
                                     🏠 Dashboard
                                 </button>
                                 <button
-                                    onClick={() => navigate('/admin/requests')}
+                                    onClick={() => navigate('/admin/agency')}
                                     className="btn btn-sm"
                                     style={{
                                         background: 'rgba(255,255,255,0.1)',
                                         color: 'white',
                                         border: '1px solid rgba(255,255,255,0.2)',
                                         fontSize: '0.8rem'
+                                    }}
+                                >
+                                    🏢 {t('agency.title', 'Agency')}
+                                </button>
+                            </nav>
+                        )}
+                        {/* SuperAdmin Links - Only visible to superAdmins */}
+                        {user?.isSuperAdmin && (
+                            <nav style={{ display: 'flex', gap: '0.5rem', marginRight: '1rem' }}>
+                                <button
+                                    onClick={() => navigate('/admin/requests')}
+                                    className="btn btn-sm"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                                        color: 'white',
+                                        border: 'none',
+                                        fontSize: '0.8rem',
+                                        boxShadow: '0 2px 8px rgba(251, 191, 36, 0.3)'
                                     }}
                                 >
                                     📋 Beta Requests
@@ -88,32 +106,30 @@ const Header = () => {
                                     onClick={() => navigate('/admin/agencies')}
                                     className="btn btn-sm"
                                     style={{
-                                        background: 'rgba(255,255,255,0.1)',
+                                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
                                         color: 'white',
-                                        border: '1px solid rgba(255,255,255,0.2)',
-                                        fontSize: '0.8rem'
+                                        border: 'none',
+                                        fontSize: '0.8rem',
+                                        boxShadow: '0 2px 8px rgba(251, 191, 36, 0.3)'
                                     }}
                                 >
-                                    🏢 Agencies
+                                    🏢 All Agencies
+                                </button>
+                                <button
+                                    onClick={() => navigate('/superadmin')}
+                                    className="btn btn-sm"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                                        color: 'white',
+                                        border: 'none',
+                                        fontSize: '0.8rem',
+                                        fontWeight: '600',
+                                        boxShadow: '0 2px 8px rgba(251, 191, 36, 0.4)'
+                                    }}
+                                >
+                                    👑 SuperAdmin
                                 </button>
                             </nav>
-                        )}
-                        {/* SuperAdmin Link - Only visible to superAdmins */}
-                        {user?.isSuperAdmin && (
-                            <button
-                                onClick={() => navigate('/superadmin')}
-                                className="btn btn-sm"
-                                style={{
-                                    background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                                    color: 'white',
-                                    border: 'none',
-                                    fontSize: '0.8rem',
-                                    fontWeight: '600',
-                                    boxShadow: '0 2px 8px rgba(251, 191, 36, 0.4)'
-                                }}
-                            >
-                                👑 SuperAdmin
-                            </button>
                         )}
                         <LanguageSwitcher />
                         <button
