@@ -1044,6 +1044,10 @@ const es = {
                 apiAccess: 'Acceso API'
             }
         },
+        // Footer
+        footer: {
+            allRightsReserved: 'Todos los derechos reservados.'
+        },
     }
 };
 
@@ -2086,6 +2090,10 @@ const en = {
                 massComms: 'Mass Communications',
                 apiAccess: 'API Access'
             }
+        },
+        // Footer
+        footer: {
+            allRightsReserved: 'All rights reserved.'
         },
     }
 };

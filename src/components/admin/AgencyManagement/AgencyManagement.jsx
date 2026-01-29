@@ -11,10 +11,19 @@ import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
+import { useAgency } from '../../../contexts/AgencyContext';
 import TeamManagement from '../TeamManagement';
 import AgencySettings from '../AgencySettings/AgencySettings';
 import SettingsTab from './tabs/SettingsTab';
 import './AgencyManagement.css';
+
+// Plan names and colors
+const PLAN_CONFIG = {
+    trial: { name: 'Trial', color: '#6b7280', bgColor: 'rgba(107, 114, 128, 0.1)' },
+    solo_groups: { name: 'Solo', color: '#8b5cf6', bgColor: 'rgba(139, 92, 246, 0.1)' },
+    pro: { name: 'Pro', color: '#3b82f6', bgColor: 'rgba(59, 130, 246, 0.1)' },
+    enterprise: { name: 'Enterprise', color: '#f59e0b', bgColor: 'rgba(245, 158, 11, 0.1)' }
+};
 
 const TABS = {
     TEAM: 'team',
@@ -25,8 +34,13 @@ const TABS = {
 const AgencyManagement = () => {
     const { t } = useTranslation();
     const { user } = useAuth();
+    const { agency } = useAgency();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(TABS.TEAM);
+
+    // Plan info
+    const planKey = agency?.planKey || 'trial';
+    const currentPlan = PLAN_CONFIG[planKey] || PLAN_CONFIG.trial;
 
     // Feedback toast state
     const [toast, setToast] = useState(null);
@@ -95,13 +109,38 @@ const AgencyManagement = () => {
             {/* Header */}
             <header className="agency-management__header">
                 <div className="header-content">
-                    <button
-                        className="back-button"
-                        onClick={() => navigate('/admin')}
-                        title={t('common.backToHome', 'Back to Dashboard')}
-                    >
-                        ← {t('admin.dashboard', 'Dashboard')}
-                    </button>
+                    <div className="header-top-row">
+                        <button
+                            className="back-button"
+                            onClick={() => navigate('/admin')}
+                            title={t('common.backToHome', 'Back to Dashboard')}
+                        >
+                            ← {t('admin.dashboard', 'Dashboard')}
+                        </button>
+
+                        {/* Plan Badge */}
+                        <button
+                            className="plan-badge"
+                            onClick={() => navigate('/billing')}
+                            title={t('plan.managePlan', 'Manage Plan')}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                padding: '0.5rem 1rem',
+                                borderRadius: 'var(--radius-md)',
+                                border: `1px solid ${currentPlan.color}50`,
+                                background: currentPlan.bgColor,
+                                color: currentPlan.color,
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            📦 {t('plan.yourPlan', 'Plan')}: {currentPlan.name}
+                        </button>
+                    </div>
                     <h1>{t('agency.title', 'Agency Management')}</h1>
                     <p className="header-subtitle">
                         {t('agency.subtitle', 'Configure your agency settings and team')}

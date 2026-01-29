@@ -117,7 +117,14 @@ const ColorPicker = ({ value, onChange }) => {
 
 // Helper function for contrast
 function getContrastColor(hexColor) {
+    // Defensive check for undefined or invalid input
+    if (!hexColor || typeof hexColor !== 'string') {
+        return '#FFFFFF';
+    }
     const hex = hexColor.replace('#', '');
+    if (hex.length < 6) {
+        return '#FFFFFF';
+    }
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);

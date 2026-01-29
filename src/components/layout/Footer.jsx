@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next';
+
 const Footer = () => {
+    const { t } = useTranslation();
+
     return (
         <footer style={{
             background: 'var(--color-primary-dark)',
@@ -24,7 +28,7 @@ const Footer = () => {
                     </div>
 
                     <div className="text-center mt-md text-muted" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>
-                        <p className="mb-xs">© {new Date().getFullYear()} TravelPoint. Todos los derechos reservados.</p>
+                        <p className="mb-xs">© {new Date().getFullYear()} TravelPoint. {t('footer.allRightsReserved', 'All rights reserved.')}</p>
                     </div>
                 </div>
             </div>

@@ -56,6 +56,21 @@
     border-color: var(--color-primary);
 }
 
+/* Header Top Row */
+.header-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.plan-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Error State */
 .agency-management__error {
     max-width: 500px;

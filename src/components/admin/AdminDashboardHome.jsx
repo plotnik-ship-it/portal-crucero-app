@@ -3,7 +3,6 @@ import { useGroupStats } from '../../hooks/useGroupStats';
 import { useGroup } from '../../contexts/GroupContext';
 import { formatCurrency } from '../../utils/formatters';
 import StatCard from '../shared/StatCard';
-import PlanStatusCard from './PlanStatusCard';
 
 const AdminDashboardHome = ({ onSelectGroup, onCreateGroup }) => {
     const { t } = useTranslation();
@@ -54,18 +53,8 @@ const AdminDashboardHome = ({ onSelectGroup, onCreateGroup }) => {
                         <h1 className="page-title">{t('admin.dashboardTitle', 'Dashboard de Administración')}</h1>
                         <p className="page-subtitle">{t('admin.groupsFinanceSummary', 'Resumen de grupos y finanzas')}</p>
                     </div>
-                    <button
-                        onClick={() => window.location.href = '/admin/branding'}
-                        className="btn btn-outline"
-                        title="Configurar branding de la agencia"
-                    >
-                        🎨 Branding
-                    </button>
                 </div>
             </div>
-
-            {/* Plan Status Card */}
-            <PlanStatusCard />
 
             {/* Global Summary Cards - Using New StatCard Component */}
             <div style={{
