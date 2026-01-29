@@ -406,7 +406,7 @@ exports.revokeTeamInvite = onCall({
  * 
  * Caller must be owner/admin. Cannot change own role or demote owner.
  */
-const updateTeamMemberRole = onCall({ cors: true }, async (request) => {
+exports.updateTeamMemberRole = onCall({ cors: true }, async (request) => {
     // 1. Verify authentication
     if (!request.auth) {
         throw new HttpsError('unauthenticated', 'Must be signed in');
@@ -483,7 +483,7 @@ const updateTeamMemberRole = onCall({ cors: true }, async (request) => {
  * 
  * Caller must be owner/admin. Cannot change own status or owner status.
  */
-const updateTeamMemberStatus = onCall({ cors: true }, async (request) => {
+exports.updateTeamMemberStatus = onCall({ cors: true }, async (request) => {
     // 1. Verify authentication
     if (!request.auth) {
         throw new HttpsError('unauthenticated', 'Must be signed in');
@@ -560,7 +560,7 @@ const updateTeamMemberStatus = onCall({ cors: true }, async (request) => {
  * 
  * Caller must be owner/admin. Cannot remove self or owner.
  */
-const removeTeamMember = onCall({ cors: true }, async (request) => {
+exports.removeTeamMember = onCall({ cors: true }, async (request) => {
     // 1. Verify authentication
     if (!request.auth) {
         throw new HttpsError('unauthenticated', 'Must be signed in');
@@ -636,12 +636,3 @@ const removeTeamMember = onCall({ cors: true }, async (request) => {
 
     return { ok: true };
 });
-
-module.exports = {
-    createTeamInvite,
-    acceptTeamInvite,
-    revokeTeamInvite,
-    updateTeamMemberRole,
-    updateTeamMemberStatus,
-    removeTeamMember
-};
