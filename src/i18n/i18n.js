@@ -36,7 +36,8 @@ export const translations = {
             supportText: '¿Problemas para entrar?',
             contactAgency: 'Contacta a tu agencia',
             agencySignup: '¿Eres una agencia?',
-            requestAccess: 'Unirme al programa beta'
+            requestAccess: 'Unirme al programa beta',
+            portalTagline: 'Gestión de Viajes Grupales'
         },
         requestAccess: {
             title: 'Solicitar Acceso',
@@ -108,7 +109,8 @@ export const translations = {
             supportText: 'Having trouble signing in?',
             contactAgency: 'Contact your agency',
             agencySignup: 'Are you an agency?',
-            requestAccess: 'Join the beta program'
+            requestAccess: 'Join the beta program',
+            portalTagline: 'Group Travel Management'
         },
         requestAccess: {
             title: 'Request Access',

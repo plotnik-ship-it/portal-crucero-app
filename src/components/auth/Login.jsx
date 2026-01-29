@@ -180,7 +180,7 @@ const Login = () => {
 
                 {/* Footer Text */}
                 <div className="login-bottom-text">
-                    <p>Portal de Cruceros Premium</p>
+                    <p>{t('login.portalTagline', 'Group Travel Management')}</p>
                 </div>
             </div>
         </div>
