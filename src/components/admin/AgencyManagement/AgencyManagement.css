@@ -1,0 +1,251 @@
+/**
+ * Agency Management Module Styles
+ * 
+ * Premium design with glassmorphism effects and smooth animations.
+ */
+
+.agency-management {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
+    padding: 2rem;
+}
+
+/* Header */
+.agency-management__header {
+    margin-bottom: 2rem;
+}
+
+.agency-management__header .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.agency-management__header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.agency-management__header .header-subtitle {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Error State */
+.agency-management__error {
+    max-width: 500px;
+    margin: 4rem auto;
+    text-align: center;
+    padding: 3rem;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.agency-management__error .error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.agency-management__error h2 {
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.agency-management__error p {
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-card);
+    box-shadow: var(--shadow-xl);
+    z-index: 1000;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.toast--success {
+    border-left: 4px solid var(--color-success);
+}
+
+.toast--error {
+    border-left: 4px solid var(--color-error);
+}
+
+.toast--info {
+    border-left: 4px solid var(--color-primary);
+}
+
+.toast__icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.toast--success .toast__icon {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--color-success);
+}
+
+.toast--error .toast__icon {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--color-error);
+}
+
+.toast--info .toast__icon {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--color-primary);
+}
+
+.toast__message {
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+    max-width: 300px;
+}
+
+.toast__close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.toast__close:hover {
+    color: var(--color-text-primary);
+}
+
+/* Tab Navigation */
+.agency-management__tabs {
+    max-width: 1200px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.tab-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.tab-button:hover {
+    background: var(--color-bg-hover);
+}
+
+.tab-button--active {
+    background: var(--color-primary);
+}
+
+.tab-button--active:hover {
+    background: var(--color-primary);
+}
+
+.tab-button__icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.tab-button__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.tab-button__label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.tab-button--active .tab-button__label {
+    color: white;
+}
+
+.tab-button__description {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+}
+
+.tab-button--active .tab-button__description {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Tab Content */
+.agency-management__content {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: 2rem;
+    min-height: 60vh;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .agency-management {
+        padding: 1rem;
+    }
+
+    .agency-management__tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .tab-button {
+        padding: 0.875rem 1rem;
+    }
+
+    .tab-button__description {
+        display: none;
+    }
+
+    .agency-management__content {
+        padding: 1.25rem;
+    }
+}

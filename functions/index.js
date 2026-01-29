@@ -239,9 +239,19 @@ exports.stripeWebhook = stripeWebhook;
 // Team Management Functions
 // ============================================
 
-const { createTeamInvite, acceptTeamInvite, revokeTeamInvite } = require('./src/team/teamManagement');
+const {
+    createTeamInvite,
+    acceptTeamInvite,
+    revokeTeamInvite,
+    updateTeamMemberRole,
+    updateTeamMemberStatus,
+    removeTeamMember
+} = require('./src/team/teamManagement');
 
 exports.createTeamInvite = createTeamInvite;
 exports.acceptTeamInvite = acceptTeamInvite;
 exports.revokeTeamInvite = revokeTeamInvite;
+exports.updateTeamMemberRole = updateTeamMemberRole;
+exports.updateTeamMemberStatus = updateTeamMemberStatus;
+exports.removeTeamMember = removeTeamMember;
 

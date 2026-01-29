@@ -34,6 +34,7 @@ const SuperAdminPanel = lazy(() => import('./components/superadmin/SuperAdminPan
 const ContractImportPage = lazy(() => import('./components/admin/ContractImport/ContractImportPage'));
 const AcceptInvite = lazy(() => import('./components/auth/AcceptInvite'));
 const TeamManagement = lazy(() => import('./components/admin/TeamManagement'));
+const AgencyManagement = lazy(() => import('./components/admin/AgencyManagement/AgencyManagement'));
 
 // Guards
 import SuperAdminGuard from './components/guards/SuperAdminGuard';
@@ -174,6 +175,18 @@ function App() {
                   <ProtectedRoute adminOnly>
                     <Suspense fallback={<Loading />}>
                       <TeamManagement />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Agency Management (Unified Panel) */}
+              <Route
+                path="/admin/agency"
+                element={
+                  <ProtectedRoute adminOnly>
+                    <Suspense fallback={<Loading />}>
+                      <AgencyManagement />
                     </Suspense>
                   </ProtectedRoute>
                 }

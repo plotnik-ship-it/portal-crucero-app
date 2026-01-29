@@ -396,3 +396,252 @@ exports.revokeTeamInvite = onCall({
 
     return { ok: true };
 });
+
+// =============================================================================
+// Member Management Functions
+// =============================================================================
+
+/**
+ * Update a team member's role
+ * 
+ * Caller must be owner/admin. Cannot change own role or demote owner.
+ */
+const updateTeamMemberRole = onCall({ cors: true }, async (request) => {
+    // 1. Verify authentication
+    if (!request.auth) {
+        throw new HttpsError('unauthenticated', 'Must be signed in');
+    }
+
+    const callerUid = request.auth.uid;
+    const { memberUid, newRole } = request.data;
+
+    // 2. Validate input
+    if (!memberUid || typeof memberUid !== 'string') {
+        throw new HttpsError('invalid-argument', 'Member UID is required');
+    }
+
+    if (!newRole || !['admin', 'agent'].includes(newRole)) {
+        throw new HttpsError('invalid-argument', 'Role must be admin or agent');
+    }
+
+    // 3. Get caller's agencyId from their user doc
+    const callerUserDoc = await db.collection('users').doc(callerUid).get();
+    if (!callerUserDoc.exists) {
+        throw new HttpsError('not-found', 'User profile not found');
+    }
+    const agencyId = callerUserDoc.data().agencyId;
+
+    if (!agencyId) {
+        throw new HttpsError('failed-precondition', 'No agency associated');
+    }
+
+    // 4. Verify caller is owner or admin
+    const { role: callerRole, isAuthorized } = await verifyCallerIsOwnerOrAdmin(callerUid, agencyId);
+    if (!isAuthorized) {
+        throw new HttpsError('permission-denied', 'Must be owner or admin');
+    }
+
+    // 5. Cannot change own role
+    if (memberUid === callerUid) {
+        throw new HttpsError('failed-precondition', 'Cannot change your own role');
+    }
+
+    // 6. Get target member
+    const memberRef = db.doc(`agencies/${agencyId}/members/${memberUid}`);
+    const memberDoc = await memberRef.get();
+
+    if (!memberDoc.exists) {
+        throw new HttpsError('not-found', 'Member not found');
+    }
+
+    const memberData = memberDoc.data();
+
+    // 7. Cannot change owner role
+    if (memberData.role === 'owner') {
+        throw new HttpsError('permission-denied', 'Cannot change owner role');
+    }
+
+    // 8. Admin cannot change another admin (only owner can)
+    if (callerRole === 'admin' && memberData.role === 'admin') {
+        throw new HttpsError('permission-denied', 'Only owner can manage admins');
+    }
+
+    // 9. Update the role
+    await memberRef.update({
+        role: newRole,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedBy: callerUid
+    });
+
+    console.log(`✅ Member ${memberUid} role changed to ${newRole} by ${callerUid}`);
+
+    return { ok: true, role: newRole };
+});
+
+/**
+ * Update a team member's status (activate/deactivate)
+ * 
+ * Caller must be owner/admin. Cannot change own status or owner status.
+ */
+const updateTeamMemberStatus = onCall({ cors: true }, async (request) => {
+    // 1. Verify authentication
+    if (!request.auth) {
+        throw new HttpsError('unauthenticated', 'Must be signed in');
+    }
+
+    const callerUid = request.auth.uid;
+    const { memberUid, status } = request.data;
+
+    // 2. Validate input
+    if (!memberUid || typeof memberUid !== 'string') {
+        throw new HttpsError('invalid-argument', 'Member UID is required');
+    }
+
+    if (!status || !['active', 'disabled'].includes(status)) {
+        throw new HttpsError('invalid-argument', 'Status must be active or disabled');
+    }
+
+    // 3. Get caller's agencyId
+    const callerUserDoc = await db.collection('users').doc(callerUid).get();
+    if (!callerUserDoc.exists) {
+        throw new HttpsError('not-found', 'User profile not found');
+    }
+    const agencyId = callerUserDoc.data().agencyId;
+
+    if (!agencyId) {
+        throw new HttpsError('failed-precondition', 'No agency associated');
+    }
+
+    // 4. Verify caller is owner or admin
+    const { role: callerRole, isAuthorized } = await verifyCallerIsOwnerOrAdmin(callerUid, agencyId);
+    if (!isAuthorized) {
+        throw new HttpsError('permission-denied', 'Must be owner or admin');
+    }
+
+    // 5. Cannot change own status
+    if (memberUid === callerUid) {
+        throw new HttpsError('failed-precondition', 'Cannot change your own status');
+    }
+
+    // 6. Get target member
+    const memberRef = db.doc(`agencies/${agencyId}/members/${memberUid}`);
+    const memberDoc = await memberRef.get();
+
+    if (!memberDoc.exists) {
+        throw new HttpsError('not-found', 'Member not found');
+    }
+
+    const memberData = memberDoc.data();
+
+    // 7. Cannot change owner status
+    if (memberData.role === 'owner') {
+        throw new HttpsError('permission-denied', 'Cannot change owner status');
+    }
+
+    // 8. Admin cannot change another admin's status
+    if (callerRole === 'admin' && memberData.role === 'admin') {
+        throw new HttpsError('permission-denied', 'Only owner can manage admins');
+    }
+
+    // 9. Update the status
+    await memberRef.update({
+        status: status,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedBy: callerUid
+    });
+
+    console.log(`✅ Member ${memberUid} status changed to ${status} by ${callerUid}`);
+
+    return { ok: true, status };
+});
+
+/**
+ * Remove a team member completely
+ * 
+ * Caller must be owner/admin. Cannot remove self or owner.
+ */
+const removeTeamMember = onCall({ cors: true }, async (request) => {
+    // 1. Verify authentication
+    if (!request.auth) {
+        throw new HttpsError('unauthenticated', 'Must be signed in');
+    }
+
+    const callerUid = request.auth.uid;
+    const { memberUid } = request.data;
+
+    // 2. Validate input
+    if (!memberUid || typeof memberUid !== 'string') {
+        throw new HttpsError('invalid-argument', 'Member UID is required');
+    }
+
+    // 3. Get caller's agencyId
+    const callerUserDoc = await db.collection('users').doc(callerUid).get();
+    if (!callerUserDoc.exists) {
+        throw new HttpsError('not-found', 'User profile not found');
+    }
+    const agencyId = callerUserDoc.data().agencyId;
+
+    if (!agencyId) {
+        throw new HttpsError('failed-precondition', 'No agency associated');
+    }
+
+    // 4. Verify caller is owner or admin
+    const { role: callerRole, isAuthorized } = await verifyCallerIsOwnerOrAdmin(callerUid, agencyId);
+    if (!isAuthorized) {
+        throw new HttpsError('permission-denied', 'Must be owner or admin');
+    }
+
+    // 5. Cannot remove self
+    if (memberUid === callerUid) {
+        throw new HttpsError('failed-precondition', 'Cannot remove yourself');
+    }
+
+    // 6. Get target member
+    const memberRef = db.doc(`agencies/${agencyId}/members/${memberUid}`);
+    const memberDoc = await memberRef.get();
+
+    if (!memberDoc.exists) {
+        throw new HttpsError('not-found', 'Member not found');
+    }
+
+    const memberData = memberDoc.data();
+
+    // 7. Cannot remove owner
+    if (memberData.role === 'owner') {
+        throw new HttpsError('permission-denied', 'Cannot remove agency owner');
+    }
+
+    // 8. Admin cannot remove another admin
+    if (callerRole === 'admin' && memberData.role === 'admin') {
+        throw new HttpsError('permission-denied', 'Only owner can remove admins');
+    }
+
+    // 9. Delete the member document
+    await memberRef.delete();
+
+    // 10. Optionally, also remove agencyId from user doc
+    // This prevents the removed user from accessing agency data
+    const userRef = db.collection('users').doc(memberUid);
+    const userDoc = await userRef.get();
+
+    if (userDoc.exists && userDoc.data().agencyId === agencyId) {
+        await userRef.update({
+            agencyId: admin.firestore.FieldValue.delete(),
+            removedFromAgencyAt: admin.firestore.FieldValue.serverTimestamp(),
+            removedBy: callerUid
+        });
+    }
+
+    console.log(`✅ Member ${memberUid} removed from agency ${agencyId} by ${callerUid}`);
+
+    return { ok: true };
+});
+
+module.exports = {
+    createTeamInvite,
+    acceptTeamInvite,
+    revokeTeamInvite,
+    updateTeamMemberRole,
+    updateTeamMemberStatus,
+    removeTeamMember
+};

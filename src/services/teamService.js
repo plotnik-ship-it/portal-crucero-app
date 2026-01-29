@@ -93,6 +93,83 @@ export const revokeTeamInvite = async ({ agencyId, inviteId }) => {
     }
 };
 
+/**
+ * Update a team member's role
+ * @param {Object} params
+ * @param {string} params.memberUid - Member UID
+ * @param {string} params.newRole - New role ('admin' | 'agent')
+ * @returns {Promise<{ok: boolean, role: string}>}
+ */
+export const updateMemberRole = async ({ memberUid, newRole }) => {
+    try {
+        const callable = httpsCallable(functions, 'updateTeamMemberRole');
+        const result = await callable({ memberUid, newRole });
+        return result.data;
+    } catch (error) {
+        console.error('Error updating member role:', error);
+
+        if (error.code === 'permission-denied') {
+            throw new Error(error.message || 'Permission denied');
+        }
+        if (error.code === 'failed-precondition') {
+            throw new Error(error.message || 'Cannot perform this action');
+        }
+
+        throw new Error('Failed to update role. Please try again.');
+    }
+};
+
+/**
+ * Update a team member's status (activate/deactivate)
+ * @param {Object} params
+ * @param {string} params.memberUid - Member UID
+ * @param {string} params.status - New status ('active' | 'disabled')
+ * @returns {Promise<{ok: boolean, status: string}>}
+ */
+export const updateMemberStatus = async ({ memberUid, status }) => {
+    try {
+        const callable = httpsCallable(functions, 'updateTeamMemberStatus');
+        const result = await callable({ memberUid, status });
+        return result.data;
+    } catch (error) {
+        console.error('Error updating member status:', error);
+
+        if (error.code === 'permission-denied') {
+            throw new Error(error.message || 'Permission denied');
+        }
+        if (error.code === 'failed-precondition') {
+            throw new Error(error.message || 'Cannot perform this action');
+        }
+
+        throw new Error('Failed to update status. Please try again.');
+    }
+};
+
+/**
+ * Remove a team member from the agency
+ * @param {Object} params
+ * @param {string} params.memberUid - Member UID
+ * @returns {Promise<{ok: boolean}>}
+ */
+export const removeMember = async ({ memberUid }) => {
+    try {
+        const callable = httpsCallable(functions, 'removeTeamMember');
+        const result = await callable({ memberUid });
+        return result.data;
+    } catch (error) {
+        console.error('Error removing team member:', error);
+
+        if (error.code === 'permission-denied') {
+            throw new Error(error.message || 'Permission denied');
+        }
+        if (error.code === 'failed-precondition') {
+            throw new Error(error.message || 'Cannot perform this action');
+        }
+
+        throw new Error('Failed to remove member. Please try again.');
+    }
+};
+
 // =============================================================================
 // Firestore Read Helpers
 // =============================================================================
